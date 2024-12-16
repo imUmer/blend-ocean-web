@@ -1,7 +1,7 @@
 const User = require('../models/userModel');
 const isValidPassword = require('../utils/passwordValidation');
 const isValidEmail = require('../utils/emailValidator');
-const generateToken = require('../utils/generateToken');
+const {generateAccessToken, generateRefreshToken} = require('../utils/generateToken');
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
 
@@ -10,6 +10,7 @@ const bcrypt = require('bcryptjs');
 // @access  Public
 const registerUser = async (req, res, next) => {
   const { username, email, password, isAdmin } = req.body;
+
   try {
 
     // Check if all fields are provided
@@ -63,11 +64,20 @@ const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await bcrypt.compare(password, user.password))) {
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    }); // Store refresh token in an HTTP-only cookie
+
     res.json({
       _id: user.id,
       username: user.username,
       email: user.email,
-      token: generateToken(user),
+      token: accessToken,
     });
   } else {
     res.status(401);
@@ -75,5 +85,23 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
+const refreshAccessToken = (req, res) => {
+  const refreshToken = req.cookies.refreshToken; // Retrieve refresh token from cookies
 
-module.exports = { registerUser, loginUser };
+  if (!refreshToken) {
+    return res.status(401).json({ message: "Refresh token missing, please log in again" });
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    const newAccessToken = jwt.sign({ id: decoded.id }, process.env.JWT_SECRET, {
+      expiresIn: "15m",
+    });
+
+    res.json({ accessToken: newAccessToken });
+  } catch (error) {
+    res.status(401).json({ message: "Invalid refresh token" });
+  }
+};
+
+module.exports = { registerUser, loginUser, refreshAccessToken };
