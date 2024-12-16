@@ -1,9 +1,11 @@
 import React from 'react'
+import Login from './Login'
 
 export default function Home() {
   return (
     <div>
-      home
+      <h1>Home</h1>
+      <Login />
     </div>
   )
 }
