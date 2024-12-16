@@ -6,12 +6,19 @@ const cors = require('cors');  // For handling cross-origin requests
 const apiRoutes = require('./routes/api'); // Import API routes
 const userRoutes = require('./routes/userRoutes'); 
 const authRoutes = require('./routes/authRoutes'); 
+const errorHandler = require('./middlewares/errorHandler');
 
-const app = express();  // Create an Express app
+/// Create an Express app
+const app = express();  
 
-// Middleware
+/// Connect to MongoDB
+connectDB();
+
+/// Middleware
 app.use(express.json());  // Parse incoming JSON requests
 app.use(cors());  // Enable CORS for handling cross-origin requests
+
+
 
 //// Use API routes
 // auth routes
@@ -19,13 +26,13 @@ app.use('/api/auth', authRoutes);
 // Test Api 
 app.use('/api', apiRoutes);
 // User Api 
-app.use('/api/user', userRoutes);
+// app.use('/api/user', userRoutes);
+app.use('/api/users', userRoutes);
 
+/// Error handling middleware
+app.use(errorHandler); 
 
-// Connect to MongoDB
-connectDB();
-
-// Start the server
+/// Start the server
 const PORT = process.env.PORT || 5001;  // Default to 5001 if no port is specified
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

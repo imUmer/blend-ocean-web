@@ -1,16 +1,16 @@
 const express = require('express');
-const { registerUser, loginUser } = require('../controllers/userController');
-const bcrypt = require('bcryptjs');
-const User = require('../models/User'); 
 const router = express.Router();
+const { getUserProfile, updateUserProfile, getAllUsers, deleteUser } = require('../controllers/userController');
+const { protect, admin } = require('../middlewares/authMiddleware');
 
-// @route   POST /api/auth/register
-// @desc    Register a new user
-// @access  Public
+// Get or Update logged-in user's profile
+router
+  .route('/profile')
+  .get(protect, getUserProfile)
+  .put(protect, updateUserProfile);
 
-router.post('/register', registerUser);
-router.post('/login', loginUser);
-
+// Admin routes
+router.get('/', protect, admin, getAllUsers); // Get all users
+router.delete('/:id', protect, admin, deleteUser); // Delete user
 
 module.exports = router;
-
