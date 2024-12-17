@@ -5,23 +5,32 @@ import menu from "../assets/icons/burger-menu-gray.svg";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false); // Track if search is open
 
   // Ref for the menu and menu button to detect outside clicks
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
+  const searchRef = useRef(null); // Ref for the search input
 
   // Toggle menu visibility
   const handleMenuClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Close menu if click happens outside the menu or menu button
+  // Toggle search visibility
+  const handleSearchClick = () => {
+    setIsSearchOpen(!isSearchOpen);
+  };
+
+  // Close menu or search if click happens outside
   const handleClickOutside = (e) => {
     if (
       menuRef.current && !menuRef.current.contains(e.target) && 
-      menuButtonRef.current && !menuButtonRef.current.contains(e.target)
+      menuButtonRef.current && !menuButtonRef.current.contains(e.target) &&
+      searchRef.current && !searchRef.current.contains(e.target)
     ) {
       setIsMenuOpen(false);
+      setIsSearchOpen(false);
     }
   };
 
@@ -44,8 +53,20 @@ const Navbar = () => {
       {/* Search Bar and Links */}
       <div className="mx-4">
         <div className="flex justify-center text-xs py-1 items-center space-x-6">
-          <div className="relative">
+          {/* Search Icon (only visible on mobile) */}
+          <div className="relative md:hidden">
+            <img
+              className="cursor-pointer"
+              src={search}
+              alt="Search"
+              onClick={handleSearchClick}
+            />
+          </div>
+
+          {/* Search input (visible on larger screens) */}
+          <div className="hidden md:block relative">
             <input
+              ref={searchRef}
               type="text"
               placeholder="Search..."
               className="flex py-2 px-20 pl-3 pr-8 border-0 lg:w-[300px] rounded-full bg-slate-700 text-lime-300 focus:outline-none focus:ring-1 focus:ring-lime-400"
@@ -53,9 +74,11 @@ const Navbar = () => {
             <img
               className="absolute p-0.5 z-20 top-1 right-1.5 cursor-pointer hover:bg-lime-500/50 rounded-lg"
               src={search}
-              alt=""
+              alt="Search icon"
             />
           </div>
+
+          {/* Links */}
           <div>
             <ul className="flex justify-center items-start max-lg:hidden text-xs space-x-4 text-gray-400 font-medium">
               <li>
