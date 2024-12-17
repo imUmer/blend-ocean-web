@@ -2,13 +2,14 @@
 
 # For testing purpose Local files 
 /test.txt
+/structure.txt
 
 # dependencies
 /node_modules
 server/node_modules
 /.pnp
 .pnp.js
-/structure.txt
+
 # testing
 /coverage
 /.env

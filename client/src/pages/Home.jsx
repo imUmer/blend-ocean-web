@@ -34,7 +34,7 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className=" min-h-screen">
       {/* Hero Slider */}
       <div className="relative w-full h-[650px] overflow-hidden">
         {slides.map((slide, index) => (
@@ -71,14 +71,14 @@ export default function Home() {
         </button>
       </div>
 
-      <div className="section bg-slate-400">
-        <div className="w-full h-fit flex justify-center items-center flex-wrap m-8 lg:gap-10 gap-6">
+      <div className="section ">
+        <div className="w-full h-fit flex justify-center items-center flex-wrap m-8 lg:gap-10 gap-6 ">
 
-          <div className="bg-gray-900 overflow-hidden w-80 rounded-xl">
+          <div className="overflow-hidden w-80 rounded-xl bg-black">
             <div className="rounded-xl overflow-hidden w-full">
               <S1 />
               </div>
-            <div className="flex items-center justify-center gap-9 p-2 font-semibold text-white text-center">
+            <div className="bg-black flex items-center justify-center gap-9 p-2 font-semibold text-white text-center">
               <h1 className="text-2xl uppercase">Models</h1>
               <button className="bg-lime-500 hover:bg-lime-600 rounded-xl px-5 py-1">
                 Browse

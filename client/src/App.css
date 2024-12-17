@@ -1,7 +1,9 @@
 
+
 body {
   margin: 0;
   font-family: "Galano Grotesque", sans-serif;
+  background-color: #202527;
   /* background: linear-gradient(135deg, #99999a, #46545c);
   display: flex;
   justify-content: center;
@@ -16,7 +18,7 @@ body {
 }
 
 body {
-  background: transparent; /* Make it white if you need */
+ /* Make it white if you need */
   /* padding: 0 24px;
   margin: 0;
   height: 100vh;
