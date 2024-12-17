@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import { jwtDecode } from "jwt-decode";
+import "./App.css";
 
 const App = () => {
 

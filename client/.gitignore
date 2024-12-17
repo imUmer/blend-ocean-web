@@ -1,5 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Exclude testing file in local
+/src/pages/Login.css
+
+
 # dependencies
 /node_modules
 /.pnp

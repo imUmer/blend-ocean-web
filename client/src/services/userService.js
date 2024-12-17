@@ -21,6 +21,17 @@ export const getUserProfile = async (token) => {
   });
   return response.data;
 };
+// update user profile
+export const updateProfile = async (updatedData, token) => {
+  console.log(updatedData);
+  
+  const response = await axiosInstance.put("/users/profile", updatedData, {
+    headers: {
+      Authorization: `Bearer ${token}`,  // Pass token for protected routes
+    },
+  });
+  return response.data;
+};
 
 // Fetch all users (admin only)
 export const getAllUsers = async (token) => {

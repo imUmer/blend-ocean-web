@@ -57,7 +57,7 @@ const registerUser = async (req, res, next) => {
 // @desc    Log in a user
 // @route   POST /api/auth/login
 // @access  Public
-const loginUser = asyncHandler(async (req, res) => {
+const loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   // Find user by email
@@ -80,7 +80,7 @@ const loginUser = asyncHandler(async (req, res) => {
       token: accessToken,
     });
   } else {
-    res.status(401);
+    res.status(401);    
     throw new Error('Invalid credentials');
   }
 });
