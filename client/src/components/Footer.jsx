@@ -1,8 +1,8 @@
 import React from "react";
 import logo from "../assets/images/logo.svg"; // Replace with actual logo
-import twitter from "../assets/icons/twitter.svg"; // Replace with actual icons
-import facebook from "../assets/icons/facebook.svg";
-import linkedin from "../assets/icons/linkedin.svg";
+import twitter from "../assets/icons/obj.svg"; 
+import facebook from "../assets/icons/obj.svg";
+import linkedin from "../assets/icons/obj.svg";
 
 const Footer = () => {
   return (
@@ -61,7 +61,7 @@ const Footer = () => {
 
       {/* Bottom Text */}
       <div className="text-xs text-gray-500">
-        <p>&copy; 2024 Your Company. All Rights Reserved.</p>
+        <p>&copy; 2024 Blend Ocean. All Rights Reserved.</p>
       </div>
     </footer>
   );

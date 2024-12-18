@@ -25,9 +25,12 @@ const Navbar = () => {
   // Close menu or search if click happens outside
   const handleClickOutside = (e) => {
     if (
-      menuRef.current && !menuRef.current.contains(e.target) && 
-      menuButtonRef.current && !menuButtonRef.current.contains(e.target) &&
-      searchRef.current && !searchRef.current.contains(e.target)
+      menuRef.current &&
+      !menuRef.current.contains(e.target) &&
+      menuButtonRef.current &&
+      !menuButtonRef.current.contains(e.target) &&
+      searchRef.current &&
+      !searchRef.current.contains(e.target)
     ) {
       setIsMenuOpen(false);
       setIsSearchOpen(false);
@@ -47,7 +50,9 @@ const Navbar = () => {
     <nav className="bg-black shadow-md py-1 px-6 flex justify-between items-center">
       {/* Logo */}
       <div className="text-2xl font-bold text-gray-800 border-gray-500 cursor-pointer">
-        <img className="text-gray-600" src={logo} alt="logo" />
+        <a href="/">
+          <img className="text-gray-600" src={logo} alt="logo" />
+        </a>
       </div>
 
       {/* Search Bar and Links */}
@@ -146,12 +151,13 @@ const Navbar = () => {
                 {/* Add Sign In and Register buttons in the menu for mobile */}
                 <li className="w-full p-1 text-center hover:bg-lime-500/20">
                   <button className="w-full text-xs text-gray-400 hover:bg-lime-500/20 px-4 py-1 border rounded-full">
-                    Sign In
+                  <a href="/login"> Sign In </a>
                   </button>
                 </li>
                 <li className="w-full p-1 text-center hover:bg-lime-500/20">
                   <button className="w-full bg-lime-500 text-xs hover:bg-lime-600 rounded-xl px-5 py-1">
-                    Register
+                  <a href="/register"> Register </a>
+                    
                   </button>
                 </li>
               </ul>
@@ -161,13 +167,17 @@ const Navbar = () => {
 
         {/* Desktop Buttons (Hidden on mobile) */}
         <div className="flex gap-2 max-md:hidden">
-          <button className="px-4 py-1 text-xs border border-lime-500 rounded-full text-gray-300 hover:text-zinc-50 bg-gray-800 hover:bg-lime-500">
-            Sign In
-          </button>
-          <button className="bg-lime-500 text-xs hover:bg-lime-600 rounded-xl px-5 py-1">
+        <a href="/login">
+        <button className="px-4 py-1 text-xs border border-lime-500 rounded-full text-gray-300 hover:text-zinc-50 bg-gray-800 hover:bg-lime-500">
+              Sign In
+            </button>
+          </a>
+        <a href="/register">
+        <button className="bg-lime-500 text-xs hover:bg-lime-600 rounded-xl px-5 py-1">
             Register
           </button>
-        </div>
+          </a>
+          </div>
       </div>
     </nav>
   );
