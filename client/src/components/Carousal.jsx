@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import "../assets/images/model.png"; // Adjust image path as necessary
+import React, { useRef, useState } from "react";
+import "../assets/images/model.png"; // Replace with your actual image paths
 
 const images = [
   require("../assets/images/model.png"),
@@ -12,50 +12,51 @@ const images = [
 
 const Carousel = () => {
   const carouselRef = useRef(null);
-  let isMouseDown = false;
-  let startX, scrollLeft;
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollStart, setScrollStart] = useState(0);
 
-  // Right Scroll
+  // Scroll Right Function
   const scrollRight = () => {
     if (carouselRef.current) {
       carouselRef.current.scrollBy({ left: 300, behavior: "smooth" });
     }
   };
 
-  // Left Scroll
-  const scrollLeftButton = () => {
+  // Scroll Left Function
+  const scrollLeft = () => {
     if (carouselRef.current) {
       carouselRef.current.scrollBy({ left: -300, behavior: "smooth" });
     }
   };
 
-  // Mouse Click and Hold Logic
+  // Handle Mouse Down Event
   const handleMouseDown = (e) => {
-    isMouseDown = true;
-    carouselRef.current.classList.add("active");
-    startX = e.pageX - carouselRef.current.offsetLeft;
-    scrollLeft = carouselRef.current.scrollLeft;
+    setIsDragging(true);
+    setStartX(e.pageX); // Store initial mouse position
+    setScrollStart(carouselRef.current.scrollLeft); // Save initial scroll position
+    carouselRef.current.style.cursor = "grabbing"; // Change cursor style
+    e.preventDefault(); // Prevent default drag behavior
   };
 
-  const handleMouseLeaveOrUp = () => {
-    isMouseDown = false;
-    carouselRef.current.classList.remove("active");
-  };
-
+  // Handle Mouse Move Event
   const handleMouseMove = (e) => {
-    if (!isMouseDown) return;
-    e.preventDefault();
-    const x = e.pageX - carouselRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5; // Adjust scroll speed
-    carouselRef.current.scrollLeft = scrollLeft - walk;
+    if (!isDragging) return; // Exit if not dragging
+    const xDiff = e.pageX - startX; // Calculate distance moved
+    carouselRef.current.scrollLeft = scrollStart - xDiff; // Update scroll position
+  };
+
+  // Handle Mouse Up or Leave Event
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    carouselRef.current.style.cursor = "grab"; // Reset cursor style
   };
 
   return (
-    <div className="relative max-w-6xl mx-auto mt-8 bg-gray-900 p-4 text-center rounded-lg">
-
-      {/* Left Button */}
+    <div className="relative max-w-6xl mx-auto mt-8 bg-black p-4 text-center rounded-lg">
+      {/* Left Scroll Button */}
       <button
-        onClick={scrollLeftButton}
+        onClick={scrollLeft}
         className="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-700 hover:bg-gray-600 text-white p-2 rounded-full z-10"
       >
         &#9664;
@@ -64,16 +65,17 @@ const Carousel = () => {
       {/* Carousel */}
       <div
         ref={carouselRef}
-        className="overflow-hidden cursor-grab active:cursor-grabbing"
+        className="overflow-hidden whitespace-nowrap cursor-grab"
         style={{
           display: "flex",
           gap: "16px",
           scrollBehavior: "smooth",
+          userSelect: "none", // Prevent text selection
         }}
         onMouseDown={handleMouseDown}
-        onMouseLeave={handleMouseLeaveOrUp}
-        onMouseUp={handleMouseLeaveOrUp}
         onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
       >
         {images.map((img, index) => (
           <div
@@ -84,13 +86,13 @@ const Carousel = () => {
               src={img}
               alt={`Slide ${index}`}
               className="w-full h-full object-cover rounded-lg pointer-events-none"
-              onDragStart={(e) => e.preventDefault()} // Prevent image drag
+              onDragStart={(e) => e.preventDefault()} // Disable drag behavior
             />
           </div>
         ))}
       </div>
 
-      {/* Right Button */}
+      {/* Right Scroll Button */}
       <button
         onClick={scrollRight}
         className="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-700 hover:bg-gray-600 text-white p-2 rounded-full z-10"

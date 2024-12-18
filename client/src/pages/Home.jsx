@@ -148,38 +148,12 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="h-[460px] relative bg-black flex flex-col justify-start items-center">
-        <div className="">
-          <h1 className="text-white text-3xl font-semibold pt-10">Models</h1>
-        </div>
-        <div className="bg-gray-900 w-full h-full">
-          <h1>con</h1>
-          <div className="flex justify-around items-center">
-            <div className="bg-neutral-500  h-full">
-              <h1>Card 1</h1>
-              <p>Descp</p>
-            </div>
-            <div className="bg-neutral-500">
-              <h1>Card 1</h1>
-              <p>Descp</p>
-            </div>
-            <div className="bg-neutral-500">
-              <h1>Card 1</h1>
-              <p>Descp</p>
-            </div>
-          </div>
-        </div>
-        <div className="">
-          <h1 className="text-white text-sm pb-5">
-            " Sign in today to get rid of Ads and start exploring the endless
-            possibilities of 3D modeling with Blend Ocean open-source library. "
-          </h1>
-        </div>
-      </div>
       <div className="bg-black">
-        <div className="w-full bg-gray-900 flex flex-col items-center justify-center text-white">
-      <h2 className="text-white text-2xl mt-4 font-bold uppercase">New Assets</h2>
-          
+        <div className="w-full bg-black flex flex-col items-center justify-center text-white">
+          <h2 className="text-white text-2xl mt-4 font-bold uppercase">
+            New Assets
+          </h2>
+
           <Carousel slides={slides} interval={4000} />
           <div className="">
             <h1 className="text-white text-sm my-4 text-center  pb-5">
