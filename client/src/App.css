@@ -10,10 +10,34 @@ body {
   align-items: center;
   height: 100vh; */
 }
+.reflection::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), transparent);
+  transform: scaleY(-1);
+  opacity: 0.5;
+  pointer-events: none; /* Prevent interfering with clicks */
+}
+.cursor-grab {
+  cursor: grab;
+}
+
+.cursor-grabbing {
+  cursor: grabbing;
+}
+
+.active {
+  cursor: grabbing;
+  user-select: none; /* Prevents text selection */
+}
 
 
 .section {
-  /* margin: auto 10%; */
+  margin: auto 10%;
   display: flex;
 }
 
