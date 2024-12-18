@@ -5,6 +5,10 @@ import S1 from "../assets/images/S1";
 import S2 from "../assets/images/S2";
 import S3 from "../assets/images/S3";
 import Carousel from "../components/Carousal";
+import house from "../assets/images/house.jpeg";
+import blend from "../assets/icons/blend.svg";
+import fbx from "../assets/icons/fbx.svg";
+import obj from "../assets/icons/obj.svg";
 
 // const slides = [
 //   "https://via.placeholder.com/600x400/FF0000/FFFFFF?text=Slide+1",
@@ -162,6 +166,53 @@ export default function Home() {
               "
             </h1>
           </div>
+        </div>
+      </div>
+
+      <div className="flex h-fit max-md:flex-col gap-7 max-md:px-1 max-md:p-1 p-20 px-20 justify-center items-center">
+        <div className="text-white w-1/3 h-full flex flex-col gap-2">
+          <h1 className="text-xl font-semibold">
+            HIGH QUALITY FULLY OPTIMIZED 3D MODELS
+          </h1>
+          <p className="text-xs text-justify ">
+            A solution specifically tailored for architectural visualization
+            professionals, offering a comprehensive 3D library to meet the
+            evolving demands of architects and interior designers.
+          </p>
+          <h1 className="text-xl font-semibold">
+            HIGH QUALITY FULLY OPTIMIZED 3D MODELS
+          </h1>
+          <p className="text-xs text-justify ">
+            CC0 (Creative Commons Zero) is a type of public domain dedication
+            that allows creators to waive all rights to their work and place it
+            in the public domain.
+          </p>
+          <p className="text-xs text-justify ">
+            This means that anyone can use, reproduce, modify, and distribute
+            the work without obtaining permission or paying royalties.
+          </p>
+          <p className="text-xs text-justify ">
+            You won't be asked to pay for it, nor will you need to go through a
+            lengthy sign-up process. Enjoy hassle-free access to what you need -
+            no hidden costs, no registration needed. Simply download what you
+            need and start using it right away, without any worries.
+          </p>
+          <p className="text-xs text-justify ">
+            Fully optimized AR models can also reduce file size and memory
+            usage, allowing for faster loading and rendering times, and
+            providing smooth experience for users.
+          </p>
+          <h1 className="text-xl font-semibold uppercase">
+            blender native files, .fbx & .obj
+            </h1>
+            <div className="w-fit flex-wrap flex justify-between gap-6 mt-2">
+                <img src={blend} alt="blend" className="p-2 bg-black rounded-xl" />
+                <img src={fbx} alt="fbx"  className="p-2 bg-black rounded-xl" />
+                <img src={obj} alt="obj"  className="p-2 bg-black rounded-xl" />
+            </div>
+        </div>
+        <div className=" w-2/4 h-full pl-6">
+          <img src={house} alt="" />
         </div>
       </div>
     </div>
