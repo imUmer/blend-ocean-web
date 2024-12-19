@@ -9,6 +9,7 @@ const modelSchema = new mongoose.Schema({
   exportFormats: { type: [String], required: true }, // Array of formats (e.g., ['.obj', '.blend'])
   earlyAccess: { type: Boolean, default: false },
   isNew: { type: Boolean, default: true }, // Whether it's new or old
+  images: { type: [String], default: [] }, 
 });
 
 const Model = mongoose.model('Model', modelSchema);

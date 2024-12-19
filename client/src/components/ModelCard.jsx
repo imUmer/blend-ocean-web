@@ -1,17 +1,19 @@
 import React from "react";
 
 const ModelCard = ({ model }) => {
+  console.log(model.title);
+  
   return (
-    <div className=" bg-black/30 w-full rounded-lg shadow hover:shadow-lg">
-      <p className="text-lime-400 font-bold pl-2">•</p>
+    <div className=" bg-black/30 w-full rounded-lg shadow hover:shadow-lg"> 
+          {model.earlyAccess === true ? <p className="text-lime-400 font-bold pl-2">•</p> : <p className="text-slate-400 font-bold pl-2">•</p> }  
       <div className="flex items-center justify-center px-3 h-48 overflow-hidden mb-3">
         <img
-          src={model.image}
-          alt={model.name}
+          src={model.image || "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg"}
+          alt={model.title}
           className="h-auto max-w-full rounded-lg"
         />
       </div>
-      <p className="text-xs font-light px-2 py-2">{model.name}</p>
+      <p className="text-xs font-light px-2 py-2">{model.title}</p>
     </div>
   );
 };

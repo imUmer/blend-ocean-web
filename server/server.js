@@ -33,7 +33,7 @@ app.use('/api/users', userRoutes);
 // Menu Api 
 app.use('/api/menu', menuRoutes);
 // Model Api 
-app.use('/api/model', modelRoutes);
+app.use('/api/models', modelRoutes);
 
 /// Error handling middleware
 app.use(errorHandler); 

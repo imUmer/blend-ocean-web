@@ -15,6 +15,26 @@ const getRelativeTime = (date) => {
 };
 
 
+// @desc    Get Early Access models
+// @route   GET /api/model/eamodels
+// @access  Public
+const getEAModel = asyncHandler(async (req, res) => {
+  try {
+    // Fetch only models that have earlyAccess set to true
+    const models = await Model.find({ earlyAccess: true }).lean();
+
+    // If no models are found
+    if (models.length === 0) {
+      return res.status(404).json({ message: 'No models found with early access.' });
+    }
+
+    // Return the models with early access
+    res.json(models);
+  } catch (error) {
+    console.error('Failed to fetch early access models:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 // @desc    Get single models
 // @route   GET /api/model/:id
@@ -22,7 +42,7 @@ const getRelativeTime = (date) => {
 const getModel = asyncHandler(async (req, res) => {
   try {
     // Query parameters for filtering and pagination
-    const { type, category, isNew, earlyAccess, page = 1, limit = 10 } = req.query;
+    const { type, category, images, isNew, earlyAccess, page = 1, limit = 10 } = req.query;
 
     // Build query filters
     const filters = {};
@@ -30,6 +50,7 @@ const getModel = asyncHandler(async (req, res) => {
     if (category) filters.category = category;
     if (isNew !== undefined) filters.isNew = isNew === 'true';
     if (earlyAccess !== undefined) filters.earlyAccess = earlyAccess === 'true';
+    if (images) filters.images = { $in: images.split(',') }; // Assuming images are passed as a comma-separated list
 
     // Paginate results
     const skip = (page - 1) * limit;
@@ -63,8 +84,8 @@ const getModel = asyncHandler(async (req, res) => {
 // @access  Public
 const getAllModel = asyncHandler(async (req, res) => {
   try {
-    // Query parameters for filtering and pagination
-    const { type, category, isNew, earlyAccess, page = 1, limit = 10 } = req.query;
+    // Query parameters for filtering
+    const { type, category, images, isNew, earlyAccess } = req.query;
 
     // Build query filters
     const filters = {};
@@ -72,6 +93,40 @@ const getAllModel = asyncHandler(async (req, res) => {
     if (category) filters.category = category;
     if (isNew !== undefined) filters.isNew = isNew === 'true';
     if (earlyAccess !== undefined) filters.earlyAccess = earlyAccess === 'true';
+    
+    // If images query is provided, filter by the presence of images
+    if (images) filters.images = { $in: images.split(',') }; // Assuming images are passed as a comma-separated list
+
+    // Fetch models from the database
+    const models = await Model.find(filters).lean();
+
+    // If no models are found
+    if (models.length === 0) {
+      return res.status(404).json({ message: 'No models found' });
+    }
+
+    // Return the models
+    res.json(models);
+  } catch (error) {
+    console.error('Failed to fetch models:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+const getAllModel1 = asyncHandler(async (req, res) => {
+  try {
+    // Query parameters for filtering and pagination
+    const { type, category, images, isNew, earlyAccess, page = 1, limit = 10 } = req.query;
+
+    // Build query filters
+    const filters = {};
+    if (type) filters.type = type;
+    if (category) filters.category = category;
+    if (isNew !== undefined) filters.isNew = isNew === 'true';
+    if (earlyAccess !== undefined) filters.earlyAccess = earlyAccess === 'true';
+    
+    // If images query is provided, filter by the presence of images
+    if (images) filters.images = { $in: images.split(',') }; // Assuming images are passed as a comma-separated list
 
     // Paginate results
     const skip = (page - 1) * limit;
@@ -100,6 +155,7 @@ const getAllModel = asyncHandler(async (req, res) => {
   }
 });
 
+
 // @desc    Create a new model
 // @route   POST /api/model/create
 // @access  Public
@@ -108,6 +164,7 @@ const createModel = async (req, res, next) => {
     type,
     title,
     category,
+    images=[],
     releaseDate, // Optional; defaults to current date
     downloads = 0, // Optional; defaults to 0
     exportFormats,
@@ -125,6 +182,7 @@ const createModel = async (req, res, next) => {
       type,
       title,
       category,
+      images,
       releaseDate: releaseDate || Date.now(), // Use provided release date or current date
       downloads,
       exportFormats,
@@ -158,6 +216,7 @@ const deleteModel = asyncHandler(async (req, res) => {
 
 module.exports = {
   getAllModel,
+  getEAModel,
   createModel,
   deleteModel,
 };

@@ -179,7 +179,7 @@ const Navbar = () => {
           <Link
             to="/register"
 
-            className="inline-flex items-center px-5 py-1 text-xs font-medium text-center text-white bg-lime-700 rounded-xl hover:bg-lime-800 focus:ring-4 focus:outline-none focus:ring-lime-300 dark:bg-lime-600 dark:hover:bg-lime-700 dark:focus:ring-lime-800"
+            className="inline-flex items-center px-5 py-1 text-xs font-medium text-center text-white bg-lime-500 rounded-xl hover:bg-lime-600 focus:ring-4 focus:outline-none  dark:bg-lime-500 dark:hover:bg-lime-600 dark:focus:ring-lime-800"
           >
             Register
           </Link>

@@ -1,9 +1,10 @@
 const express = require('express');
-const {getAllModel, createModel } = require('../controllers/modelController')
+const {getAllModel, getEAModel, createModel } = require('../controllers/modelController')
 const router = express.Router();
 
 router.get('/', getAllModel);
-router.get('/create', createModel);
+router.get('/eamodels', getEAModel);
+router.post('/create', createModel);
 
 
 module.exports = router;

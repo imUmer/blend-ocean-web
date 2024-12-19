@@ -37,7 +37,7 @@ const Sidebar = ({ toggleSidebar }) => {
   };
 
   return (
-    <div className="w-64 shadow-2xl bg-neutral-800 border-neutral-700 text-white h-screen absolute lg:sticky top-15 z-0">
+    <div className="w-64 shadow-2xl bg-neutral-800 border-neutral-700 text-white h-full lg:h-screen absolute lg:sticky top-15 z-20">
       {/* Header with Close Button */}
       <div className="flex items-center justify-between relative">
         <h2 className="text-2xl font-bold mb-4 p-4">Menu</h2>
