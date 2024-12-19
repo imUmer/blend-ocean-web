@@ -4,6 +4,7 @@ import burgermenuf from "../assets/icons/burger-menu-gray-f.svg";
 
 const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
   const [models, setModels] = useState([]);
+  const [earlyAccessToggle, setEarlyAccessToggle] = useState(false);
   const [modelDetail, setModelDetail] = useState([]);
   const [loading, setLoading] = useState(true); // Loading state
 
@@ -27,17 +28,33 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
   }, []);
 
   const getEarlyAccessModels = async () => {
-    try {
-      setLoading(true); // Show loading spinner
-      const response = await fetch("/api/models/eamodels"); 
-      const data = await response.json();
-      
-      setModels(data); // Assuming `data.models` contains the array of models
-    } catch (error) {
-      console.error("Failed to fetch models:", error);
-    } finally {
-      setLoading(false); // Hide loading spinner
-    }
+    if(earlyAccessToggle === true)
+    {
+      try {
+        setLoading(true); // Show loading spinner
+        const response = await fetch("/api/models"); 
+        const data = await response.json();
+        
+        setModels(data);
+        setEarlyAccessToggle(false);
+      } catch (error) {
+        console.error("Failed to fetch models:", error);
+      } finally {
+        setLoading(false); // Hide loading spinner
+      }
+    }else
+      try {
+        setLoading(true); // Show loading spinner
+        const response = await fetch("/api/models/eamodels"); 
+        const data = await response.json();
+        
+        setModels(data);
+        setEarlyAccessToggle(true);
+      } catch (error) {
+        console.error("Failed to fetch models:", error);
+      } finally {
+        setLoading(false); // Hide loading spinner
+      }
   }
 
   return (
@@ -64,7 +81,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
         </div>
         <div className="flex items-center flex-col sm:flex-row gap-2 space-x-4">
           <button onClick={getEarlyAccessModels} className="px-4 py-2 bg-lime-500 hover:bg-lime-600 rounded-full">
-            Early Access Items
+            {earlyAccessToggle ? "All Items" : "Early Access Items"}
           </button>
           <button
             id="dropdownHoverButton"
