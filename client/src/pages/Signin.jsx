@@ -1,12 +1,36 @@
 import React, { useState } from "react";
+import { loginUser } from "../services/userService";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const SignIn = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [message, setMessage] = useState("");
+  const { setToken } = useAuth(); // Get setToken from AuthContext
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setMessage("");
+    setLoading(false);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle sign-in logic here
+    setLoading(true);
+    try {
+      const response = await loginUser(formData);
+      const { token } = response;
+
+      setToken(token); // Update token in AuthContext
+      setMessage("Logged in successfully!");
+      navigate("/profile");
+    } catch (error) {
+      setMessage(error.response?.data?.message || "Invalid email or password");
+    } finally {
+      setLoading(false); // Hide spinner
+    }
   };
 
   return (
@@ -17,24 +41,30 @@ const SignIn = () => {
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm text-gray-400">Email Address</label>
+            <label htmlFor="email" className="block text-sm text-gray-400">
+              Email Address
+            </label>
             <input
               type="email"
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               className="w-full px-4 py-2 mt-2 bg-gray-700 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500"
               placeholder="Enter your email"
               required
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm text-gray-400">Password</label>
+            <label htmlFor="password" className="block text-sm text-gray-400">
+              Password
+            </label>
             <input
               type="password"
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               className="w-full px-4 py-2 mt-2 bg-gray-700 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500"
               placeholder="Enter your password"
               required
@@ -43,21 +73,45 @@ const SignIn = () => {
           <div className="flex items-center justify-between mt-4">
             <div>
               <input type="checkbox" id="remember" className="text-lime-500" />
-              <label htmlFor="remember" className="text-sm text-gray-400 ml-2">Remember Me</label>
+              <label htmlFor="remember" className="text-sm text-gray-400 ml-2">
+                Remember Me
+              </label>
             </div>
-            <a href="#" className="text-sm text-lime-500 hover:underline">Forgot Password?</a>
+            <a href="#" className="text-sm text-lime-500 hover:underline">
+              Forgot Password?
+            </a>
           </div>
           <div className="mt-6">
+            {message && (
+              <p className="text-sm text-rose-600 text-center font-medium">
+                {message}
+              </p>
+            )}
             <button
               type="submit"
-              className="w-full bg-lime-500 text-black py-2 rounded-lg hover:bg-lime-600 transition"
+              className={`w-full bg-lime-500 text-black py-2 rounded-lg hover:bg-lime-600 transition ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={loading}
             >
-              Sign In
+              {loading ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+              ) : (
+                "Sign In"
+              )}
             </button>
           </div>
         </form>
         <div className="mt-4 text-center text-sm">
-          <p className="text-gray-400">Don't have an account? <a href="/register" className="text-lime-500 hover:underline">Sign Up</a></p>
+          <p className="text-gray-400">
+            Don't have an account?{" "}
+            <Link
+            to="/register"
+            className="text-lime-500 hover:underline"
+          >
+            Register
+          </Link>
+          </p>
         </div>
       </div>
     </div>

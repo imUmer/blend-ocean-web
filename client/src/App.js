@@ -6,6 +6,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { MenuProvider } from "./context/MenuContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 // import Login from "./pages/Login";
 import Login from "./pages/Signin";
@@ -16,16 +17,19 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
+import ShowModel from "./pages/ShowModel";
 
 const App = () => {
   return (
     <AuthProvider>
-      <Navbar />
+    <MenuProvider>
       <Router>
+      <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/model" element={<ShowModel />} />
           <Route
             path="/dashboard"
             element={
@@ -45,6 +49,7 @@ const App = () => {
         </Routes>
       </Router>
       <Footer />
+    </MenuProvider>
     </AuthProvider>
   );
 };

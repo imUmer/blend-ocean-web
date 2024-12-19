@@ -6,6 +6,7 @@ const cors = require('cors');  // For handling cross-origin requests
 const apiRoutes = require('./routes/api'); // Import API routes
 const userRoutes = require('./routes/userRoutes'); 
 const authRoutes = require('./routes/authRoutes'); 
+const menuRoutes = require('./routes/menuRoutes'); 
 const errorHandler = require('./middlewares/errorHandler');
 
 /// Create an Express app
@@ -28,6 +29,8 @@ app.use('/api', apiRoutes);
 // User Api 
 // app.use('/api/user', userRoutes);
 app.use('/api/users', userRoutes);
+// Menu Api 
+app.use('/api/menu', menuRoutes);
 
 /// Error handling middleware
 app.use(errorHandler); 

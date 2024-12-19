@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {jwtDecode} from "jwt-decode";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { getUserProfile, updateProfile } from "../services/userService"; // Assuming you have these service functions
+import { getUserProfile, updateProfile } from "../services/userService";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState({
@@ -22,8 +22,8 @@ const Profile = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setToken('')
-   navigate("/login"); // Redirect to login page
+    setToken("");
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -68,10 +68,8 @@ const Profile = () => {
       if (newPassword) {
         updatedProfile.password = newPassword;
       }
-      console.log( profileData);
-      
+
       const response = await updateProfile(updatedProfile, token);
-      
       setMessage("Profile updated successfully.");
     } catch (err) {
       setMessage("Failed to update profile.");
@@ -81,17 +79,21 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 text-gray-800">
-      <div className="w-full max-w-lg px-6 py-8 bg-gray-100 border border-gray-200 rounded-lg shadow-lg">
-        <h2 className="mb-6 text-2xl font-semibold text-center">My Profile</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-gray-200">
+      <div className="w-full max-w-lg px-6 py-8 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+        <h2 className="mb-6 text-2xl font-semibold text-center text-gray-100">
+          My Profile
+        </h2>
 
         {message && (
-          <p className="text-sm text-red-600 text-center font-medium">{message}</p>
+          <p className="text-sm text-red-500 text-center font-medium">
+            {message}
+          </p>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block mb-1 text-sm font-medium text-gray-700">
+            <label htmlFor="name" className="block mb-1 text-sm font-medium">
               Full Name
             </label>
             <input
@@ -100,13 +102,13 @@ const Profile = () => {
               name="name"
               value={profileData.name}
               onChange={handleChange}
-              className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="username" className="block mb-1 text-sm font-medium text-gray-700">
+            <label htmlFor="username" className="block mb-1 text-sm font-medium">
               Username
             </label>
             <input
@@ -115,13 +117,13 @@ const Profile = () => {
               name="username"
               value={profileData.username}
               onChange={handleChange}
-              className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="block mb-1 text-sm font-medium">
               Email Address
             </label>
             <input
@@ -130,14 +132,14 @@ const Profile = () => {
               name="email"
               value={profileData.email}
               onChange={handleChange}
-              className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
               disabled
             />
           </div>
 
           <div>
-            <label htmlFor="role" className="block mb-1 text-sm font-medium text-gray-700">
+            <label htmlFor="role" className="block mb-1 text-sm font-medium">
               Role
             </label>
             <input
@@ -146,13 +148,13 @@ const Profile = () => {
               name="role"
               value={profileData.role ? "Admin" : "User"}
               onChange={handleChange}
-              className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               disabled
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block mb-1 text-sm font-medium text-gray-700">
+            <label htmlFor="password" className="block mb-1 text-sm font-medium">
               New Password (Leave blank to keep current)
             </label>
             <input
@@ -161,13 +163,13 @@ const Profile = () => {
               name="password"
               value={newPassword}
               onChange={handlePasswordChange}
-              className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <button
             type="submit"
-            className={`w-full px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 ${
+            className={`w-full bg-lime-500 text-sm font-semibold text-white py-2 rounded-lg hover:bg-lime-600 transition ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={loading}
@@ -178,18 +180,13 @@ const Profile = () => {
               "Update Profile"
             )}
           </button>
+
           <button
-          onClick={handleLogout}
-            className={`w-full px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            disabled={loading}
+            type="button"
+            onClick={handleLogout}
+            className="w-full px-4 py-2 text-sm font-semibold border-black text-white bg-rose-950 rounded-lg hover:bg-rose-800 focus:outline-none focus:ring-2 focus:ring-red-500"
           >
-            {loading ? (
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
-            ) : (
-              "Logout"
-            )}
+            Logout
           </button>
         </form>
       </div>

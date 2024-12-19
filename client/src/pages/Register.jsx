@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { registerUser } from "../services/userService";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({ username: "", email: "", password: "" });
@@ -109,12 +109,12 @@ const Register = () => {
       <div className="mt-4 text-sm text-center">
         <p className="text-gray-600">
           Already have an account?{" "}
-          <a
-            href="/login"
+          <Link
+            to="/login"
             className="text-blue-600 hover:underline hover:text-blue-800"
           >
             Login
-          </a>
+          </Link>
         </p>
       </div>
     </div>

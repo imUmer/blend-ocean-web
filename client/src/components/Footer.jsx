@@ -1,8 +1,8 @@
 import React from "react";
 import logo from "../assets/images/logo.svg"; // Replace with actual logo
-import twitter from "../assets/icons/obj.svg"; 
-import facebook from "../assets/icons/obj.svg";
-import linkedin from "../assets/icons/obj.svg";
+import twitter from "../assets/icons/twitter.svg"; 
+import facebook from "../assets/icons/facebook.svg";
+import instagram from "../assets/icons/instagram.svg";
 
 const Footer = () => {
   return (
@@ -41,19 +41,19 @@ const Footer = () => {
       {/* Social Icons */}
       <div className="mb-4">
         <ul className="flex justify-center space-x-4">
-          <li>
-            <a href="#" className="hover:text-lime-500">
+          <li className="bg-white rounded-lg hover:bg-lime-500">
+            <a href="#" className="">
               <img src={twitter} alt="Twitter" className="w-5 h-5" />
             </a>
           </li>
-          <li>
-            <a href="#" className="hover:text-lime-500">
+          <li className="bg-white rounded-lg hover:bg-lime-500">
+            <a href="#" className="">
               <img src={facebook} alt="Facebook" className="w-5 h-5" />
             </a>
           </li>
-          <li>
-            <a href="#" className="hover:text-lime-500">
-              <img src={linkedin} alt="LinkedIn" className="w-5 h-5" />
+          <li className="bg-white rounded-lg hover:bg-lime-500">
+            <a href="#" className=" ">
+              <img src={instagram} alt="LinkedIn" className="w-5 h-5" />
             </a>
           </li>
         </ul>
