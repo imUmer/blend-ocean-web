@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ModelCard from "./ModelCard";
 import burgermenuf from "../assets/icons/burger-menu-gray-f.svg";
 
@@ -36,9 +36,18 @@ const models = [
 ];
 
 const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
+    const [loading, setLoading] = useState(false); // Loading state
+  
  // text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 end-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white
   return (
-    <div className="p-4 text-white">
+    <div className="relative p-4 text-white">
+
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center z-30 bg-neutral-800 bg-opacity-50">
+          <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
       <div className="flex justify-between items-center mb-6">
         <div className="flex justify-start items-start gap-5"> 
           <img src={burgermenuf} className="w-8 mt-2 cursor-pointer bg-transparent hover:bg-gray-600 rounded-lg " alt="" onClick={toggleSidebar} />
