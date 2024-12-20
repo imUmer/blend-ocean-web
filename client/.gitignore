@@ -2,6 +2,7 @@
 
 # Exclude testing file in local
 /src/pages/Login.css
+/src/pages/OAuth.jsx
 /src/components/Listing.jsx
 /src/components/ListingItems.jsx
 

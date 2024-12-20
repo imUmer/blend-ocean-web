@@ -16,22 +16,22 @@ const Footer = () => {
       <div className="mb-4">
         <ul className="flex justify-center space-x-6 text-xs">
           <li>
-            <a href="#" className="hover:text-lime-500">
+            <a href="/" className="hover:text-lime-500">
               Privacy Policy
             </a>
           </li>
           <li>
-            <a href="#" className="hover:text-lime-500">
+            <a href="/" className="hover:text-lime-500">
               Terms of Service
             </a>
           </li>
           <li>
-            <a href="#" className="hover:text-lime-500">
+            <a href="/" className="hover:text-lime-500">
               About Us
             </a>
           </li>
           <li>
-            <a href="#" className="hover:text-lime-500">
+            <a href="/" className="hover:text-lime-500">
               Contact
             </a>
           </li>
@@ -42,17 +42,17 @@ const Footer = () => {
       <div className="mb-4">
         <ul className="flex justify-center space-x-4">
           <li className="bg-white rounded-lg hover:bg-lime-500">
-            <a href="#" className="">
+            <a href="/" className="">
               <img src={twitter} alt="Twitter" className="w-5 h-5" />
             </a>
           </li>
           <li className="bg-white rounded-lg hover:bg-lime-500">
-            <a href="#" className="">
+            <a href="/" className="">
               <img src={facebook} alt="Facebook" className="w-5 h-5" />
             </a>
           </li>
           <li className="bg-white rounded-lg hover:bg-lime-500">
-            <a href="#" className=" ">
+            <a href="/" className=" ">
               <img src={instagram} alt="LinkedIn" className="w-5 h-5" />
             </a>
           </li>

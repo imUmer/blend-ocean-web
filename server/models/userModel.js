@@ -3,6 +3,10 @@ const bcrypt = require('bcryptjs');  // for hashing passwords
 
 const userSchema = mongoose.Schema(
   {
+    name: {
+      type: String,
+      required: true,
+    },
     username: {
       type: String,
       required: true,
@@ -18,8 +22,12 @@ const userSchema = mongoose.Schema(
     },
     isAdmin: {
       type: Boolean,
-      required: true,
       default: false, 
+    },
+    photoUrl: {
+      type: String,
+      required: true,
+      default: "", 
     },
   },
   {

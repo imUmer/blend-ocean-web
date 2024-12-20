@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import h1 from "../assets/images/h1.png";
+// import h1 from "../assets/images/h1.png";
 import model from "../assets/images/model.png";
 import S1 from "../assets/images/S1";
 import S2 from "../assets/images/S2";

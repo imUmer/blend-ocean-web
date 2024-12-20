@@ -91,22 +91,22 @@ const Navbar = () => {
           <div>
             <ul className="flex justify-center items-start max-lg:hidden text-xs space-x-4 text-gray-400 font-medium">
               <li>
-                <a href="#" className="hover:text-lime-500">
+                <a href="/" className="hover:text-lime-500">
                   Home
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-lime-500">
+                <a href="/" className="hover:text-lime-500">
                   About
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-lime-500">
+                <a href="/" className="hover:text-lime-500">
                   Services
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-lime-500">
+                <a href="/" className="hover:text-lime-500">
                   Contact
                 </a>
               </li>
@@ -133,22 +133,22 @@ const Navbar = () => {
             >
               <ul className="flex flex-col items-center bg-slate-800 w-32 p-1 gap-1 text-xs text-gray-400 font-medium">
                 <li className="w-full p-1 text-center hover:bg-lime-500/20">
-                  <a href="#" className="hover:text-lime-500">
+                  <a href="/" className="hover:text-lime-500">
                     Home
                   </a>
                 </li>
                 <li className="w-full p-1 text-center hover:bg-lime-500/20">
-                  <a href="#" className="hover:text-lime-500">
+                  <a href="/" className="hover:text-lime-500">
                     About
                   </a>
                 </li>
                 <li className="w-full p-1 text-center hover:bg-lime-500/20">
-                  <a href="#" className="hover:text-lime-500">
+                  <a href="/" className="hover:text-lime-500">
                     Services
                   </a>
                 </li>
                 <li className="w-full p-1 text-center hover:bg-lime-500/20">
-                  <a href="#" className="hover:text-lime-500">
+                  <a href="/" className="hover:text-lime-500">
                     Contact
                   </a>
                 </li>

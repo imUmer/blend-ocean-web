@@ -12,6 +12,16 @@ export const loginUser = async (userData) => {
   return response.data;
 };
 
+// Login with a Google
+export const googleLogin = async (userData) => {
+  console.log(userData);
+  
+  const response = await axiosInstance.post("/auth/google", userData);
+  console.log(response.data);
+  
+  return response.data;
+};
+
 // Fetch user profile
 export const getUserProfile = async (token) => {
   const response = await axiosInstance.get("/users/profile", {

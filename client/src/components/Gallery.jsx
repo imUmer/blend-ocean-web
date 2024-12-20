@@ -5,7 +5,7 @@ import burgermenuf from "../assets/icons/burger-menu-gray-f.svg";
 const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
   const [models, setModels] = useState([]);
   const [earlyAccessToggle, setEarlyAccessToggle] = useState(false);
-  const [modelDetail, setModelDetail] = useState([]);
+  // const [modelDetail, setModelDetail] = useState([]);
   const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {

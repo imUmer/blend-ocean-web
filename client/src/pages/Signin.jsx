@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { loginUser } from "../services/userService";
+import { loginUser, googleLogin } from "../services/userService";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { auth, googleProvider } from "../firebase";
+import { signInWithPopup } from "firebase/auth";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -9,6 +11,43 @@ const SignIn = () => {
   const { setToken } = useAuth(); // Get setToken from AuthContext
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  function generateRandomCode() {
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    const digits = "0123456789";
+    let randomCode = "";
+    for (let i = 0; i < 3; i++) {
+      const randomIndex = Math.floor(Math.random() * letters.length);
+      randomCode += letters[randomIndex];
+    }
+    for (let i = 0; i < 4; i++) {
+      const randomIndex = Math.floor(Math.random() * digits.length);
+      randomCode += digits[randomIndex];
+    }
+    return randomCode.toLowerCase();
+  }
+  
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      let usernameR = (user.displayName.split(" ")[0] + generateRandomCode()).toLowerCase();
+
+      setFormData({ ...formData, name: user.displayName, email: user.email, photoUrl: user.photoURL, username: usernameR });
+      console.log(formData);
+      
+      const response = await googleLogin(formData);
+      const { token } = response;
+      console.log(response, token);
+      
+      setToken(token); 
+      setMessage("Logged in successfully!");
+      navigate("/profile");
+    } catch (error) {
+      console.error("Error signing in with Google:", error.message);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -102,15 +141,25 @@ const SignIn = () => {
             </button>
           </div>
         </form>
+        <div className="login-container pt-2">
+          <button
+            onClick={handleGoogleSignIn}
+            className="flex w-full items-center justify-center gap-2 bg-white text-black px-4 py-2 rounded-lg shadow hover:shadow-lg"
+          >
+            <img
+              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+              alt="Google"
+              className="h-4"
+            />
+            Sign in with Google
+          </button>
+        </div>
         <div className="mt-4 text-center text-sm">
           <p className="text-gray-400">
             Don't have an account?{" "}
-            <Link
-            to="/register"
-            className="text-lime-500 hover:underline"
-          >
-            Register
-          </Link>
+            <Link to="/register" className="text-lime-500 hover:underline">
+              Register
+            </Link>
           </p>
         </div>
       </div>
