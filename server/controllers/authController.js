@@ -12,11 +12,11 @@ const bcrypt = require("bcryptjs");
 // @route   POST /api/auth/register
 // @access  Public
 const registerUser = async (req, res, next) => {
-  const { username, email, password, isAdmin } = req.body;
+  const { name, username, email, password, photoUrl, isAdmin } = req.body;
 
   try {
     // Check if all fields are provided
-    if (!username || !email || !password) {
+    if (!name || !username || !email || !password) {
       res.status(400);
       throw new Error("All fields are required");
     }
@@ -48,9 +48,11 @@ const registerUser = async (req, res, next) => {
 
     // Create a new user
     const user = new User({
+      name,
       username,
       email,
       password,
+      photoUrl: photoUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwW4kzIb_8SII6G7Bl4BCPfRmLZVVtc2kW6g&s",
       isAdmin: isAdmin || false,
     });
     await user.save();
@@ -84,6 +86,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
       _id: user.id,
       username: user.username,
       email: user.email,
+      photoUrl:user.photoUrl,
       token: accessToken,
     });
   } else {
@@ -112,6 +115,7 @@ const google = asyncHandler(async (req, res, next) => {
       _id: user.id,
       username: user.username,
       email: user.email,
+      photoUrl:user.photoUrl,
       token: accessToken,
     });
   } else {
@@ -148,6 +152,7 @@ const google = asyncHandler(async (req, res, next) => {
       _id: user.id,
       username: user.username,
       email: user.email,
+      photoUrl:user.photoUrl,
       token: accessToken,
     });
   }

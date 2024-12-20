@@ -3,7 +3,7 @@ import { registerUser } from "../services/userService";
 import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [formData, setFormData] = useState({ username: "", email: "", password: "" });
+  const [formData, setFormData] = useState({ name:"", username: "", email: "", password: "", photoUrl:"" });
   const [message, setMessage] = useState("");
   const [loading, seLoading] = useState(false);
   const navigate = useNavigate();
@@ -42,10 +42,28 @@ const Register = () => {
           </label>
           <input
             type="text"
-            id="username"
-            name="username"
+            id="name"
+            name="name"
             placeholder="Enter your full name"
             value={formData.name}
+            onChange={handleChange}
+            className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+            required
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="username"
+            className="block mb-1 text-sm font-medium text-gray-700"
+          >
+            username
+          </label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            value={formData.username}
             onChange={handleChange}
             className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
             required

@@ -10,6 +10,7 @@ const Profile = () => {
     username: "",
     email: "",
     password: "",
+    photo: "",
     role: "",
   });
   const [newPassword, setNewPassword] = useState("");
@@ -35,6 +36,7 @@ const Profile = () => {
           name: userProfile.name,
           username: userProfile.username,
           email: userProfile.email,
+          photo: userProfile.photoUrl,
           role: userProfile.role,
         });
       } catch (err) {
@@ -78,13 +80,22 @@ const Profile = () => {
     }
   };
 
+  const changeProfilePic = (e) => {
+    e.preventDefault();
+
+    console.log('haha');
+    
+  }
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-gray-200">
       <div className="w-full max-w-lg px-6 py-8 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
         <h2 className="mb-6 text-2xl font-semibold text-center text-gray-100">
           My Profile
         </h2>
-
+        <div className="flex items-center justify-center cursor-pointer" onClick={changeProfilePic}>
+          {/* <img src={profileData.photo} alt="" className="h-28 rounded-full w-fit hover:from-gray-400" /> */}
+          <img src={profileData.photo || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwW4kzIb_8SII6G7Bl4BCPfRmLZVVtc2kW6g&s"} alt="" className="border border-lime-500 h-28 rounded-full w-fit hover:opacity-80  hover:shadow-xl" />
+        </div>
         {message && (
           <p className="text-sm text-red-500 text-center font-medium">
             {message}
@@ -167,6 +178,11 @@ const Profile = () => {
             />
           </div>
 
+          {message && (
+          <p className="text-sm text-red-500 text-center font-medium">
+            {message}
+          </p>
+        )}
           <button
             type="submit"
             className={`w-full bg-lime-500 text-sm font-semibold text-white py-2 rounded-lg hover:bg-lime-600 transition ${

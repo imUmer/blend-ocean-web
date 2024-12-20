@@ -32,9 +32,8 @@ const SignIn = () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      let usernameR = (user.displayName.split(" ")[0] + generateRandomCode()).toLowerCase();
 
-      setFormData({ ...formData, name: user.displayName, email: user.email, photoUrl: user.photoURL, username: usernameR });
+      setFormData({ ...formData, name: user.displayName, email: user.email, photoUrl: user.photoURL });
       console.log(formData);
       
       const response = await googleLogin(formData);

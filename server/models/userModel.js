@@ -26,7 +26,7 @@ const userSchema = mongoose.Schema(
     },
     photoUrl: {
       type: String,
-      required: true,
+      required: false,
       default: "", 
     },
   },
