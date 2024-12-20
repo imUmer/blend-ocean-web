@@ -16,6 +16,7 @@ import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import ShowModel from "./pages/ShowModel";
+import ImageToBinary from "./components/ImageToBinary";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
     <MenuProvider>
       <Router>
       <Navbar />
+      <ImageToBinary />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />

@@ -5,6 +5,7 @@
 /src/pages/OAuth.jsx
 /src/components/Listing.jsx
 /src/components/ListingItems.jsx
+/src/components/ImageToBinary.jsx
 
 
 # dependencies

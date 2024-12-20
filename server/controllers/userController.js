@@ -58,6 +58,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
 const updateUserProfile = asyncHandler(async (req, res) => {
   // const { id, username, email, password } = req.body;
   const user = await User.findById(req.body.id);
+  console.log(user, req.body.id);
   
   if (!user) {
     res.status(404);
@@ -72,16 +73,15 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     {
       $set: {
         id: req.body.id,
+        name: req.body.name,
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
-        avatar: req.body.avatar,
+        photoUrl: req.body.photoUrl,
       },
     },
     { new: true }
-  );
-
-  // const { password, ...rest } = updatedUser._doc;
+  )
 
   res.status(200).json(
     { 
@@ -89,41 +89,15 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       email: updatedUser.email,
       message: "Profile updated successfully",}
   );
-// res.json({
-//   message: "here " + user.username + " id: " + user.email + " id: " + user.password + " id: " + id ,
-// });
 });
 
-const updateUserProfile1 = asyncHandler(async (req, res) => {
+const updateUserProfilePic = asyncHandler(async (req, res) => {
   console.log('here');
   const { id, username, email, password } = req.body;
   
   // Find user by id
   const user = await User.findById(req.body.id);
   console.log(req.body);
-  
-  if (!user) {
-    res.status(404);
-    throw new Error("User not found");
-  }
-
-  // Check if the password is being updated
-  if (req.body.password) {
-    // Hash the new password before saving it
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    
-    // Update the password with the hashed value
-    user.password = hashedPassword;
-  }
-
-  // Update other user information (username, email)
-  user.username = username || user.username;
-  user.email = email || user.email;
-
-  // Save the updated user details
-  const updatedUser = await user.save();
-
   res.json({
     _id: updatedUser.id,
     username: updatedUser.username,
