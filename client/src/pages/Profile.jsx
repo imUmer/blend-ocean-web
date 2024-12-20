@@ -143,7 +143,7 @@ const Profile = () => {
             type="file"
             onChange={handleFileChange}
             accept="image/*"
-            style={{ display: "none" }} // Hide the file input
+            hidden
           />
 
           {/* Image preview, clicking triggers file input */}
