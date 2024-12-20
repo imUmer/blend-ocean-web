@@ -6,37 +6,24 @@ import { auth, googleProvider } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
 
 const SignIn = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({email: "", password: "" });
   const [message, setMessage] = useState("");
   const { setToken } = useAuth(); // Get setToken from AuthContext
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  function generateRandomCode() {
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    const digits = "0123456789";
-    let randomCode = "";
-    for (let i = 0; i < 3; i++) {
-      const randomIndex = Math.floor(Math.random() * letters.length);
-      randomCode += letters[randomIndex];
-    }
-    for (let i = 0; i < 4; i++) {
-      const randomIndex = Math.floor(Math.random() * digits.length);
-      randomCode += digits[randomIndex];
-    }
-    return randomCode.toLowerCase();
-  }
-  
 
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      setFormData({ ...formData, name: user.displayName, email: user.email, photoUrl: user.photoURL });
-      console.log(formData);
+      const googleData = {
+        name: user.displayName,
+        email: user.email,
+        photoUrl: user.photoURL,
+      };
       
-      const response = await googleLogin(formData);
+      const response = await googleLogin(googleData);
       const { token } = response;
       console.log(response, token);
       

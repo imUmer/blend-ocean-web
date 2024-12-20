@@ -1,5 +1,5 @@
 // server.js
-require('dotenv').config();  // Load environment variables from .env file
+const dotenv = require('dotenv'); // Load environment variables from .env file
 const express = require('express');
 const connectDB = require('./config/db');  // Import DB connection
 const cors = require('cors');  // For handling cross-origin requests
@@ -12,6 +12,9 @@ const errorHandler = require('./middlewares/errorHandler');
 
 /// Create an Express app
 const app = express();  
+
+/// Get access env variables
+dotenv.config();
 
 /// Connect to MongoDB
 connectDB();
@@ -36,8 +39,8 @@ app.use('/api/menu', menuRoutes);
 app.use('/api/models', modelRoutes);
 
 /// Error handling middleware
-app.use(errorHandler); 
-console.log( process.env.PORT);
+app.use(errorHandler);  
+console.log( process.env.MONGO_URI1);
 
 /// Start the server
 const PORT = process.env.PORT || 5001;  // Default to 5001 if no port is specified

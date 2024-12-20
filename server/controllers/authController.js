@@ -113,6 +113,7 @@ const google = asyncHandler(async (req, res, next) => {
 
     res.json({
       _id: user.id,
+      name: user.name,
       username: user.username,
       email: user.email,
       photoUrl:user.photoUrl,
@@ -121,9 +122,7 @@ const google = asyncHandler(async (req, res, next) => {
   } else {
     const generatedPassword = Math.random().toString(36).slice(-8);
     const hashedPassword = bcrypt.hashSync(generatedPassword, 10);
-    const username =
-      req.body.name.split(" ").join("").toLowerCase() +
-      Math.random().toString(36).slice(-4);
+    const username = req.body.name.split(" ").join("").toLowerCase() +Math.random().toString(36).slice(-4);
 
     // Create a new user
     const user = new User({
