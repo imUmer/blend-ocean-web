@@ -5,8 +5,10 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+
+
 const firebaseConfig = {
-  apiKey: "AIzaSyB4Cm2SAtAfNxGT4PRpxq80HnGUYE_Pd2U",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "blend-ocean.firebaseapp.com",
   projectId: "blend-ocean",
   storageBucket: "blend-ocean.firebasestorage.app",

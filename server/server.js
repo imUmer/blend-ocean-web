@@ -37,6 +37,7 @@ app.use('/api/models', modelRoutes);
 
 /// Error handling middleware
 app.use(errorHandler); 
+console.log( process.env.PORT);
 
 /// Start the server
 const PORT = process.env.PORT || 5001;  // Default to 5001 if no port is specified

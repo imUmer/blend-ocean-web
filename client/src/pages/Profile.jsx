@@ -93,7 +93,6 @@ const Profile = () => {
           My Profile
         </h2>
         <div className="flex items-center justify-center cursor-pointer" onClick={changeProfilePic}>
-          {/* <img src={profileData.photo} alt="" className="h-28 rounded-full w-fit hover:from-gray-400" /> */}
           <img src={profileData.photo || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwW4kzIb_8SII6G7Bl4BCPfRmLZVVtc2kW6g&s"} alt="" className="border border-lime-500 h-28 rounded-full w-fit hover:opacity-80  hover:shadow-xl" />
         </div>
         {message && (

@@ -3,6 +3,7 @@ import logo from "../assets/images/logo.svg";
 import search from "../assets/icons/search.svg";
 import menu from "../assets/icons/burger-menu-gray.svg";
 import { Link } from "react-router-dom";
+import { getUserProfile } from "../services/userService";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,6 +13,16 @@ const Navbar = () => {
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
   const searchRef = useRef(null); // Ref for the search input
+
+  //  get user profile :
+  const [profileData, setProfileData] = useState({
+      name: "",
+      username: "",
+      email: "",
+      password: "",
+      photo: "",
+      role: "",
+    });
 
   // Toggle menu visibility
   const handleMenuClick = () => {
@@ -41,7 +52,6 @@ const Navbar = () => {
   // Use effect to add and clean up the event listener for clicks outside
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -167,7 +177,7 @@ const Navbar = () => {
             </div>
           )}
         </div>
-
+       
         {/* Desktop Buttons (Hidden on mobile) */}
         <div className="flex gap-2 max-md:hidden">
           <Link
@@ -183,7 +193,17 @@ const Navbar = () => {
           >
             Register
           </Link>
+          <Link
+            to="/logout"
+
+            className="hidden items-center px-5 py-1 text-xs font-medium text-center text-white bg-lime-500 rounded-xl hover:bg-lime-600 focus:ring-4 focus:outline-none  dark:bg-lime-500 dark:hover:bg-lime-600 dark:focus:ring-lime-800"
+          >
+            Logout
+          </Link>
         </div>
+      </div>
+      <div className="hidden items-center justify-center cursor-pointer" >
+          <img src={ "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwW4kzIb_8SII6G7Bl4BCPfRmLZVVtc2kW6g&s"} alt="" className="border border-lime-500 h-10 rounded-full w-fit hover:opacity-80  hover:shadow-xl" />
       </div>
     </nav>
   );
