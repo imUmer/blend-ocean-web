@@ -111,15 +111,15 @@ const Navbar = () => {
          
           {/* Links */}
           <div>
-            <ul className="flex justify-center items-start max-lg:hidden text-xs space-x-4 text-gray-400 font-medium">
+            <ul className="w-full truncate flex justify-center items-start max-lg:hidden text-xs gap-4 text-gray-400 font-medium">
             {
-                data.links.map((link) => (
-                  <li key={link.id}>
-                    <a href={link.path} className="hover:text-lime-500">
-                      {link.name}
-                    </a>
-                  </li>
-                ))
+              data.links.map((link) => (
+                  <Link to={link.path} >
+                <li key={link.id} className=" text-center py-1 px-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-500">
+                    {link.name}
+                </li>
+                  </Link>
+              ))
               }
             </ul>
           </div>
@@ -145,10 +145,10 @@ const Navbar = () => {
               <ul className="flex flex-col items-center bg-slate-800 w-40 p-1 text-xs text-gray-400 font-medium">
                 {
                   data.links.map((link) => (
-                    <li key={link.id} className="w-full text-center py-2 px-3 m-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
-                      <a href={link.path} className="hover:text-lime-500">
+                    <li key={link.id} className="w-full text-center py-2 px-3 m-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-500">
+                      <Link to={link.path} >
                         {link.name}
-                      </a>
+                      </Link>
                     </li>
                   ))
                 }
@@ -211,7 +211,7 @@ const Navbar = () => {
             to="/login"
             className={`${
               token ? "hidden" : ""
-            } px-4 py-1 text-xs border border-lime-500 rounded-full text-gray-300 hover:text-zinc-50 bg-gray-800 hover:bg-lime-500`}
+            } truncate px-4 py-1 text-xs border border-lime-500 rounded-full text-gray-300 hover:text-zinc-50 bg-gray-800 hover:bg-lime-500`}
           >
             Sign in
           </Link>
