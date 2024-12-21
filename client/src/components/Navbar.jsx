@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { getUserProfile } from "../services/userService";
 import { useAuth } from "../context/AuthContext";
 import FirestoreUserProfile from "./FirestoreUserProfile";
+import data from "../Helper/data.js";
+
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -106,30 +108,19 @@ const Navbar = () => {
               alt="Search icon"
             />
           </div>
-
+         
           {/* Links */}
           <div>
             <ul className="flex justify-center items-start max-lg:hidden text-xs space-x-4 text-gray-400 font-medium">
-              <li>
-                <a href="/" className="hover:text-lime-500">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="/" className="hover:text-lime-500">
-                  About
-                </a>
-              </li>
-              <li>
-                <a href="/" className="hover:text-lime-500">
-                  Services
-                </a>
-              </li>
-              <li>
-                <a href="/" className="hover:text-lime-500">
-                  Contact
-                </a>
-              </li>
+            {
+                data.links.map((link) => (
+                  <li key={link.id}>
+                    <a href={link.path} className="hover:text-lime-500">
+                      {link.name}
+                    </a>
+                  </li>
+                ))
+              }
             </ul>
           </div>
         </div>
@@ -149,48 +140,66 @@ const Navbar = () => {
           {isMenuOpen && (
             <div
               ref={menuRef}
-              className="absolute top-10 -right-5 z-30 justify-center"
+              className="absolute max-md:top-8 top-10 max-md:-right-6 -right-16 z-30 shadow-lg justify-center"
             >
-              <ul className="flex flex-col items-center bg-slate-800 w-32 p-1 gap-1 text-xs text-gray-400 font-medium">
-                <li className="w-full p-1 text-center hover:bg-lime-500/20">
-                  <a href="/" className="hover:text-lime-500">
-                    Home
-                  </a>
-                </li>
-                <li className="w-full p-1 text-center hover:bg-lime-500/20">
-                  <a href="/" className="hover:text-lime-500">
-                    About
-                  </a>
-                </li>
-                <li className="w-full p-1 text-center hover:bg-lime-500/20">
-                  <a href="/" className="hover:text-lime-500">
-                    Services
-                  </a>
-                </li>
-                <li className="w-full p-1 text-center hover:bg-lime-500/20">
-                  <a href="/" className="hover:text-lime-500">
-                    Contact
-                  </a>
-                </li>
+              <ul className="flex flex-col items-center bg-slate-800 w-40 p-1 text-xs text-gray-400 font-medium">
+                {
+                  data.links.map((link) => (
+                    <li key={link.id} className="w-full text-center py-2 px-3 m-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
+                      <a href={link.path} className="hover:text-lime-500">
+                        {link.name}
+                      </a>
+                    </li>
+                  ))
+                }
 
-                <li className="md:hidden w-full p-1 text-center hover:bg-lime-500/20">
-                  <button
-                    className={`${
-                      token ? "hidden" : ""
-                    } w-full text-xs text-gray-400 hover:bg-lime-500/20 px-4 py-1 border rounded-full`}
-                  >
-                    <a href="/login"> Sign In </a>
-                  </button>
-                </li>
-                <li className="md:hidden w-full p-1 text-center hover:bg-lime-500/20">
-                  <button
-                    className={`${
-                      token ? "hidden" : ""
-                    } w-full bg-lime-500 text-xs hover:bg-lime-600 rounded-xl px-5 py-1`}
-                  >
-                    <a href="/register"> Register </a>
-                  </button>
-                </li>
+                {token ? (
+                  ""
+                ) : (
+                <li className="w-full text-center py-2 px-3 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
+                <Link to="/login">
+                      <button
+                        className={`${
+                          token ? "hidden" : ""
+                        } w-full text-xs text-gray-300 hover:bg-lime-500 hover:text-black px-4 py-1 border border-lime-500 rounded-full`}
+                      >
+                        Sign In
+                      </button>
+                    </Link>
+                  </li>
+                )}
+                {token ? (
+                  ""
+                ) : (
+                <li className="w-full text-center py-2 px-3 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
+                <Link to="/login">
+                      <button
+                        className={`${
+                          token ? "hidden" : ""
+                        } w-full bg-lime-500 text-xs text-white hover:bg-lime-600 rounded-xl px-5 py-1`}
+                      >
+                        {" "}
+                        Register
+                      </button>
+                    </Link>
+                  </li>
+                )}
+                {token ?  (
+                <li className="w-full text-center py-2 px-3 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
+                <Link to="/login">
+                      <button
+                        onClick={handleLogout}
+                        className={`${
+                          token ? "" : "hidden"
+                        }  items-center px-5 py-1 text-xs font-medium text-center text-white bg-lime-500 rounded-xl hover:bg-lime-600 focus:ring-4 focus:outline-none  dark:bg-lime-500 dark:hover:bg-lime-600 dark:focus:ring-lime-800`}
+                      >
+                        Logout
+                      </button>
+                    </Link>
+                  </li>
+                ): (
+                  ""
+                ) }
               </ul>
             </div>
           )}

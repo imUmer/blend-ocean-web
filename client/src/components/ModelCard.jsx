@@ -1,7 +1,6 @@
 import React from "react";
 
 const ModelCard = ({ model }) => {
-  console.log(model.title);
   
   return (
     <div className=" bg-black/30 w-full rounded-lg shadow hover:shadow-lg"> 
