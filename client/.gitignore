@@ -3,6 +3,8 @@
 # Exclude testing file in local
 /src/pages/Login.css
 /src/pages/OAuth.jsx
+/src/pages/Test.jsx
+/src/components/Test.jsx
 /src/components/Listing.jsx
 /src/components/ListingItems.jsx
 /src/components/ImageToBinary.jsx

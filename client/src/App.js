@@ -17,6 +17,7 @@ import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import ShowModel from "./pages/ShowModel";
 
+
 const App = () => {
   return (
     <AuthProvider>

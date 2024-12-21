@@ -10,7 +10,7 @@ const ModelCard = ({ model }) => {
         <img
           src={model.image || "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg"}
           alt={model.title}
-          className="h-auto max-w-full rounded-lg"
+          className="h-auto rounded-lg"
         />
       </div>
       <p className="text-xs font-light px-2 py-2">{model.title}</p>

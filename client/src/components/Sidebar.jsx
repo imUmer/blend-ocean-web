@@ -37,14 +37,14 @@ const Sidebar = ({ toggleSidebar }) => {
   };
 
   return (
-    <div className="w-64 shadow-2xl bg-neutral-800 border-neutral-700 text-white h-full lg:h-screen absolute lg:sticky top-15 z-20">
+    <div className="w-64 max-lg:w-full shadow-2xl bg-neutral-800 border-neutral-700 text-white top-15 z-20">
       {/* Header with Close Button */}
       <div className="flex items-center justify-between relative">
         <h2 className="text-2xl font-bold mb-4 p-4">Menu</h2>
         <button
           onClick={toggleSidebar}
           type="button"
-          className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+          className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-700 dark:hover:text-white"
         >
           <svg
             aria-hidden="true"
@@ -76,7 +76,7 @@ const Sidebar = ({ toggleSidebar }) => {
           {menus.map((menu) => (
             <li key={menu.name} className="mb-4">
               <div
-                className="flex px-5 justify-between items-center cursor-pointer hover:text-lime-500"
+                className="flex px-5 justify-between items-center cursor-pointer mx-2 p-2 rounded hover:bg-gray-700 hover:text-lime-500"
                 onClick={() => toggleSubMenu(menu.name)}
               >
                 <div className="flex gap-2 justify-start items-center">
@@ -88,11 +88,11 @@ const Sidebar = ({ toggleSidebar }) => {
                 )}
               </div>
               {subMenuOpen[menu.name] && (
-                <ul className="pl-5 mt-2 w-full text-gray-400 bg-black/30">
+                <ul className=" mt-2 px-1 py-1 w-full text-gray-400 bg-black/30">
                   {menu.submenus.map((submenu) => (
                     <li
                       key={submenu.link}
-                      className="py-1 cursor-pointer hover:text-lime-400"
+                      className="py-2 pl-5 m-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400"
                     >
                       <Link to={`${submenu.link}`}>{submenu.name}</Link>
                     </li>

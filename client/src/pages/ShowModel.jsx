@@ -12,7 +12,7 @@ const ShowModel = () => {
 
   return (
     <div className="flex flex-col lg:flex-row">
-      {isSidebarOpen &&<Sidebar toggleSidebar={toggleSidebar} /> }
+      {isSidebarOpen &&<Sidebar className="" toggleSidebar={toggleSidebar} /> }
       <div className="flex-1">
         <Gallery toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
       </div>
