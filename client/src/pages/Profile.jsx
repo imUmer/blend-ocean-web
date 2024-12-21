@@ -3,8 +3,8 @@ import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { getUserProfile, updateProfile } from "../services/userService";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
-import { app } from "../firebase";
+import { collection, addDoc } from "firebase/firestore";
+import { db, app } from "../firebase";
 import FirestoreUserProfile from "../components/FirestoreUserProfile";
 
 const Profile = () => {
@@ -22,9 +22,9 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [loadingPic, setLoadingPic] = useState(false);
   const navigate = useNavigate();
-  const { token, setToken } = useAuth();
-  const user1 = token ? jwtDecode(token) : null;
-  const [user, setUser] = useState(user1);
+  const {user, setUser, token, setToken } = useAuth();
+  // const user1 = token ? jwtDecode(token) : null;
+  // const [user, setUser] = useState(user1);
   const fileInputRef = useRef(null);
   const [documentId, setDocumentId] = useState(null);
   const [loadingProfilePic, setLoadingProfilePic] = useState(true);
@@ -36,7 +36,9 @@ const Profile = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setToken("");
+    setUser("");
     navigate("/login");
   };
 
@@ -58,13 +60,7 @@ const Profile = () => {
     };
 
     fetchProfile();
-    if (token) {
-      const decoded = jwtDecode(token);
-      setUser(decoded);
-    } else {
-      setUser(null);
-    }
-  }, [token,documentId]);
+  }, [token,user,documentId]);
 
   const handleChange = (e) => {
     setProfileData({ ...profileData, [e.target.name]: e.target.value });
@@ -95,7 +91,6 @@ const Profile = () => {
   
 
   const [status, setStatus] = useState("");
-  const db = getFirestore(app); // Initialize Firestore
 
   const handleFileChange = async (event) => {
     try {
@@ -150,7 +145,7 @@ const Profile = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-gray-200">
       <div className="w-full max-w-lg px-6 py-8 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
         <h2 className="mb-6 text-2xl font-semibold text-center text-gray-100">
-          My Profile
+          My Profile {user?.name}
         </h2>
         <div className="flex items-center justify-center">
           <input

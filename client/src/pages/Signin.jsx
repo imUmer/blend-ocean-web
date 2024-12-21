@@ -8,7 +8,7 @@ import { signInWithPopup } from "firebase/auth";
 const SignIn = () => {
   const [formData, setFormData] = useState({email: "", password: "" });
   const [message, setMessage] = useState("");
-  const { setToken } = useAuth(); // Get setToken from AuthContext
+  const { setUser, setToken } = useAuth(); // Get setToken from AuthContext
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -28,6 +28,7 @@ const SignIn = () => {
       console.log(response, token);
       
       setToken(token); 
+      setUser(googleData); 
       setMessage("Logged in successfully!");
       navigate("/profile");
     } catch (error) {
@@ -46,9 +47,12 @@ const SignIn = () => {
     setLoading(true);
     try {
       const response = await loginUser(formData);
-      const { token } = response;
+      const { name, email, photoUrl, token } = response;
+      console.log(response);
+      
 
       setToken(token); // Update token in AuthContext
+      setUser({name,email,photoUrl}); 
       setMessage("Logged in successfully!");
       navigate("/profile");
     } catch (error) {

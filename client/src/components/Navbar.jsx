@@ -162,13 +162,13 @@ const Navbar = () => {
                     Contact
                   </a>
                 </li>
-                {/* Add Sign In and Register buttons in the menu for mobile */}
-                <li className="w-full p-1 text-center hover:bg-lime-500/20">
+
+                <li className="md:hidden w-full p-1 text-center hover:bg-lime-500/20">
                   <button className="w-full text-xs text-gray-400 hover:bg-lime-500/20 px-4 py-1 border rounded-full">
                     <a href="/login"> Sign In </a>
                   </button>
                 </li>
-                <li className="w-full p-1 text-center hover:bg-lime-500/20">
+                <li className="md:hidden w-full p-1 text-center hover:bg-lime-500/20">
                   <button className="w-full bg-lime-500 text-xs hover:bg-lime-600 rounded-xl px-5 py-1">
                     <a href="/register"> Register </a>
                   </button>

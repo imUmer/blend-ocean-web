@@ -84,6 +84,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 
     res.json({
       _id: user.id,
+      name: user.name,
       username: user.username,
       email: user.email,
       photoUrl:user.photoUrl,
@@ -149,6 +150,7 @@ const google = asyncHandler(async (req, res, next) => {
     // Respond with user details and access token
     res.json({
       _id: user.id,
+      name: user.name,
       username: user.username,
       email: user.email,
       photoUrl:user.photoUrl,
