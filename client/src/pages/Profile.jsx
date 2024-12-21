@@ -14,7 +14,7 @@ const Profile = () => {
     username: "",
     email: "",
     password: "",
-    photo: "",
+    photoUrl: "",
     role: "",
   });
   const [newPassword, setNewPassword] = useState("");
@@ -51,7 +51,7 @@ const Profile = () => {
           name: userProfile.name,
           username: userProfile.username,
           email: userProfile.email,
-          photo: userProfile.photoUrl,
+          photoUrl: userProfile.photoUrl,
           role: userProfile.role,
         });
       } catch (err) {
@@ -132,6 +132,9 @@ const Profile = () => {
 
       await updateProfile(updatedProfile, token);
       setDocumentId(docRef.id);
+      setUser({...user, photoUrl:docRef.id});
+      console.log(user, docRef.id);
+      
       setStatus(`Image changed successfully!`);
     } catch (error) {
       console.error("Error saving image: ", error);
@@ -145,7 +148,7 @@ const Profile = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-gray-200">
       <div className="w-full max-w-lg px-6 py-8 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
         <h2 className="mb-6 text-2xl font-semibold text-center text-gray-100">
-          My Profile {user?.name}
+          My Profile
         </h2>
         <div className="flex items-center justify-center">
           <input
@@ -156,7 +159,7 @@ const Profile = () => {
             hidden
           />
           <div  onClick={handleImageClick}>
-            <FirestoreUserProfile  documentId={profileData.photo} />
+            <FirestoreUserProfile  documentId={profileData.photoUrl} flag={1}/>
           </div>
           <div className="flex absolute z-40 rounded-full">
             {loadingPic &&

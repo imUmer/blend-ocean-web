@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase"; // Import Firestore instance
 
-const FirestoreUserProfile = ({ documentId }) => {
+const FirestoreUserProfile = ({ documentId, flag }) => {
   const [documentData, setDocumentData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -30,18 +30,31 @@ const FirestoreUserProfile = ({ documentId }) => {
 
   return (
     <div className="flex items-center justify-center">
+     { flag ? <>
       <img
-            src={
-              documentData?.image ||
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwW4kzIb_8SII6G7Bl4BCPfRmLZVVtc2kW6g&s"
-            }
-            alt="Profile"
-            className={`border cursor-pointer object-fit border-lime-500 h-28 rounded-full w-28 hover:opacity-80 hover:shadow-xl 
+        src={
+          documentData?.image ||
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwW4kzIb_8SII6G7Bl4BCPfRmLZVVtc2kW6g&s"
+        }
+        alt="Profile"
+        className={`border cursor-pointer object-fit border-lime-500 h-28 w-28 rounded-full hover:opacity-80 hover:shadow-xl 
               ${loading ? "cursor-not-allowed" : ""}
               `}
-          />
-      <div>
-      </div>
+      />
+     </> :
+     <>
+      <img
+        src={
+          documentData?.image ||
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwW4kzIb_8SII6G7Bl4BCPfRmLZVVtc2kW6g&s"
+        }
+        alt="Profile"
+        className={`border cursor-pointer object-fit border-lime-500 h-8 w-8 rounded-full hover:opacity-80 hover:shadow-xl 
+              ${loading ? "cursor-not-allowed" : ""}
+              `}
+      />
+     </>
+      }
     </div>
   );
 };
