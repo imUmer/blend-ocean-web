@@ -172,7 +172,7 @@ const Navbar = () => {
                   ""
                 ) : (
                 <li className="w-full text-center py-2 px-3 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
-                <Link to="/login">
+                <Link to="/register">
                       <button
                         className={`${
                           token ? "hidden" : ""
