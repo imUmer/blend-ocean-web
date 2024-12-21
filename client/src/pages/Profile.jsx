@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getUserProfile, updateProfile } from "../services/userService";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { app } from "../firebase";
+import FirestoreUserProfile from "../components/FirestoreUserProfile";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState({
@@ -19,12 +20,16 @@ const Profile = () => {
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingPic, setLoadingPic] = useState(false);
   const navigate = useNavigate();
   const { token, setToken } = useAuth();
   const user1 = token ? jwtDecode(token) : null;
   const [user, setUser] = useState(user1);
   const fileInputRef = useRef(null);
+  const [documentId, setDocumentId] = useState(null);
+  const [loadingProfilePic, setLoadingProfilePic] = useState(true);
 
+ 
   const handleImageClick = () => {
     fileInputRef.current.click(); // Programmatically trigger the file input
   };
@@ -59,7 +64,7 @@ const Profile = () => {
     } else {
       setUser(null);
     }
-  }, [token]);
+  }, [token,documentId]);
 
   const handleChange = (e) => {
     setProfileData({ ...profileData, [e.target.name]: e.target.value });
@@ -79,7 +84,7 @@ const Profile = () => {
         updatedProfile.password = newPassword;
       }
 
-      const response = await updateProfile(updatedProfile, token);
+      await updateProfile(updatedProfile, token);
       setMessage("Profile updated successfully.");
     } catch (err) {
       setMessage("Failed to update profile.");
@@ -87,32 +92,36 @@ const Profile = () => {
       setLoading(false);
     }
   };
-
-  const changeProfilePic = (e) => {
-    e.preventDefault();
-    handleFileChange();
-    console.log("haha");
-  };
+  
 
   const [status, setStatus] = useState("");
   const db = getFirestore(app); // Initialize Firestore
 
   const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64String = reader.result;
-        saveImage({ base64String });
-      };
-      reader.readAsDataURL(file); // Converts to base64
+    try {
+      const file = event.target.files[0];
+      setLoadingPic(true);
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64String = reader.result;
+          saveImage({ base64String });
+        };
+        reader.readAsDataURL(file); // Converts to base64
+      }
+    } catch (error) {
+      setMessage(error);
+    }
+    finally{
+      setLoadingPic(false);
     }
   };
 
   const saveImage = async ({ base64String }) => {
     try {
-      const user = profileData;
+      setLoadingPic(true);
 
+      const user = profileData;
       if (!user) {
         setStatus("User is not logged in.");
         return;
@@ -124,10 +133,16 @@ const Profile = () => {
         userId: user.id,
       });
 
-      setStatus(`Image saved successfully! Document ID: ${docRef.id}`);
+      const updatedProfile = { ...profileData, photoUrl: docRef.id };
+
+      await updateProfile(updatedProfile, token);
+      setDocumentId(docRef.id);
+      setStatus(`Image changed successfully!`);
     } catch (error) {
       console.error("Error saving image: ", error);
       setStatus("Failed to save image.");
+    }finally {
+      setLoadingPic(false);
     }
   };
 
@@ -137,7 +152,7 @@ const Profile = () => {
         <h2 className="mb-6 text-2xl font-semibold text-center text-gray-100">
           My Profile
         </h2>
-        <div className="flex z-30 items-center justify-center cursor-pointer">
+        <div className="flex items-center justify-center">
           <input
             ref={fileInputRef}
             type="file"
@@ -145,17 +160,16 @@ const Profile = () => {
             accept="image/*"
             hidden
           />
-
-          {/* Image preview, clicking triggers file input */}
-          <img
-            src={
-              profileData.photo ||
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwW4kzIb_8SII6G7Bl4BCPfRmLZVVtc2kW6g&s"
+          <div  onClick={handleImageClick}>
+            <FirestoreUserProfile  documentId={profileData.photo} />
+          </div>
+          <div className="flex absolute z-40 rounded-full">
+            {loadingPic &&
+            <div className={`w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto 
+              ${loadingPic ? "border-lime-400 cursor-not-allowed" : ""}
+              `}></div>
             }
-            alt="Profile"
-            onClick={handleImageClick} // Open file dialog on image click
-            className="border bg-black border-lime-500 h-28 rounded-full w-fit hover:opacity-80 hover:shadow-xl"
-          />
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -167,6 +181,7 @@ const Profile = () => {
               type="text"
               id="name"
               name="name"
+              placeholder="Full Name"
               value={profileData.name}
               onChange={handleChange}
               className="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -185,6 +200,7 @@ const Profile = () => {
               type="text"
               id="username"
               name="username"
+              placeholder="username"
               value={profileData.username}
               onChange={handleChange}
               className="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -234,15 +250,21 @@ const Profile = () => {
               type="password"
               id="password"
               name="password"
+              placeholder="password"
               value={newPassword}
               onChange={handlePasswordChange}
               className="w-full px-3 py-2 text-sm bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
+          {status && (
+            <p className="text-sm text-slate-300 text-center font-medium">
+              {status }
+            </p>
+          )}
           {message && (
-            <p className="text-sm text-red-500 text-center font-medium">
-              {message}
+            <p className="text-sm text-slate-300 text-center font-medium">
+              {message }
             </p>
           )}
           <button
