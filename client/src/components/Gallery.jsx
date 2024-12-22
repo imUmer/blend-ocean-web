@@ -3,6 +3,7 @@ import ModelCard from "./ModelCard";
 import ModelPopup from "./ModelPopup";
 import burgermenuf from "../assets/icons/burger-menu-gray-f.svg";
 import axios from "axios";
+import { useSearch } from "../context/searchContext";
 
 const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
   const [models, setModels] = useState([]);
@@ -13,6 +14,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
   const [pages, setPages] = useState(1);
   const [total, setTotal] = useState(1);
   const [selectedModel, setSelectedModel] = useState(null); // For popup
+  const { searchTerm } = useSearch();
 
   const handleModelClick = (model) => {
     setSelectedModel(model); 
@@ -21,9 +23,9 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
   const fetchModels = async (page) => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`/api/models/chunk?page=${page}&limit=8`);
+      const { data } = await axios.get(`/api/models/search?page=${page}&limit=8&searchTerm=${searchTerm}`);
       setModels(data.models);
-      console.log(data);
+      console.log("Gallery: " + data);
       
       setPages(data.pages);
       setTotal(data.total);
@@ -36,7 +38,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
 
   useEffect(() => {
     fetchModels(page);
-  }, [page]);
+  }, [page, searchTerm]);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= pages) {
@@ -83,7 +85,6 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
           <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
-
 
       {/* <div className="w-64 h-full absolute md:h-full md:relative inline-block bg-black">
         <h1>sfsafasdf</h1>

@@ -121,7 +121,7 @@ const getModels = asyncHandler(async (req, res) => {
   const limit = Number(req.query.limit) || 8; // Default to 8 items per page
   const skip = (page - 1) * limit; // Calculate the number of documents to skip
   const earlyAccess = req.query.earlyaccess;
-  console.log(earlyAccess);
+  console.log("modelController: " + earlyAccess);
    // Build query filters
    const filters = {};
    if (earlyAccess !== undefined) filters.earlyAccess = earlyAccess === 'true';
@@ -143,46 +143,45 @@ const getModels = asyncHandler(async (req, res) => {
 }); 
 
 
-const getAllModel1 = asyncHandler(async (req, res) => {
+const searchModel = asyncHandler(async (req, res) => {
   try {
     // Query parameters for filtering and pagination
-    const { type, category, images, isNew, earlyAccess, page = 1, limit = 10 } = req.query;
-
+    const { searchTerm, title, type, category, images, isNew } = req.query;
+    const page = Number(req.query.page) || 1; // Default to page 1
+    const limit = Number(req.query.limit) || 8; // Default to 8 items per page
+    const skip = (page - 1) * limit; // Calculate the number of documents to skip
+    const earlyAccess = req.query.earlyaccess;
     // Build query filters
-    const filters = {};
+    const filters = {
+      $or: [
+        { title: { $regex: searchTerm, $options: "i" } }, 
+        { category: { $regex: searchTerm, $options: "i" } }, 
+      ],
+    };
+
     if (type) filters.type = type;
-    if (category) filters.category = category;
+    // if (category) filters.category = category;
     if (isNew !== undefined) filters.isNew = isNew === 'true';
     if (earlyAccess !== undefined) filters.earlyAccess = earlyAccess === 'true';
     
     // If images query is provided, filter by the presence of images
     if (images) filters.images = { $in: images.split(',') }; // Assuming images are passed as a comma-separated list
 
-    // Paginate results
-    const skip = (page - 1) * limit;
 
-    // Fetch models from the database
-    const models = await Model.find(filters).skip(skip).limit(parseInt(limit)).lean();
 
-    // Add relative time for releaseDate
-    const results = models.map((model) => ({
-      ...model,
-      release: getRelativeTime(new Date(model.releaseDate)), // Add relative release time
-    }));
-
-    // Count total documents for pagination
-    const total = await Model.countDocuments(filters);
-
-    res.json({
-      total,
-      page: parseInt(page),
-      limit: parseInt(limit),
-      results,
-    });
-  } catch (error) {
-    console.error('Failed to fetch models:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
+      const total = await Model.countDocuments(filters); // Get total number of models
+      const models = await Model.find(filters).skip(skip).limit(limit).lean();; // Fetch models with pagination
+  
+      res.json({
+        models,
+        page,
+        pages: Math.ceil(total / limit), // Total number of pages
+        total,
+      });
+    } catch (error) {
+      res.status(500);
+      throw new Error('Error fetching models');
+    }
 });
 
 
@@ -250,4 +249,5 @@ module.exports = {
   createModel,
   deleteModel,
   getModels,
+  searchModel,
 };

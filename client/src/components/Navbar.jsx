@@ -7,12 +7,13 @@ import { getUserProfile } from "../services/userService";
 import { useAuth } from "../context/AuthContext";
 import FirestoreUserProfile from "./FirestoreUserProfile";
 import data from "../Helper/data.js";
-
+import { useSearch } from "../context/searchContext.js";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false); // Track if search is open
   const navigate = useNavigate();
+  const { setSearchTerm, searchTerm } = useSearch();
   // token
   const { user, setUser, token, setToken } = useAuth();
 
@@ -41,8 +42,8 @@ const Navbar = () => {
     setIsSearchOpen(!isSearchOpen);
   };
 
-  const handleSearch = () => {
-    setIsSearchOpen(!isSearchOpen);
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value); 
   };
 
   // Close menu or search if click happens outside
@@ -103,7 +104,7 @@ const Navbar = () => {
             <input
               ref={searchRef}
               type="text"
-              onChange={()=>handleSearch}
+              onChange={handleSearch}
               placeholder="Search..."
               className="flex py-2 px-20 pl-3 pr-8 border-0 lg:w-[300px] rounded-full bg-slate-700 text-lime-300 focus:outline-none focus:ring-1 focus:ring-lime-400"
             />
@@ -113,19 +114,18 @@ const Navbar = () => {
               alt="Search icon"
             />
           </div>
-         
+
           {/* Links */}
           <div>
             <ul className="w-full truncate flex justify-center items-start max-lg:hidden text-xs gap-4 text-gray-400 font-medium">
-            {
-              data.links.map((link) => (
-                <li key={link.id}  className=" text-center py-1 px-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-500">
-                  <Link  to={link.path} >
-                    {link.name}
-                  </Link>
+              {data.links.map((link) => (
+                <li
+                  key={link.id}
+                  className=" text-center py-1 px-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-500"
+                >
+                  <Link to={link.path}>{link.name}</Link>
                 </li>
-              ))
-              }
+              ))}
             </ul>
           </div>
         </div>
@@ -148,21 +148,20 @@ const Navbar = () => {
               className="absolute max-md:top-8 top-10 max-md:-right-6 -right-16 z-30 shadow-lg justify-center"
             >
               <ul className="flex flex-col items-center bg-slate-800 w-40 p-1 text-xs text-gray-400 font-medium">
-                {
-                  data.links.map((link,i) => (
-                    <li key={i} className="w-full text-center py-2 px-3 m-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-500">
-                      <Link to={link.path} >
-                        {link.name}
-                      </Link>
-                    </li>
-                  ))
-                }
+                {data.links.map((link, i) => (
+                  <li
+                    key={i}
+                    className="w-full text-center py-2 px-3 m-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-500"
+                  >
+                    <Link to={link.path}>{link.name}</Link>
+                  </li>
+                ))}
 
                 {token ? (
                   ""
                 ) : (
-                <li className="w-full text-center py-2 px-3 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
-                <Link to="/login">
+                  <li className="w-full text-center py-2 px-3 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
+                    <Link to="/login">
                       <button
                         className={`${
                           token ? "hidden" : ""
@@ -176,8 +175,8 @@ const Navbar = () => {
                 {token ? (
                   ""
                 ) : (
-                <li className="w-full text-center py-2 px-3 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
-                <Link to="/register">
+                  <li className="w-full text-center py-2 px-3 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
+                    <Link to="/register">
                       <button
                         className={`${
                           token ? "hidden" : ""
@@ -189,9 +188,9 @@ const Navbar = () => {
                     </Link>
                   </li>
                 )}
-                {token ?  (
-                <li className="w-full text-center py-2 px-3 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
-                <Link to="/login">
+                {token ? (
+                  <li className="w-full text-center py-2 px-3 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
+                    <Link to="/login">
                       <button
                         onClick={handleLogout}
                         className={`${
@@ -202,9 +201,9 @@ const Navbar = () => {
                       </button>
                     </Link>
                   </li>
-                ): (
+                ) : (
                   ""
-                ) }
+                )}
               </ul>
             </div>
           )}
