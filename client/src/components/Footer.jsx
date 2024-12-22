@@ -1,8 +1,10 @@
 import React from "react";
 import logo from "../assets/images/logo.svg"; // Replace with actual logo
-import twitter from "../assets/icons/twitter.svg"; 
+import twitter from "../assets/icons/twitter.svg";
 import facebook from "../assets/icons/facebook.svg";
 import instagram from "../assets/icons/instagram.svg";
+import { Link } from "react-router-dom";
+import data from "../Helper/data";
 
 const Footer = () => {
   return (
