@@ -181,6 +181,7 @@ const searchModel = asyncHandler(async (req, res) => {
         pages: Math.ceil(total / limit),
         total,
       });
+      return;
     }
 
     
