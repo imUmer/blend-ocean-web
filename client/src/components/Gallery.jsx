@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ModelCard from "./ModelCard";
+import ModelPopup from "./ModelPopup";
 import burgermenuf from "../assets/icons/burger-menu-gray-f.svg";
 import axios from "axios";
 
@@ -10,7 +11,11 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
+  const [selectedModel, setSelectedModel] = useState(null); // For popup
 
+  const handleModelClick = (model) => {
+    setSelectedModel(model);
+  };
   // Fetch models dynamically
   const fetchModels = async (page) => {
     setLoading(true);
@@ -75,6 +80,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
         </div>
       )}
 
+
       {/* <div className="w-64 h-full absolute md:h-full md:relative inline-block bg-black">
         <h1>sfsafasdf</h1>
       </div> */}
@@ -131,11 +137,13 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
           </div>
         </div>
         
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-        {models?.map((model,i) => (
-          <ModelCard key={i} model={model} />
+        {/* Models cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2" >
+        {models?.map((model) => (
+        <ModelCard key={model._id} model={model} handleModelClick={handleModelClick}  />
         ))}
       </div>
+
 
         {/* Pagination */}
       <div className="flex justify-center mt-6 space-x-2">
@@ -165,6 +173,14 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
           Next
         </button>
       </div>
+
+      {/* Popup */}
+      {selectedModel && (
+        <ModelPopup
+          model={selectedModel}
+          onClose={() => setSelectedModel(null)}
+        />
+      )}
       </div>
     </div>
   );
