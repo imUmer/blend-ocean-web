@@ -7,7 +7,7 @@ const FilterPopup = ({ isOpen, onClose }) => {
 
   const handleApply = () => {
     setFilters(localFilters); // Apply filters globally
-    console.log("Filter pop : " + filters);
+    console.log("Filter pop : " + filters , localFilters);
     onClose(); // Close popup
   };
 

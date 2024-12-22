@@ -145,21 +145,13 @@ const getModels = asyncHandler(async (req, res) => {
 const searchModel = asyncHandler(async (req, res) => {
   try {
     // Extract query parameters
-    const { searchTerm, page = 1, limit = 8,title, type, category, isNew, earlyAccess, images } = req.query;
+    const { searchTerm, page = 1, limit = 8, title, type, category, isNew, earlyAccess, images } = req.query;
 
     // Pagination setup
     const skip = (page - 1) * limit;
 
     // Initialize filters
     const filters = {};
-
-    // Add regex-based search for `title` and `category`
-    if (searchTerm) {
-      filters.$or = [
-        { title: { $regex: searchTerm, $options: "i" } },
-        { category: { $regex: searchTerm, $options: "i" } },
-      ];
-    }
 
     if (title) {
       filters.$or = [
@@ -172,6 +164,26 @@ const searchModel = asyncHandler(async (req, res) => {
         { category: { $regex: category, $options: "i" } },
       ];
     }
+
+    // Add regex-based search for `title` and `category`
+    if (searchTerm) {
+      filters.$or = [
+        { title: { $regex: searchTerm, $options: "i" } },
+        { category: { $regex: searchTerm, $options: "i" } },
+      ];
+    }
+    else{
+      const total = await Model.countDocuments(filters);
+      const models = await Model.find(filters).skip(skip).limit(Number(limit)).lean();
+      res.json({
+        models,
+        page: Number(page),
+        pages: Math.ceil(total / limit),
+        total,
+      });
+    }
+
+    
 
     // Add specific filters if provided
     if (type) filters.type = type;
