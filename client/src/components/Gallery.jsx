@@ -11,6 +11,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
+  const [total, setTotal] = useState(1);
   const [selectedModel, setSelectedModel] = useState(null); // For popup
 
   const handleModelClick = (model) => {
@@ -25,6 +26,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
       console.log(data);
       
       setPages(data.pages);
+      setTotal(data.total);
     } catch (error) {
       console.error(error);
     } finally {
@@ -49,8 +51,9 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
         const { data } = await axios.get(`/api/models/chunk?page=${page}&limit=8`);
         setModels(data.models);
       
-        setPages(data.pages);
         setEarlyAccessToggle(false);
+        setPages(data.pages);
+        setTotal(data.total);
       } catch (error) {
         console.error("Failed to fetch models:", error);
       } finally {
@@ -61,9 +64,10 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
         setLoading(true); // Show loading spinner
         const { data } = await axios.get(`/api/models/chunk?page=${page}&limit=8&earlyaccess=true`);
         setModels(data.models);
-      
-        setPages(data.pages);
+        
         setEarlyAccessToggle(true);
+        setPages(data.pages);
+        setTotal(data.total);
       } catch (error) {
         console.error("Failed to fetch models:", error);
       } finally {
@@ -96,7 +100,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
             <div className="flex flex-col">
               <h2 className="text-2xl w-full font-bold">MODELS</h2>
               <p className="text-gray-400 ">
-                {models[0]?.category || "All "} - {models.length} Results
+                {models[0]?.category || "All "} - {total} Results
               </p>
             </div>
           </div>
