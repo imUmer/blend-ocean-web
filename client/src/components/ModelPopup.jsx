@@ -10,7 +10,7 @@ const ModelPopup = ({ model, onClose }) => {
   if (!model) return null; // Return nothing if no model is selected
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-95 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
       <div className="bg-gray-800 text-gray-200 rounded-lg shadow-lg max-w-4xl w-full p-6 relative">
         {/* Close Button */}
         <button

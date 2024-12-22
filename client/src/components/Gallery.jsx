@@ -4,7 +4,7 @@ import ModelPopup from "./ModelPopup";
 import burgermenuf from "../assets/icons/burger-menu-gray-f.svg";
 import axios from "axios";
 
-const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
+const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
   const [models, setModels] = useState([]);
   const [earlyAccessToggle, setEarlyAccessToggle] = useState(false);
   // const [modelDetail, setModelDetail] = useState([]);
@@ -15,7 +15,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
   const [selectedModel, setSelectedModel] = useState(null); // For popup
 
   const handleModelClick = (model) => {
-    setSelectedModel(model);
+    setSelectedModel(model); 
   };
   // Fetch models dynamically
   const fetchModels = async (page) => {
@@ -97,6 +97,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
               alt=""
               onClick={toggleSidebar}
             />
+            
             <div className="flex flex-col">
               <h2 className="text-2xl w-full font-bold">MODELS</h2>
               <p className="text-gray-400 ">

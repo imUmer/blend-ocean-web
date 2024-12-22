@@ -41,6 +41,10 @@ const Navbar = () => {
     setIsSearchOpen(!isSearchOpen);
   };
 
+  const handleSearch = () => {
+    setIsSearchOpen(!isSearchOpen);
+  };
+
   // Close menu or search if click happens outside
   const handleClickOutside = (e) => {
     if (
@@ -99,6 +103,7 @@ const Navbar = () => {
             <input
               ref={searchRef}
               type="text"
+              onChange={()=>handleSearch}
               placeholder="Search..."
               className="flex py-2 px-20 pl-3 pr-8 border-0 lg:w-[300px] rounded-full bg-slate-700 text-lime-300 focus:outline-none focus:ring-1 focus:ring-lime-400"
             />
@@ -113,13 +118,13 @@ const Navbar = () => {
           <div>
             <ul className="w-full truncate flex justify-center items-start max-lg:hidden text-xs gap-4 text-gray-400 font-medium">
             {
-              // data.links.map((link) => (
-              //   <li key={link.id}  className=" text-center py-1 px-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-500">
-              //     <Link  to={link.path} >
-              //       {link.name}
-              //     </Link>
-              //   </li>
-              // ))
+              data.links.map((link) => (
+                <li key={link.id}  className=" text-center py-1 px-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-500">
+                  <Link  to={link.path} >
+                    {link.name}
+                  </Link>
+                </li>
+              ))
               }
             </ul>
           </div>
@@ -146,9 +151,9 @@ const Navbar = () => {
                 {
                   data.links.map((link,i) => (
                     <li key={i} className="w-full text-center py-2 px-3 m-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-500">
-                      {/* <Link to={link.path} >
+                      <Link to={link.path} >
                         {link.name}
-                      </Link> */}
+                      </Link>
                     </li>
                   ))
                 }
