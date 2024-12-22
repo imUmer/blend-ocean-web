@@ -142,47 +142,63 @@ const getModels = asyncHandler(async (req, res) => {
   }
 }); 
 
-
 const searchModel = asyncHandler(async (req, res) => {
   try {
-    // Query parameters for filtering and pagination
-    const { searchTerm, title, type, category, images, isNew } = req.query;
-    const page = Number(req.query.page) || 1; // Default to page 1
-    const limit = Number(req.query.limit) || 8; // Default to 8 items per page
-    const skip = (page - 1) * limit; // Calculate the number of documents to skip
-    const earlyAccess = req.query.earlyaccess;
-    // Build query filters
-    const filters = {
-      $or: [
-        { title: { $regex: searchTerm, $options: "i" } }, 
-        { category: { $regex: searchTerm, $options: "i" } }, 
-      ],
-    };
+    // Extract query parameters
+    const { searchTerm, page = 1, limit = 8,title, type, category, isNew, earlyAccess, images } = req.query;
 
+    // Pagination setup
+    const skip = (page - 1) * limit;
+
+    // Initialize filters
+    const filters = {};
+
+    // Add regex-based search for `title` and `category`
+    if (searchTerm) {
+      filters.$or = [
+        { title: { $regex: searchTerm, $options: "i" } },
+        { category: { $regex: searchTerm, $options: "i" } },
+      ];
+    }
+
+    if (title) {
+      filters.$or = [
+        { title: { $regex: title, $options: "i" } },
+      ];
+    }
+
+    if (category) {
+      filters.$or = [
+        { category: { $regex: category, $options: "i" } },
+      ];
+    }
+
+    // Add specific filters if provided
     if (type) filters.type = type;
     // if (category) filters.category = category;
     if (isNew !== undefined) filters.isNew = isNew === 'true';
     if (earlyAccess !== undefined) filters.earlyAccess = earlyAccess === 'true';
-    
-    // If images query is provided, filter by the presence of images
-    if (images) filters.images = { $in: images.split(',') }; // Assuming images are passed as a comma-separated list
 
+    // Filter by images if provided (assumes comma-separated list)
+    if (images) filters.images = { $in: images.split(",") };
 
+    // Fetch total count and filtered models
+    const total = await Model.countDocuments(filters);
+    const models = await Model.find(filters).skip(skip).limit(Number(limit)).lean();
 
-      const total = await Model.countDocuments(filters); // Get total number of models
-      const models = await Model.find(filters).skip(skip).limit(limit).lean();; // Fetch models with pagination
-  
-      res.json({
-        models,
-        page,
-        pages: Math.ceil(total / limit), // Total number of pages
-        total,
-      });
-    } catch (error) {
-      res.status(500);
-      throw new Error('Error fetching models');
-    }
+    // Respond with paginated results
+    res.json({
+      models,
+      page: Number(page),
+      pages: Math.ceil(total / limit),
+      total,
+    });
+  } catch (error) {
+    console.error("Error fetching models:", error);
+    res.status(500).json({ success: false, message: "Error fetching models" });
+  }
 });
+
 
 
 // @desc    Create a new model

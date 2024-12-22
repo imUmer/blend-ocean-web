@@ -7,7 +7,8 @@ import { getUserProfile } from "../services/userService";
 import { useAuth } from "../context/AuthContext";
 import FirestoreUserProfile from "./FirestoreUserProfile";
 import data from "../Helper/data.js";
-import { useSearch } from "../context/searchContext.js";
+import { useSearch } from "../context/SearchContext.js";
+import FilterPopup from "./FilterPopup";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,6 +22,19 @@ const Navbar = () => {
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
   const searchRef = useRef(null); // Ref for the search input
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const handleKeyDown = (e) => {
+      // alert("Helo", e.key);
+    //   if(e.cmdKey) {
+    //   alert("Helo");
+      
+    // }
+    if (e.ctrlKey && e.key === "k") {
+      e.preventDefault();
+      setIsFilterOpen((prev) => !prev);
+    }
+  };
 
   //  get user profile :
   const [profileData, setProfileData] = useState({
@@ -76,6 +90,10 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [user]);
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <nav className="bg-black shadow-md py-1 px-6 flex justify-between items-center">
@@ -248,6 +266,8 @@ const Navbar = () => {
           />
         </div>
       </div>
+      <FilterPopup isOpen={isFilterOpen} onClose={() => setIsFilterOpen(false)} />
+
     </nav>
   );
 };

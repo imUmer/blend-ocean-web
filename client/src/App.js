@@ -12,7 +12,7 @@ import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import ShowModel from "./pages/ShowModel";
-import { SearchProvider } from "./context/searchContext";
+import { SearchProvider } from "./context/SearchContext";
 
 const App = () => {
   return (

@@ -3,7 +3,7 @@ import ModelCard from "./ModelCard";
 import ModelPopup from "./ModelPopup";
 import burgermenuf from "../assets/icons/burger-menu-gray-f.svg";
 import axios from "axios";
-import { useSearch } from "../context/searchContext";
+import { useSearch } from "../context/SearchContext";
 
 const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
   const [models, setModels] = useState([]);
@@ -14,7 +14,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
   const [pages, setPages] = useState(1);
   const [total, setTotal] = useState(1);
   const [selectedModel, setSelectedModel] = useState(null); // For popup
-  const { searchTerm } = useSearch();
+  const { filters, searchTerm } = useSearch();
 
   const handleModelClick = (model) => {
     setSelectedModel(model); 
@@ -23,22 +23,32 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
   const fetchModels = async (page) => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`/api/models/search?page=${page}&limit=8&searchTerm=${searchTerm}`);
+      const { data } = await axios.get('/api/models/search', {
+        params: {
+          page,
+          limit: 8,
+          searchTerm,
+          ...filters, // Spread filters object into params
+        },
+      });
+  
       setModels(data.models);
-      console.log("Gallery: " + data);
-      
+      console.log("Gallery: ", data.models, " total: " +data.total);
+      console.log("Gallery filters: ", filters);
+  
       setPages(data.pages);
       setTotal(data.total);
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching models:", error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     fetchModels(page);
-  }, [page, searchTerm]);
+  }, [page, searchTerm, filters]);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= pages) {
