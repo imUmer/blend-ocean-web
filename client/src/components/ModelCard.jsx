@@ -1,7 +1,7 @@
 import React from "react";
 
 const ModelCard = ({ model }) => {
-  
+console.log("haha"+model.title);
   return (
     <div className=" bg-black/30 w-full hover:bg-gray-700 hover:text-lime-500 cursor-pointer rounded-lg shadow hover:shadow-lg"> 
           {model.earlyAccess === true ? <p className="text-lime-400 font-bold pl-2">•</p> : <p className="text-slate-400 font-bold pl-2">•</p> }  

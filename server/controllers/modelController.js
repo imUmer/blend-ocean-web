@@ -86,7 +86,8 @@ const getAllModel = asyncHandler(async (req, res) => {
   try {
     // Query parameters for filtering
     const { type, category, images, isNew, earlyAccess } = req.query;
-
+    console.log(category);
+    
     // Build query filters
     const filters = {};
     if (type) filters.type = type;
@@ -112,6 +113,35 @@ const getAllModel = asyncHandler(async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+// @desc    Get models with pagination
+// @route   GET /api/models
+// @access  Public
+const getModels = asyncHandler(async (req, res) => {
+  const page = Number(req.query.page) || 1; // Default to page 1
+  const limit = Number(req.query.limit) || 8; // Default to 8 items per page
+  const skip = (page - 1) * limit; // Calculate the number of documents to skip
+  const earlyAccess = req.query.earlyaccess;
+  console.log(earlyAccess);
+   // Build query filters
+   const filters = {};
+   if (earlyAccess !== undefined) filters.earlyAccess = earlyAccess === 'true';
+
+  try {
+    const total = await Model.countDocuments(filters); // Get total number of models
+    const models = await Model.find(filters).skip(skip).limit(limit); // Fetch models with pagination
+
+    res.json({
+      models,
+      page,
+      pages: Math.ceil(total / limit), // Total number of pages
+      total,
+    });
+  } catch (error) {
+    res.status(500);
+    throw new Error('Error fetching models');
+  }
+}); 
+
 
 const getAllModel1 = asyncHandler(async (req, res) => {
   try {
@@ -219,4 +249,5 @@ module.exports = {
   getEAModel,
   createModel,
   deleteModel,
+  getModels,
 };

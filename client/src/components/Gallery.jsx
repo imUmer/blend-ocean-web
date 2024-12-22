@@ -1,40 +1,50 @@
 import React, { useState, useEffect } from "react";
 import ModelCard from "./ModelCard";
 import burgermenuf from "../assets/icons/burger-menu-gray-f.svg";
+import axios from "axios";
 
 const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
   const [models, setModels] = useState([]);
   const [earlyAccessToggle, setEarlyAccessToggle] = useState(false);
   // const [modelDetail, setModelDetail] = useState([]);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
+
+  // Fetch models dynamically
+  const fetchModels = async (page) => {
+    setLoading(true);
+    try {
+      const { data } = await axios.get(`/api/models/chunk?page=${page}&limit=8`);
+      setModels(data.models);
+      console.log(data);
+      
+      setPages(data.pages);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchModels = async () => {
-      try {
-        setLoading(true); // Show loading spinner
-        const response = await fetch("/api/models"); // Replace with your API endpoint
-        const data = await response.json();
-        console.log(data[0].category);
+    fetchModels(page);
+  }, [page]);
 
-        setModels(data); // Assuming `data.models` contains the array of models
-      } catch (error) {
-        console.error("Failed to fetch models:", error);
-      } finally {
-        setLoading(false); // Hide loading spinner
-      }
-    };
-
-    fetchModels();
-  }, []);
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= pages) {
+      setPage(newPage);
+    }
+  }; 
 
   const getEarlyAccessModels = async () => {
     if (earlyAccessToggle === true) {
       try {
         setLoading(true); // Show loading spinner
-        const response = await fetch("/api/models");
-        const data = await response.json();
-
-        setModels(data);
+        const { data } = await axios.get(`/api/models/chunk?page=${page}&limit=8`);
+        setModels(data.models);
+      
+        setPages(data.pages);
         setEarlyAccessToggle(false);
       } catch (error) {
         console.error("Failed to fetch models:", error);
@@ -44,10 +54,10 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
     } else
       try {
         setLoading(true); // Show loading spinner
-        const response = await fetch("/api/models/eamodels");
-        const data = await response.json();
-
-        setModels(data);
+        const { data } = await axios.get(`/api/models/chunk?page=${page}&limit=8&earlyaccess=true`);
+        setModels(data.models);
+      
+        setPages(data.pages);
         setEarlyAccessToggle(true);
       } catch (error) {
         console.error("Failed to fetch models:", error);
@@ -120,23 +130,41 @@ const Gallery = ({ toggleSidebar, isSidebarOpen }) => {
             </select>
           </div>
         </div>
+        
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        {models?.map((model,i) => (
+          <ModelCard key={i} model={model} />
+        ))}
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-          {models.map((model) => (
-            <ModelCard key={model._id} model={model} />
-          ))}
-        </div>
-
-        <div className="flex flex-wrap gap-2 justify-center mt-6 space-x-2">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((page) => (
-            <button
-              key={page}
-              className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
-            >
-              {page}
-            </button>
-          ))}
-        </div>
+        {/* Pagination */}
+      <div className="flex justify-center mt-6 space-x-2">
+        <button
+          onClick={() => handlePageChange(page - 1)}
+          className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+          disabled={page === 1}
+        >
+          Previous
+        </button>
+        {Array.from({ length: pages }, (_, i) => i + 1).map((pageNumber) => (
+          <button
+            key={pageNumber}
+            onClick={() => handlePageChange(pageNumber)}
+            className={`px-3 py-1 ${
+              page === pageNumber ? "bg-lime-500" : "bg-gray-700"
+            } text-white rounded hover:bg-gray-600`}
+          >
+            {pageNumber}
+          </button>
+        ))}
+        <button
+          onClick={() => handlePageChange(page + 1)}
+          className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+          disabled={page === pages}
+        >
+          Next
+        </button>
+      </div>
       </div>
     </div>
   );
