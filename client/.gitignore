@@ -9,6 +9,7 @@
 /src/components/ListingItems.jsx
 /src/components/ImageToBinary.jsx
 /src/components/FirestoreSingleDocument.jsx
+/src/components/Carousel.jsx
 
 
 # dependencies

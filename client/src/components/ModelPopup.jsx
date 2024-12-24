@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const ModelPopup = ({ model, onClose }) => {
   const [selectedImage, setSelectedImage] = useState(
-    model.images.length > 0
+    model?.images?.length > 0
       ? model.images[0]
       : "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg"
   );
@@ -45,7 +45,7 @@ const ModelPopup = ({ model, onClose }) => {
 
             {/* Thumbnail Images */}
             <div className="flex gap-2 max-md:justify-center overflow-x-auto">
-              {model.images.length > 0 ? (
+              {model?.images?.length > 0 ? (
                 model.images.map((image, index) => (
                   <img
                     key={index}

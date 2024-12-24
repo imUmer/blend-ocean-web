@@ -123,32 +123,11 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
             >
               {earlyAccessToggle ? "All Items" : "Early Access Items"}
             </button>
-            <button
-              id="dropdownHoverButton"
-              data-dropdown-toggle="dropdownHover"
-              data-dropdown-trigger="hover"
-              className="text-white w-full bg-gray-700 lg:text-sm text-xs hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              type="button"
-            >
-              Dropdown hover
-              <svg
-                className="w-1.5 h-2.5 ms-3 sm:w-2.5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 10 6"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m1 1 4 4 4-4"
-                />
-              </svg>
-            </button>
-            <select className="bg-gray-900  w-full lg:text-sm text-xs text-white px-4 py-2 rounded-full">
+
+            <select className="bg-gray-900  w-52 lg:text-sm text-xs text-white px-4 py-2  rounded-full">
               <option>Sorted By: Newest</option>
+              <option>Sorted By: Oldest</option>
+
             </select>
           </div>
         </div>

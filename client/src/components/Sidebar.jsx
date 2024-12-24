@@ -80,7 +80,7 @@ const Sidebar = ({ toggleSidebar }) => {
                 onClick={() => toggleSubMenu(menu.name)}
               >
                 <div className="flex gap-2 justify-start items-center">
-                  <img src={model} className="w-5" alt="menu icon" />
+                  <img src={model} className="w-5" alt="" />
                   <span className="text-lg">{menu.name}</span>
                 </div>
                 {menu.submenus.length > 0 && (

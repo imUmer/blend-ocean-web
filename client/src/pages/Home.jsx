@@ -4,7 +4,7 @@ import model from "../assets/images/model.png";
 import S1 from "../assets/images/S1";
 import S2 from "../assets/images/S2";
 import S3 from "../assets/images/S3";
-import Carousel from "../components/Carousal";
+import Carousel from "../components/Carousel";
 import house from "../assets/images/house.jpeg";
 import blend from "../assets/icons/blend.svg";
 import fbx from "../assets/icons/fbx.svg";
@@ -86,8 +86,10 @@ export default function Home() {
       <div className="section ">
         <div className="w-full h-fit flex justify-center items-center flex-wrap m-8 lg:gap-10 gap-6 ">
           <div className="overflow-hidden w-80 rounded-xl bg-black">
-            <div className="rounded-xl overflow-hidden w-full">
-              <S1 />
+            <div className="rounded-xl overflow-hidden w-full group">
+              <div className="transform transition-transform duration-500 group-hover:scale-110">
+                <S1 className="cursor-cell" />
+              </div>
             </div>
             <div className="bg-black flex items-center justify-center gap-9 p-2 font-semibold text-white text-center">
               <h1 className="text-2xl uppercase">Models</h1>
@@ -96,9 +98,12 @@ export default function Home() {
               </button>
             </div>
           </div>
-          <div className="bg-gray-900 overflow-hidden w-80 rounded-xl">
-            <div className="rounded-xl overflow-hidden w-full">
-              <S2 />
+
+          <div className="bg-black overflow-hidden w-80 rounded-xl">
+            <div className="rounded-xl overflow-hidden w-full group">
+              <div className="transform transition-transform duration-500 group-hover:scale-110">
+              <S2 className="cursor-cell"/>
+            </div>
             </div>
             <div className="flex items-center justify-center gap-9 p-2 font-semibold text-white text-center">
               <h1 className="text-2xl uppercase">Models</h1>
@@ -107,9 +112,11 @@ export default function Home() {
               </button>
             </div>
           </div>
-          <div className="bg-gray-900 overflow-hidden w-80 rounded-xl">
-            <div className="rounded-xl overflow-hidden w-full">
-              <S3 />
+          <div className="bg-black overflow-hidden w-80 rounded-xl">
+            <div className="rounded-xl overflow-hidden w-full group">
+              <div className="transform transition-transform duration-500 group-hover:scale-110">
+              <S3 className="cursor-cell"/>
+            </div>
             </div>
             <div className="flex items-center justify-center gap-9 p-2 font-semibold text-white text-center">
               <h1 className="text-2xl uppercase">Models</h1>
@@ -204,12 +211,12 @@ export default function Home() {
           </p>
           <h1 className="text-xl font-semibold uppercase">
             blender native files, .fbx & .obj
-            </h1>
-            <div className="w-fit flex-wrap flex justify-between gap-6 mt-2">
-                <img src={blend} alt="blend" className="p-2 bg-black rounded-xl" />
-                <img src={fbx} alt="fbx"  className="p-2 bg-black rounded-xl" />
-                <img src={obj} alt="obj"  className="p-2 bg-black rounded-xl" />
-            </div>
+          </h1>
+          <div className="w-fit flex-wrap flex justify-between gap-6 mt-2">
+            <img src={blend} alt="blend" className="p-2 bg-black rounded-xl" />
+            <img src={fbx} alt="fbx" className="p-2 bg-black rounded-xl" />
+            <img src={obj} alt="obj" className="p-2 bg-black rounded-xl" />
+          </div>
         </div>
         <div className=" w-2/4 h-full pl-6">
           <img src={house} alt="" />
