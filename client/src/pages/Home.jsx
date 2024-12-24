@@ -9,6 +9,8 @@ import house from "../assets/images/house.jpeg";
 import blend from "../assets/icons/blend.svg";
 import fbx from "../assets/icons/fbx.svg";
 import obj from "../assets/icons/obj.svg";
+import HeroSlider from "../components/HeroSlider";
+import CardCarousel from "../components/CardCarousel";
 
 // const slides = [
 //   "https://via.placeholder.com/600x400/FF0000/FFFFFF?text=Slide+1",
@@ -47,41 +49,8 @@ export default function Home() {
 
   return (
     <div className=" min-h-screen">
-      {/* Hero Slider */}
-      <div className="relative w-full h-[650px] overflow-hidden">
-        {slides.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`absolute w-full h-full transition-transform duration-700 ease-in-out ${
-              index === currentSlide ? "translate-x-0" : "translate-x-full"
-            }`}
-            style={{
-              backgroundImage: `url('../assets/images/model.png')`,
-              backgroundSize: "contain",
-            }}
-          >
-            <div className="flex items-center justify-center h-full bg-black bg-opacity-50">
-              <h1 className="text-4xl md:text-6xl font-bold text-white">
-                {slide.text}
-              </h1>
-            </div>
-          </div>
-        ))}
-
-        {/* Slider Controls */}
-        <button
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white bg-gray-800 px-4 py-2 rounded-full"
-          onClick={prevSlide}
-        >
-          &#9664;
-        </button>
-        <button
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white bg-gray-800 px-4 py-2 rounded-full"
-          onClick={nextSlide}
-        >
-          &#9654;
-        </button>
-      </div>
+      <HeroSlider />
+     <CardCarousel />
 
       <div className="section ">
         <div className="w-full h-fit flex justify-center items-center flex-wrap m-8 lg:gap-10 gap-6 ">
