@@ -1,5 +1,7 @@
 import React, { useRef, useState } from "react";
-import "../assets/images/model.png"; // Replace with your actual image paths
+import logobo from "../assets/logos/logobo.svg";
+import logo from "../assets/logos/logo.svg";
+import logoa from "../assets/logos/logo.png";
 
 const images = [
   require("../assets/images/h1.png"),
@@ -28,7 +30,7 @@ const HeroSlider = () => {
   return (
     <div className="relative w-full  mx-auto">
       {/* Carousel Container */}
-      <div className="overflow-hidden">
+      <div className="overflow-hidden ">
         <div
           className="flex transition-transform duration-500"
           style={{
@@ -59,20 +61,27 @@ const HeroSlider = () => {
       >
         &#10095;
       </button>
-
+      <div className="absolute z-30 bottom-[50%]   w-full items-center flex justify-center mt-4 space-x-2">
+      <div className="items-center flex flex-col justify-center mt-4 space-x-2">
+        <img src={logoa} alt="logo" className="mx-auto w-32 shadow-md cursor-crosshair" />
+        <img src={logo} alt="logo" className="mx-auto w-52 shadow-md cursor-crosshair" />
+        </div>
+        </div>
       {/* Dots for Navigation */}
-      <div className="absolute bottom-[10%] left-[44%] flex justify-center mt-4 space-x-2">
+      <div className="absolute bottom-[10%] w-full items-center flex justify-center mt-4 space-x-2">
+      <div className=" items-center flex justify-center mt-4 space-x-2">
         {images.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
             className={`h-3 w-3 rounded-full ${
               currentIndex === index
-                ? "bg-blue-500"
+                ? "bg-lime-300"
                 : "bg-gray-300 hover:bg-gray-400"
             }`}
           />
         ))}
+      </div>
       </div>
     </div>
   );
