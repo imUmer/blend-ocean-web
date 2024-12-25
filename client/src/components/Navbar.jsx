@@ -26,11 +26,6 @@ const Navbar = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const handleKeyDown = (e) => {
-    // alert("Helo", e.key);
-    //   if(e.cmdKey) {
-    //   alert("Helo");
-
-    // }
     if (e.metaKey && e.key === "k") {
       e.preventDefault();
       setIsFilterOpen((prev) => !prev);
@@ -55,6 +50,7 @@ const Navbar = () => {
   // Toggle search visibility
   const handleSearchClick = () => {
     setIsSearchOpen(!isSearchOpen);
+    setIsFilterOpen((prev) => !prev);
   };
 
   const handleSearch = (e) => {

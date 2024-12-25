@@ -4,23 +4,12 @@ import React, { useState, useEffect } from "react";
 
 const AnimatedSearchBar = ({handleSearch}) => {
   const [animationStep, setAnimationStep] = useState(0); // Track the animation step
-  const [hide, setHide] = useState(0); // Track the animation step
   const [isHovered, setIsHovered] = useState(false); // Track hover state
 
   // Automatically change animation step every 2 seconds (2000ms)
   useEffect(() => {
     const interval = setInterval(() => {
-        if (animationStep) {
-            switch (animationStep) {
-                case 0:
-                    setHide(0)
-                    break;
-            
-                default:
-                    break;
-            }
-        }
-      setAnimationStep((prevStep) => (prevStep + 1) % 3); // Cycle through 3 steps
+        setAnimationStep((prevStep) => (prevStep + 1) % 3); // Cycle through 3 steps
     }, 2000); // Change step every 2 seconds
 
     // Cleanup interval when component unmounts
@@ -28,7 +17,7 @@ const AnimatedSearchBar = ({handleSearch}) => {
   }, []);
 
   return (
-    <div className="relative w-full max-w-md mx-auto"
+    <div className="hidden md:block relative w-full max-w-md mx-auto"
     onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
     >
@@ -79,7 +68,7 @@ const AnimatedSearchBar = ({handleSearch}) => {
         
         {/* Tooltip */}
         {isHovered && (
-          <div className="absolute -bottom-8 left-0 text-lime-300 text-xs font-semibold animate-bounce">
+          <div className="absolute -bottom-8 text-nowrap left-0 text-lime-300 text-xs font-semibold animate-bounce">
             Press short-cut keys for quick access!
           </div>
         )}
