@@ -14,7 +14,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false); // Track if search is open
   const navigate = useNavigate();
-  const { setSearchTerm, searchTerm } = useSearch();
+  const { setSearchTerm } = useSearch();
   // token
   const { user, setUser, token, setToken } = useAuth();
 
@@ -30,7 +30,7 @@ const Navbar = () => {
     //   alert("Helo");
       
     // }
-    if (e.ctrlKey && e.key === "k") {
+    if (e.metaKey && e.key === "k") {
       e.preventDefault();
       setIsFilterOpen((prev) => !prev);
     }
@@ -57,7 +57,10 @@ const Navbar = () => {
   };
 
   const handleSearch = (e) => {
-    setSearchTerm(e.target.value); 
+    if(e.target.value.length > 3) 
+      setSearchTerm(e.target.value); 
+    else
+    setSearchTerm(""); 
   };
 
   // Close menu or search if click happens outside
@@ -123,7 +126,7 @@ const Navbar = () => {
               ref={searchRef}
               type="text"
               onChange={handleSearch}
-              placeholder="Search..."
+              placeholder="Search... 3 characters atleast"
               className="flex py-2 px-20 pl-3 pr-8 border-0 lg:w-[300px] rounded-full bg-slate-700 text-lime-300 focus:outline-none focus:ring-1 focus:ring-lime-400"
             />
             <img
