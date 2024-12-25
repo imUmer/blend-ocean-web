@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useMenu } from '../context/MenuContext';
 import model from '../assets/icons/model.svg';
 import { Link } from 'react-router-dom';
+import {mainmenu} from "../Helper/data.js";
 
 const Sidebar = ({ toggleSidebar }) => {
   const { menus, setMenus } = useMenu(); // Use Menu Context
@@ -9,6 +10,7 @@ const Sidebar = ({ toggleSidebar }) => {
   const [loading, setLoading] = useState(false); // Loading state
 
   useEffect(() => {
+    
     const fetchMenu = async () => {
       if (menus) return; // If menus are already fetched, skip the fetch
 

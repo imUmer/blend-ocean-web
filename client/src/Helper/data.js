@@ -10,4 +10,14 @@ const data = {
   footer: "© 2024 My Website",
 };
 
-export default data; 
+const mainmenu = {
+  title: "Main Menu",
+  menus: [
+    { id: 1, name: "Textures", path: "/textures" },
+    { id: 2, name: "Models", path: "/models" },
+    { id: 3, name: "HDRI's", path: "/hdris" },
+  ]
+};
+
+// Named exports for both constants
+export { data, mainmenu };

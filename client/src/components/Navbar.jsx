@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { getUserProfile } from "../services/userService";
 import { useAuth } from "../context/AuthContext";
 import FirestoreUserProfile from "./FirestoreUserProfile";
-import data from "../Helper/data.js";
+import {data} from "../Helper/data.js";
 import { useSearch } from "../context/SearchContext.js";
 import FilterPopup from "./FilterPopup";
 import AnimatedSearchBar from "./AnimatedSearchbar.jsx";
