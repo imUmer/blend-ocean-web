@@ -57,7 +57,7 @@ const Navbar = () => {
   };
 
   const handleSearch = (e) => {
-    if(e.target.value.length > 3) 
+    if(e.target.value.length >= 3) 
       setSearchTerm(e.target.value); 
     else
     setSearchTerm(""); 
