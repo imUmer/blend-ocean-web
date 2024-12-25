@@ -9,6 +9,7 @@ import FirestoreUserProfile from "./FirestoreUserProfile";
 import data from "../Helper/data.js";
 import { useSearch } from "../context/SearchContext.js";
 import FilterPopup from "./FilterPopup";
+import AnimatedSearchBar from "./AnimatedSearchbar.jsx";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,10 +26,10 @@ const Navbar = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const handleKeyDown = (e) => {
-      // alert("Helo", e.key);
+    // alert("Helo", e.key);
     //   if(e.cmdKey) {
     //   alert("Helo");
-      
+
     // }
     if (e.metaKey && e.key === "k") {
       e.preventDefault();
@@ -57,10 +58,8 @@ const Navbar = () => {
   };
 
   const handleSearch = (e) => {
-    if(e.target.value.length >= 3) 
-      setSearchTerm(e.target.value); 
-    else
-    setSearchTerm(""); 
+    if (e.target.value.length >= 3) setSearchTerm(e.target.value);
+    else setSearchTerm("");
   };
 
   // Close menu or search if click happens outside
@@ -119,22 +118,8 @@ const Navbar = () => {
               onClick={handleSearchClick}
             />
           </div>
-
           {/* Search input (visible on larger screens) */}
-          <div className="hidden md:block relative">
-            <input
-              ref={searchRef}
-              type="text"
-              onChange={handleSearch}
-              placeholder="Search... 3 characters atleast"
-              className="flex py-2 px-20 pl-3 pr-8 border-0 lg:w-[300px] rounded-full bg-slate-700 text-lime-300 focus:outline-none focus:ring-1 focus:ring-lime-400"
-            />
-            <img
-              className="absolute p-0.5 z-20 top-1 right-1.5 cursor-pointer hover:bg-lime-500/50 rounded-lg"
-              src={search}
-              alt="Search icon"
-            />
-          </div>
+          <AnimatedSearchBar handleSearch={handleSearch} />
 
           {/* Links */}
           <div>
@@ -269,8 +254,10 @@ const Navbar = () => {
           />
         </div>
       </div>
-      <FilterPopup isOpen={isFilterOpen} onClose={() => setIsFilterOpen(false)} />
-
+      <FilterPopup
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+      />
     </nav>
   );
 };
