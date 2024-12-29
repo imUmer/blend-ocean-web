@@ -1,14 +1,22 @@
 const mongoose = require('mongoose');
 
+
+// Define submenu schema
 const submenuSchema = new mongoose.Schema({
-  name: String,
-  link: String, // Link for navigation
+  id: { type: Number, required: true },
+  name: { type: String, required: true },
+  subname: { type: String, required: true },
+  count: { type: Number, required: true },
+  path: { type: String, required: true },
 });
 
 const menuSchema = new mongoose.Schema({
+  id: Number,
   name: String,
-  submenus: [submenuSchema], // Array of submenu objects
+  submenus: [], // Array of submenu objects
+  path: String,
 });
 
+const Submenu = mongoose.model("Submenu", submenuSchema);
 const Menu = mongoose.model('Menu', menuSchema);
-module.exports = Menu;
+module.exports = {Menu, Submenu};

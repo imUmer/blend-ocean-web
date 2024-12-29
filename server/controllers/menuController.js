@@ -1,5 +1,5 @@
 const asyncHandler = require('express-async-handler');
-const Menu = require('../models/menuModel');
+const {Menu, Submenu} = require('../models/menuModel');
 const bcrypt = require('bcryptjs');
 
 // @desc    Get logged-in menu
@@ -61,8 +61,48 @@ const deleteMenu = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Create a SubMenu by ID (Admin only)
+// @route   Create /api/submenu/create
+// @access  Private/Admin
+const createSubMenu = asyncHandler(async (req, res, next) => {
+  
+  const { submenus  } = req.body;
+
+  try {
+    const data_submenus = new Submenu({submenus});
+    // await data_submenus.save();
+
+    await Submenu.deleteMany();
+
+    const documents = [];
+
+    submenus.forEach((submenu) => {
+      const parentPath = submenu.name.toLowerCase().replace(/\s+/g, "-"); // Convert name to lowercase and hyphenate
+
+      submenu.submenu.forEach((item) => {
+        const path = `/${parentPath}/${item.name.toLowerCase()}`;
+        documents.push({
+          id: submenu.id,
+          name: submenu.name,
+          subname: item.name,
+          count: item.count,
+          path: path,
+        });
+      });
+    });
+
+    // Insert transformed data into MongoDB
+    await Submenu.insertMany(documents);
+
+    res.status(201).json({ message: 'SubMenu Created successfully' });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = {
   getAllMenu,
   createMenu,
   deleteMenu,
+  createSubMenu,
 };

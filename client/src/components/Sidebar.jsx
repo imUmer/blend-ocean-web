@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useMenu } from '../context/MenuContext';
 import model from '../assets/icons/model.svg';
+import texture from '../assets/icons/texture.svg';
+import hdris from '../assets/icons/hdris.svg';
+import arrow from '../assets/icons/arrow.svg';
 import { Link } from 'react-router-dom';
 import {mainmenu} from "../Helper/data.js";
 
@@ -11,6 +14,57 @@ const Sidebar = ({ toggleSidebar }) => {
 
   useEffect(() => {
     
+    const mainmenu = {
+      title: "Main Menu",
+      menus: [
+        { id: 1, name: "Textures", path: "/textures", submenus: [] },
+        { id: 2, name: "Models", path: "/models", submenus: [] },
+        { id: 3, name: "HDRI's", path: "/hdris", submenus: [] },
+      ],
+    };
+    
+    // Simulated fetched data
+    const fetchedSubmenus = [
+      { id: 1, name: "Paper", submenu: { damaged: 20, plain: 10 } },
+      { id: 2, name: "Plastic", submenu: { form: 15, plastic: 25, rubber: 10 } },
+      { id: 3, name: "HDRI Types", submenu: { "HDRI 1": 12, "HDRI 2": 8 } },
+    ];
+    
+    // Add more fetched submenu data dynamically
+    fetchedSubmenus.push(
+      { id: 1, name: "Fabric", submenu: { cotton: 12, silk: 8 } }, // Adds to Textures
+      { id: 2, name: "Metal", submenu: { steel: 20, iron: 15 } }   // Adds to Models
+    );
+    
+    // Function to map fetched submenus to the corresponding main menu
+    function mapFetchedSubmenus(mainmenu, fetchedSubmenus) {
+      const updatedMainMenu = { ...mainmenu };
+    
+      fetchedSubmenus.forEach((submenu) => {
+        const targetMenu = updatedMainMenu.menus.find((menu) => menu.id === submenu.id);
+    
+        if (targetMenu) {
+          // Calculate the total count for the submenu
+          const total = Object.values(submenu.submenu).reduce((acc, count) => acc + count, 0);
+    
+          // Push the submenu with totals and details to the corresponding menu
+          targetMenu.submenus.push({
+            name: submenu.name,
+            total,
+            details: submenu.submenu,
+          });
+        }
+      });
+    
+      return updatedMainMenu;
+    }
+    
+    // Add dynamic submenus to the main menu
+    const updatedMainMenu = mapFetchedSubmenus(mainmenu, fetchedSubmenus);
+    
+    console.log(updatedMainMenu);
+    
+
     const fetchMenu = async () => {
       if (menus) return; // If menus are already fetched, skip the fetch
 
@@ -82,11 +136,11 @@ const Sidebar = ({ toggleSidebar }) => {
                 onClick={() => toggleSubMenu(menu.name)}
               >
                 <div className="flex gap-2 justify-start items-center">
-                  <img src={model} className="w-5" alt="" />
+                  <img src={menu.name === "Textures" ? texture : menu.name === "Models" ? model : hdris } className="w-5" alt="" />
                   <span className="text-lg">{menu.name}</span>
                 </div>
                 {menu.submenus.length > 0 && (
-                  <span>{subMenuOpen[menu.name] ? '-' : '+'}</span>
+                  <span> <img src={arrow } className={`${subMenuOpen[menu.name] ? "rotate-180" : "rotate-0" } w-3`} alt="" /></span>
                 )}
               </div>
               {subMenuOpen[menu.name] && (

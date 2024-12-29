@@ -3,6 +3,7 @@
 # For testing purpose Local files 
 /test.txt
 /structure.txt
+/server/helper
 
 # dependencies
 /node_modules
