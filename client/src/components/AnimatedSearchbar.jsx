@@ -27,7 +27,7 @@ const AnimatedSearchBar = ({handleSearch}) => {
         <input
           type="text"
           onChange={handleSearch}  // "scale-110 opacity-100" : "scale-90 opacity-0"
-          placeholder="Search... 3 characters at least"
+          placeholder="Search...atleast 3 letters"
           className={`${animationStep === 0 ? "px-10" : "px-20 "} flex py-2  pl-3 pr-30 border-0 w-full rounded-full bg-slate-700 text-lime-300 focus:outline-none focus:ring-1 focus:ring-lime-400 transition-all duration-500`}
         />
 
