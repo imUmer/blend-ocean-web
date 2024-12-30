@@ -140,11 +140,45 @@ const createSubMenu = asyncHandler(async (req, res, next) => {
   }
 });
 
+// @desc    Get Menu with Populated Submenus
+// @route   GET /api/menu/:menuId
+// @access  Public
+const getMenuWithSubmenus = asyncHandler(async (req, res) => {
+  const { menuId } = req.params;
 
+  try {
+    // Find the menu by ID
+    const menu = await Menu.findOne({ id: Number(menuId) });
+    if (!menu) {
+      return res.status(404).json({ message: 'Menu not found' });
+    }
+
+    // Fetch submenus associated with this menu ID
+    const submenus = await Submenu.find({ id: Number(menuId) });
+
+    // Attach the submenus directly to the menu object
+    const result = {
+      ...menu.toObject(), // Convert Mongoose document to plain JS object
+      submenus: submenus.map((submenu) => ({
+        id: submenu.id,
+        name: submenu.name,
+        subname: submenu.subname,
+        count: submenu.count,
+        path: submenu.path,
+        submenus: submenu.submenus, // Nested submenus
+      })),
+    };
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+});
 
 module.exports = {
   getAllMenu,
   createMenu,
   deleteMenu,
   createSubMenu,
+  getMenuWithSubmenus,
 };
