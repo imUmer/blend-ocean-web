@@ -10,6 +10,6 @@ router.post('/create', createMenu);
 router.get('/submenu', (req,res)=> {
     res.send("Haha");
 });
-router.post('/submenu/create', createSubMenu);
+router.post('/:menuId/submenu/create', createSubMenu);
 
 module.exports = router;

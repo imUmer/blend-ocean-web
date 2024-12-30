@@ -76,44 +76,71 @@ const deleteMenu = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Create a SubMenu by ID (Admin only)
-// @route   Create /api/submenu/create
+// @desc    Create Submenus for an existing Menu
+// @route   POST /api/menu/:menuId/submenu/create
 // @access  Private/Admin
 const createSubMenu = asyncHandler(async (req, res, next) => {
-  
-  const { submenus  } = req.body;
+  const { menuId } = req.params; // Parent menu ID
+  const { submenus } = req.body; // Submenu data to add
+
+  if (!menuId || !submenus || submenus.length === 0) {
+    return res.status(400).json({ message: 'Please provide a valid Menu ID and submenus' });
+  }
 
   try {
-    const data_submenus = new Submenu({submenus});
-    // await data_submenus.save();
+    // Verify the parent menu exists
+    const parentMenu = await Menu.findOne({ id: Number(menuId) });
+    if (!parentMenu) {
+      return res.status(404).json({ message: 'Parent Menu not found' });
+    }
 
-    await Submenu.deleteMany();
+    const documents = []; // Store submenu documents to be created
 
-    const documents = [];
-
+    // Process each submenu
     submenus.forEach((submenu) => {
-      const parentPath = submenu.name.toLowerCase().replace(/\s+/g, "-"); // Convert name to lowercase and hyphenate
+      const parentPath = parentMenu.name.toLowerCase().replace(/\s+/g, "-"); // Convert parent menu name to path format
+      const submenuPath = `/${parentPath}/${submenu.name.toLowerCase().replace(/\s+/g, "-")}`;
 
-      submenu.submenu.forEach((item) => {
-        const path = `/${parentPath}/${item.name.toLowerCase()}`;
-        documents.push({
-          id: submenu.id,
-          name: submenu.name,
-          subname: item.name,
-          count: item.count,
-          path: path,
+      // Process nested submenus, if present
+      const nestedSubmenus = [];
+      let totalCount = submenu.count || 0; // Initialize total count for nested submenus
+
+      if (submenu.submenus && submenu.submenus.length > 0) {
+        submenu.submenus.forEach((nested) => {
+          const nestedPath = `${submenuPath}/${nested.subname.toLowerCase().replace(/\s+/g, "-")}`;
+          totalCount += nested.count;
+          nestedSubmenus.push({
+            id: Number(menuId), // Parent menu ID for nested submenu
+            name: submenu.name, // Parent submenu name
+            subname: nested.subname, // Nested submenu name
+            count: nested.count, // Nested submenu count
+            path: nestedPath, // Nested submenu path
+            submenus: [], // Further nesting can be added if required
+          });
         });
+      }
+
+      // Push the processed submenu with its nested submenus
+      documents.push({
+        id: Number(menuId),
+        name: parentMenu.name,
+        subname: submenu.name, // Submenu name
+        count: totalCount, // Total count including nested submenus
+        path: submenuPath, // Path for the submenu
+        submenus: nestedSubmenus, // Nested submenus
       });
     });
 
-    // Insert transformed data into MongoDB
+    // Insert documents into Submenu collection
     await Submenu.insertMany(documents);
 
-    res.status(201).json({ message: 'SubMenu Created successfully' });
+    res.status(201).json({ message: 'Submenus created successfully', submenus: documents });
   } catch (error) {
     next(error);
   }
 });
+
+
 
 module.exports = {
   getAllMenu,
