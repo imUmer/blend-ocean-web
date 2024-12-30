@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import "./App.css";
 import Navbar from "./components/Navbar";
+import Test from './components/Test'; // This is for testing purpose
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import ShowModel from "./pages/ShowModel";
@@ -21,6 +22,7 @@ const App = () => {
         <SearchProvider>
           <Router>
             <Navbar />
+             <Test /> {/*this is for testing purpose */}
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />

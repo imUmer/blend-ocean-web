@@ -31,16 +31,31 @@ const getAllMenu = asyncHandler(async (req, res) => {
 });
 
 // @desc    Create a new menu
-// @route   POST /api/auth/register
+// @route   POST /api/menu/create
 // @access  Public
 const createMenu = async (req, res, next) => {
-  const { name, submenus  } = req.body;
+  const { name, submenus } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ message: 'Please provide a Menu name' });
+  }
 
   try {
-    const menu = new Menu({name, submenus});
+    // Find the menu with the highest ID
+    const lastMenu = await Menu.findOne().sort({ id: -1 }).exec();
+    const newId = lastMenu ? lastMenu.id + 1 : 1; // Increment ID or start with 1
+
+    // Create a new menu
+    const menu = new Menu({
+      id: newId,
+      name,
+      submenus: submenus || [], // Default to an empty array if submenus are not provided
+      path: `/${name.toLowerCase().replace(/\s+/g, '-')}` // Auto-generate the path
+    });
+
     await menu.save();
 
-    res.status(201).json({ message: 'Menu Created successfully' });
+    res.status(201).json({ message: 'Menu created successfully', menu });
   } catch (error) {
     next(error);
   }

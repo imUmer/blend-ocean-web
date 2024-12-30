@@ -139,12 +139,12 @@ const Sidebar = ({ toggleSidebar }) => {
                   <img src={menu.name === "Textures" ? texture : menu.name === "Models" ? model : hdris } className="w-5" alt="" />
                   <span className="text-lg">{menu.name}</span>
                 </div>
-                {menu.submenus.length > 0 && (
-                  <span> <img src={arrow } className={`${subMenuOpen[menu.name] ? "rotate-180" : "rotate-0" } w-3`} alt="" /></span>
+                {menu.submenus?.length > 0 && (
+                  <span> <img src={arrow} className={`${subMenuOpen[menu.name] ? "rotate-180" : "rotate-0" } w-3`} alt="" /></span>
                 )}
               </div>
               {subMenuOpen[menu.name] && (
-                <ul className=" mt-2 px-1 py-1 w-full text-gray-400 bg-black/30">
+                <ul className={`${menu.submenus?.length > 0 ? "bg-black/30" : "mt-0 py-0"} mt-2 px-1 py-1 w-full text-gray-400`}>
                   {menu.submenus.map((submenu) => (
                     <li
                       key={submenu.link}
