@@ -62,7 +62,7 @@ const Sidebar = ({ toggleSidebar }) => {
     // Add dynamic submenus to the main menu
     const updatedMainMenu = mapFetchedSubmenus(mainmenu, fetchedSubmenus);
     
-    console.log(updatedMainMenu);
+
     
 
     const fetchMenu = async () => {
@@ -85,12 +85,30 @@ const Sidebar = ({ toggleSidebar }) => {
     fetchMenu();
   }, [menus, setMenus]); // Only run if menus is not already set
 
-  const toggleSubMenu = (menu) => {
+  const toggleSubMenu = async (menu) => {
+    if (!subMenuOpen[menu.name]) {
+      // Fetch submenus if not already open
+      try {
+        const response = await fetch(`/api/menu/${menu.id}`);
+        const submenus = await response.json();
+        const ssubmenus = submenus.submenus;
+        const updatedMenus = menus.map((m) =>
+          m.id === menu.id ? { ...m, ssubmenus } : m
+        );
+        console.log(menus);
+        const data = [submenus]
+        console.log(data);
+        setMenus(data); // Cache the updated menu
+      } catch (error) {
+        console.error('Failed to fetch submenus:', error);
+      }
+    }
     setSubMenuOpen((prev) => ({
       ...prev,
-      [menu]: !prev[menu],
+      [menu.name]: !prev[menu.name],
     }));
   };
+  
 
   return (
     <div className="w-64 max-lg:w-full shadow-2xl bg-neutral-800 border-neutral-700 text-white top-15 z-20">
@@ -133,7 +151,7 @@ const Sidebar = ({ toggleSidebar }) => {
             <li key={menu.name} className="mb-4">
               <div
                 className="flex px-5 justify-between items-center cursor-pointer mx-2 p-2 rounded hover:bg-gray-700 hover:text-lime-500"
-                onClick={() => toggleSubMenu(menu.name)}
+                onClick={() => toggleSubMenu(menu)}
               >
                 <div className="flex gap-2 justify-start items-center">
                   <img src={menu.name === "Textures" ? texture : menu.name === "Models" ? model : hdris } className="w-5" alt="" />

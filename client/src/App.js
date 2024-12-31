@@ -22,7 +22,7 @@ const App = () => {
         <SearchProvider>
           <Router>
             <Navbar />
-             <Test /> {/*this is for testing purpose */}
+            {/* <Test /> this is for testing purpose */}
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />

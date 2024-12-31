@@ -15,7 +15,6 @@ const submenuSchema = new mongoose.Schema({
       subname: { type: String, required: true }, // Nested submenu name (e.g., "Tables")
       count: { type: Number, required: true }, // Item count for nested submenu
       path: { type: String, required: true }, // Nested submenu path
-      submenus: { type: Array, default: [] }, // Allow further nesting if required
     },
   ],
 });
