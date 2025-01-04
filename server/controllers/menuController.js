@@ -1,184 +1,156 @@
 const asyncHandler = require('express-async-handler');
-const {Menu, Submenu} = require('../models/menuModel');
-const bcrypt = require('bcryptjs');
+const {Menu} = require('../models/menuModel');
 
-// @desc    Get logged-in menu
-// @route   GET /api/menu/
-// @access  Menu
-const getMenu = asyncHandler(async (req, res) => {
-  const menu = await Menu.findById(req.user.id);
+// @desc    Create a new item under a submenu
+// @route   POST /api/menu/item
+// @access  Private
+const createItem = asyncHandler(async (req, res) => {
+  const { name, category, parentId } = req.body;
 
-  if (user) {
-    res.json({
-      _id: user.id,
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      role: user.isAdmin,
-    });
-  } else {
-    res.status(404);
-    throw new Error('User not found');
+  // Check if the submenu exists
+  const submenu = await Menu.findById(parentId);
+  if (!submenu || submenu.category !== 'submenu') {
+    res.status(400);
+    throw new Error('Parent submenu not found or invalid category.');
   }
+
+  // Check if the item already exists under this submenu
+  const existingItem = await Menu.findOne({ name, parentId: submenu._id });
+  if (existingItem) {
+    res.status(400);
+    throw new Error('Item with this name already exists under this submenu.');
+  }
+
+  // Create item
+  const item = new Menu({
+    name,
+    category: 'item',
+    parentId: submenu._id,
+    count: 1,  // Initial count for the item
+  });
+
+  const createdItem = await item.save();
+
+  // Update submenu's count with the new item count
+  submenu.count = submenu.count + 1;
+  await submenu.save();
+
+  res.status(201).json(createdItem);
 });
 
-// @desc    Get all menu
+
+// @desc    Create a new submenu
+// @route   POST /api/menu
+// @access  Private
+const createSubMenu = asyncHandler(async (req, res) => {
+  const { name, category, parentId } = req.body;
+
+  // Check if the parent menu exists
+  const parentMenu = await Menu.findById(parentId);
+  if (!parentMenu || parentMenu.category !== 'menu') {
+    res.status(400);
+    throw new Error('Parent menu not found or invalid category.');
+  }
+
+  // Create submenu
+  const submenu = new Menu({
+    name,
+    category: 'submenu',
+    parentId: parentMenu._id,
+    count: 0,  // Initial count
+  });
+
+  const createdSubMenu = await submenu.save();
+
+  res.status(201).json(createdSubMenu);
+});
+
+
+
+// @desc    Create a new menu item
+// @route   POST /api/menu
+// @access  Private/Admin
+const createMenu = asyncHandler(async (req, res) => {
+  const { name, parentId, category, count } = req.body;
+
+  // Validate required fields
+  if (!name || !category) {
+    res.status(400);
+    throw new Error('Menu name and category are required');
+  }
+
+  // Check if a menu with the same name already exists
+  const existingMenu = await Menu.findOne({ name });
+  if (existingMenu) {
+    res.status(400);
+    throw new Error('A menu with the same name already exists');
+  }
+
+  // Create the menu
+  const menu = new Menu({
+    name,
+    parentId: parentId || null, // Default to null if not provided
+    category,
+    count: count || null, // Default to null if not provided
+  });
+
+  const createdMenu = await menu.save();
+  res.status(201).json(createdMenu);
+});
+
+
+// @desc    Get all menu items
 // @route   GET /api/menu
 // @access  Public
-const getAllMenu = asyncHandler(async (req, res) => {
-  const menu = await Menu.find(); 
-  res.json(menu);
+const getAllMenus = asyncHandler(async (req, res) => {
+  const menus = await Menu.find().populate("parentId").exec();
+  res.status(200).json(menus);
 });
 
-// @desc    Create a new menu
-// @route   POST /api/menu/create
-// @access  Public
-const createMenu = async (req, res, next) => {
-  const { name, submenus } = req.body;
+// @desc    Update a menu item by ID
+// @route   PUT /api/menu/:id
+// @access  Private/Admin
+const updateMenu = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { name, category, count } = req.body;
 
-  if (!name) {
-    return res.status(400).json({ message: 'Please provide a Menu name' });
+  const menu = await Menu.findById(id);
+
+  if (menu) {
+    menu.name = name || menu.name;
+    menu.category = category || menu.category;
+    menu.count = count !== undefined ? count : menu.count;
+
+    const updatedMenu = await menu.save();
+    res.status(200).json(updatedMenu);
+  } else {
+    res.status(404);
+    throw new Error("Menu item not found");
   }
+});
 
-  try {
-    // Find the menu with the highest ID
-    const lastMenu = await Menu.findOne().sort({ id: -1 }).exec();
-    const newId = lastMenu ? lastMenu.id + 1 : 1; // Increment ID or start with 1
-
-    // Create a new menu
-    const menu = new Menu({
-      id: newId,
-      name,
-      submenus: submenus || [], // Default to an empty array if submenus are not provided
-      path: `/${name.toLowerCase().replace(/\s+/g, '-')}` // Auto-generate the path
-    });
-
-    await menu.save();
-
-    res.status(201).json({ message: 'Menu created successfully', menu });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// @desc    Delete a menu by ID (Admin only)
+// @desc    Delete a menu by ID
 // @route   DELETE /api/menu/:id
 // @access  Private/Admin
 const deleteMenu = asyncHandler(async (req, res) => {
-  const menu = await Menu.findById(req.params.id);
+  const { id } = req.params;
+
+  const menu = await Menu.findById(id);
 
   if (menu) {
     await menu.remove();
-    res.json({ message: 'Menu removed successfully' });
+    res.json({ message: "Menu removed successfully" });
   } else {
     res.status(404);
-    throw new Error('Menu not found');
-  }
-});
-
-// @desc    Create Submenus for an existing Menu
-// @route   POST /api/menu/:menuId/submenu/create
-// @access  Private/Admin
-const createSubMenu = asyncHandler(async (req, res, next) => {
-  const { menuId } = req.params; // Parent menu ID
-  const { submenus } = req.body; // Submenu data to add
-
-  if (!menuId || !submenus || submenus.length === 0) {
-    return res.status(400).json({ message: 'Please provide a valid Menu ID and submenus' });
-  }
-
-  try {
-    // Verify the parent menu exists
-    const parentMenu = await Menu.findOne({ id: Number(menuId) });
-    if (!parentMenu) {
-      return res.status(404).json({ message: 'Parent Menu not found' });
-    }
-
-    const documents = []; // Store submenu documents to be created
-
-    // Process each submenu
-    submenus.forEach((submenu) => {
-      const parentPath = parentMenu.name.toLowerCase().replace(/\s+/g, "-"); // Convert parent menu name to path format
-      const submenuPath = `/${parentPath}/${submenu.name.toLowerCase().replace(/\s+/g, "-")}`;
-
-      // Process nested submenus, if present
-      const nestedSubmenus = [];
-      let totalCount = submenu.count || 0; // Initialize total count for nested submenus
-
-      if (submenu.submenus && submenu.submenus.length > 0) {
-        submenu.submenus.forEach((nested) => {
-          const nestedPath = `${submenuPath}/${nested.subname.toLowerCase().replace(/\s+/g, "-")}`;
-          totalCount += nested.count;
-          nestedSubmenus.push({
-            id: Number(menuId), // Parent menu ID for nested submenu
-            name: submenu.name, // Parent submenu name
-            subname: nested.subname, // Nested submenu name
-            count: nested.count, // Nested submenu count
-            path: nestedPath, // Nested submenu path
-            submenus: [], // Further nesting can be added if required
-          });
-        });
-      }
-
-      // Push the processed submenu with its nested submenus
-      documents.push({
-        id: Number(menuId),
-        name: parentMenu.name,
-        subname: submenu.name, // Submenu name
-        count: totalCount, // Total count including nested submenus
-        path: submenuPath, // Path for the submenu
-        submenus: nestedSubmenus, // Nested submenus
-      });
-    });
-
-    // Insert documents into Submenu collection
-    await Submenu.insertMany(documents);
-
-    res.status(201).json({ message: 'Submenus created successfully', submenus: documents });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// @desc    Get Menu with Populated Submenus
-// @route   GET /api/menu/:menuId
-// @access  Public
-const getMenuWithSubmenus = asyncHandler(async (req, res) => {
-  const { menuId } = req.params;
-
-  try {
-    // Find the menu by ID
-    const menu = await Menu.findOne({ id: Number(menuId) });
-    if (!menu) {
-      return res.status(404).json({ message: 'Menu not found' });
-    }
-
-    // Fetch submenus associated with this menu ID
-    const submenus = await Submenu.find({ id: Number(menuId) });
-
-    // Attach the submenus directly to the menu object
-    const result = {
-      ...menu.toObject(), // Convert Mongoose document to plain JS object
-      submenus: submenus.map((submenu) => ({
-        id: submenu.id,
-        name: submenu.name,
-        subname: submenu.subname,
-        count: submenu.count,
-        path: submenu.path,
-        submenus: submenu.submenus, // Nested submenus
-      })),
-    };
-
-    res.status(200).json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    throw new Error("Menu item not found");
   }
 });
 
 module.exports = {
-  getAllMenu,
   createMenu,
+  getAllMenus,
+  updateMenu,
   deleteMenu,
   createSubMenu,
-  getMenuWithSubmenus,
+  createItem,
 };

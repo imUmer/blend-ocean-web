@@ -8,47 +8,44 @@ import arrow from "../assets/icons/arrow.svg";
 const Sidebar = ({ toggleSidebar }) => {
   const [subMenuOpen, setSubMenuOpen] = useState({});
   const [loading, setLoading] = useState(false);
+  const [menuData, setMenuData] = useState([]);
 
-  
-  const menuData = [
-    { id: 1, name: "Models", parentId: null, category: "menu", count: null },
-    { id: 2, name: "Textures", parentId: null, category: "menu", count: null },
-    { id: 3, name: "HDRIs", parentId: null, category: "menu", count: null },
-    { id: 4, name: "Cars", parentId: 1, category: "submenu", count: 6 },
-    { id: 5, name: "BMW", parentId: 4, category: "item", count: 3 },
-    { id: 6, name: "Mercedes", parentId: 4, category: "item", count: 3 },
-    { id: 7, name: "Wood", parentId: 2, category: "submenu", count: 5 },
-    { id: 8, name: "Cracked", parentId: 7, category: "item", count: 4 },
-    { id: 9, name: "Black Wood", parentId: 7, category: "item", count: 1 },
-    { id: 10, name: "Indoor", parentId: 3, category: "submenu", count: 2 },
-    { id: 11, name: "Living Room", parentId: 10, category: "item", count: 1 },
-    { id: 12, name: "Office Space", parentId: 10, category: "item", count: 1 },
-  ];
+  // Fetch menu data from API
+  const fetchMenuData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/menu/"); // Replace with your actual API endpoint
+      const data = await response.json();
+      console.log(data);
+      
+      setMenuData(data); // Set fetched data to state
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching menu data:", error);
+      setLoading(false);
+    }
+  };
 
+  // Build menu hierarchy
   const buildMenuHierarchy = () => {
-    const rootMenus = menuData.filter((menu) => menu.parentId === null);
+    const rootMenus = menuData.filter((menu) => !menu.parentId); // No parent means top-level menu
     const buildSubMenu = (parentId) => {
       return menuData
-        .filter((menu) => menu.parentId === parentId)
+        .filter((menu) => menu.parentId?._id === parentId) // Match parentId
         .map((submenu) => ({
           ...submenu,
-          submenus: buildSubMenu(submenu.id),
+          submenus: buildSubMenu(submenu._id), // Recursive call for nested submenus
         }));
     };
 
     return rootMenus.map((menu) => ({
       ...menu,
-      submenus: buildSubMenu(menu.id),
+      submenus: buildSubMenu(menu._id),
     }));
   };
 
   useEffect(() => {
-    setLoading(true);
-
-    setTimeout(() => {
-      buildMenuHierarchy();
-      setLoading(false);
-    }, 500);
+    fetchMenuData(); // Fetch menu data on component mount
   }, []);
 
   const toggleSubMenu = (menu) => {
@@ -60,7 +57,7 @@ const Sidebar = ({ toggleSidebar }) => {
 
   const renderMenu = (menus) => {
     return menus.map((menu) => (
-      <li key={menu.id} className="mb-2">
+      <li key={menu._id} className="mb-2">
         <div
           className={`flex justify-between items-center px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-700 hover:text-lime-500 ${
             menu.parentId === null ? "bg-neutral-800 text-white" : ""
@@ -92,7 +89,8 @@ const Sidebar = ({ toggleSidebar }) => {
             </span>
           </div>
 
-          {menu.count !== null && (
+          {/* Show count only for submenus and items (not for categories) */}
+          {menu.category !== "menu" && menu.count !== null && (
             <span className="text-gray-400 text-sm">{menu.count}</span>
           )}
 

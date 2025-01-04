@@ -1,16 +1,14 @@
 const express = require('express');
-const {getAllMenu, createMenu, createSubMenu, getMenuWithSubmenus} = require('../controllers/menuController');
+const {getAllMenus, createMenu, updateMenu, deleteMenu, createSubMenu, createItem} = require('../controllers/menuController');
 const router = express.Router();
 
 // Menu
-router.get('/', getAllMenu);
-router.post('/create', createMenu);
-
-// SubMenu
-router.get('/submenu', (req,res)=> {
-    res.send("Haha");
-});
-router.get('/:menuId/', getMenuWithSubmenus);
-router.post('/:menuId/submenu/create', createSubMenu);
+// Routes for Menu CRUD operations 
+router.post("/create", createMenu); // Create a new menu
+router.post("/createsub", createSubMenu); // Create a new menu
+router.post("/item", createItem); // Create a new menu
+router.get("/", getAllMenus); // Get all menus
+router.put("/:id", updateMenu); // Update a menu by ID
+router.delete("/:id", deleteMenu); // Delete a menu by ID
 
 module.exports = router;
