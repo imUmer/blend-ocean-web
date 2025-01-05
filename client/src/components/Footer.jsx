@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useMemo } from "react";
 import logo from "../assets/logos/logo.svg";
 import twitter from "../assets/icons/twitter.svg";
 import facebook from "../assets/icons/facebook.svg";
 import instagram from "../assets/icons/instagram.svg";
-import { Link } from "react-router-dom";
-import data from "../Helper/data";
 
 const Footer = () => {
+  const currentYear = useMemo(() => new Date().getFullYear(), []);
   return (
     <footer className="bg-black py-6 text-center text-gray-400">
       {/* Logo */}
@@ -63,7 +62,9 @@ const Footer = () => {
 
       {/* Bottom Text */}
       <div className="text-xs text-gray-500">
-        <p>&copy; 2024 Blend Ocean. All Rights Reserved.</p>
+        <p>
+          &copy; {currentYear} Blend Ocean. All Rights Reserved.
+        </p>
       </div>
     </footer>
   );
