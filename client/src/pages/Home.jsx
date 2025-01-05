@@ -96,33 +96,34 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex h-fit max-md:flex-col gap-10 max-md:px-1 max-md:p-1 p-20 px-20 justify-center items-center">
-        <div className="text-white w-1/3 h-full flex flex-col gap-6">
-          <h1 className="text-3xl">HIGH QUALITY FULLY OPTIMIZED 3D MODELS</h1>
-          <p className="text-xs text-justify ">
+      {/* HIGH QUALITY  */}
+      <div className="flex h-fit max-md:flex-col gap-10 max-md:px-1 max-md:p-1 p-5 mt-5 px-20 justify-center items-center">
+        <div className="text-white text-center w-2/3 lg:w-1/3 h-full flex flex-col gap-6">
+          <h1 className=" text-md font-semibold sm:text-3xl md:text-start">HIGH QUALITY FULLY OPTIMIZED 3D MODELS</h1>
+          <p className="text-xs text-center sm:text-justify ">
             Fully optimized VR models can also reduce file size and memory
             usage, allowing for faster loading and rendering times.
           </p>
-          <p className="text-xs text-justify ">
+          <p className="text-xs text-center sm:text-justify ">
             The use of efficient geometry and texture compression techniques can
             also help to reduce the CPU and GPU workload.
           </p>
-          <p className="text-xs text-justify ">
+          <p className="text-xs text-center sm:text-justify ">
             Fully optimized game-ready models can also reduce file size and
             memory usage, allowing for faster loading and rendering times.
           </p>
-          <p className="text-xs text-justify ">
+          <p className="text-xs text-center sm:text-justify ">
             Fully optimized 3D models for architectural visualization (archviz)
             are designed to provide high-quality and realistic images of
             buildings and other structures.
           </p>
-          <p className="text-xs text-justify ">
+          <p className="text-xs text-center sm:text-justify ">
             Fully optimized AR models can also reduce file size and memory
             usage, allowing for faster loading and rendering times, and
             providing smooth experience for users.
           </p>
         </div>
-        <div className=" w-2/4 pl-6">
+        <div className="p-3 md:w-2/3">
           <img src={model} alt="" />
         </div>
       </div>
