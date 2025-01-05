@@ -33,8 +33,8 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
       });
   
       setModels(data.models);
-      console.log("Gallery: ", data.models, " total: " +data.total);
-      console.log("Gallery filters: ", filters);
+      console.log("Gallery: ", data, " total: " +data.total);
+      // console.log("Gallery filters: ", filters);
   
       setPages(data.pages);
       setTotal(data.total);

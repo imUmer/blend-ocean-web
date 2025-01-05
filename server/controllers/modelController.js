@@ -146,6 +146,7 @@ const searchModel = asyncHandler(async (req, res) => {
   try {
     // Extract query parameters
     const { searchTerm, page = 1, limit = 8, title, type, category, isNew, earlyAccess, images } = req.query;
+console.log(searchTerm);
 
     // Pagination setup
     const skip = (page - 1) * limit;
@@ -170,7 +171,7 @@ const searchModel = asyncHandler(async (req, res) => {
       filters.$or = [
         { title: { $regex: searchTerm, $options: "i" } },
         { category: { $regex: searchTerm, $options: "i" } },
-      ];
+      ]
     }
     else{
       const total = await Model.countDocuments(filters);

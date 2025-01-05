@@ -50,10 +50,9 @@ export default function Home() {
   return (
     <div className=" min-h-screen">
       <HeroSlider />
-     <CardCarousel />
 
-      <div className="section ">
-        <div className="w-full h-fit flex justify-center items-center flex-wrap m-8 lg:gap-10 gap-6 ">
+      <div className="product-section">
+        <div className="w-full h-fit flex justify-center items-center flex-wrap px-3 mt-4 py-6 lg:gap-10 gap-6 ">
           <div className="overflow-hidden w-80 rounded-xl bg-black">
             <div className="rounded-xl overflow-hidden w-full group">
               <div className="transform transition-transform duration-500 group-hover:scale-110">
@@ -75,7 +74,7 @@ export default function Home() {
             </div>
             </div>
             <div className="flex items-center justify-center gap-9 p-2 font-semibold text-white text-center">
-              <h1 className="text-2xl uppercase">Models</h1>
+              <h1 className="text-2xl uppercase">Textures</h1>
               <button className="bg-lime-500 hover:bg-lime-600 rounded-xl px-5 py-1">
                 Browse
               </button>
@@ -88,7 +87,7 @@ export default function Home() {
             </div>
             </div>
             <div className="flex items-center justify-center gap-9 p-2 font-semibold text-white text-center">
-              <h1 className="text-2xl uppercase">Models</h1>
+              <h1 className="text-2xl uppercase">HDRIs</h1>
               <button className="bg-lime-500 hover:bg-lime-600 rounded-xl px-5 py-1">
                 Browse
               </button>
@@ -130,13 +129,12 @@ export default function Home() {
 
       <div className="bg-black">
         <div className="w-full bg-black flex flex-col items-center justify-center text-white">
-          <h2 className="text-white text-2xl mt-4 font-bold uppercase">
+          <h2 className="text-white text-2xl mt-4 mb-4 font-bold uppercase">
             New Assets
           </h2>
-
-          <Carousel slides={slides} interval={4000} />
-          <div className="">
-            <h1 className="text-white text-sm my-4 text-center  pb-5">
+          <CardCarousel />
+          <div className="mt-4">
+            <h1 className="text-white text-sm my-4 text-center pb-5 px-5">
               " Sign in today to get rid of Ads and start exploring the endless
               possibilities of 3D modeling with Blend Ocean open-source library.
               "
