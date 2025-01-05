@@ -61,10 +61,10 @@ const HeroSlider = () => {
       >
         &#10095;
       </button>
-      <div className="absolute z-30 bottom-[50%]   w-full items-center flex justify-center mt-4 space-x-2">
+      <div className="absolute z-30 md:bottom-[50%] bottom-[40%] w-full items-center flex justify-center mt-4 space-x-2">
       <div className="items-center flex flex-col justify-center mt-4 space-x-2">
-        <img src={logoa} alt="logo" className="mx-auto w-32 shadow-md cursor-crosshair" />
-        <img src={logo} alt="logo" className="mx-auto w-52 shadow-md cursor-crosshair" />
+        <img src={logoa} alt="logo" className="mx-auto mt-2 w-11  max-w:sm:hidden shadow-md cursor-crosshair md:w-32" />
+        <img src={logo} alt="logo" className="mx-auto w-20 shadow-md cursor-crosshair md:w-44" />
         </div>
         </div>
       {/* Dots for Navigation */}
