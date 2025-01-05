@@ -12,6 +12,7 @@ import obj from "../assets/icons/obj.svg";
 import HeroSlider from "../components/HeroSlider";
 import CardCarousel from "../components/CardCarousel";
 import Support from "../components/Support";
+import About from "../components/About";
 
 // const slides = [
 //   "https://via.placeholder.com/600x400/FF0000/FFFFFF?text=Slide+1",
@@ -196,6 +197,9 @@ export default function Home() {
 
       {/* Support Section */}
       <Support />
+      
+      {/* About Section */}
+      <About />
     </div>
   );
 }
