@@ -99,7 +99,7 @@ export default function Home() {
       {/* HIGH QUALITY  */}
       <div className="flex h-fit max-md:flex-col gap-10 max-md:px-1 max-md:p-1 p-5 mt-5 px-20 justify-center items-center">
         <div className="text-white text-center w-2/3 lg:w-1/3 h-full flex flex-col gap-6">
-          <h1 className=" text-md font-semibold sm:text-3xl md:text-start">HIGH QUALITY FULLY OPTIMIZED 3D MODELS</h1>
+          <h1 className=" text-md font-semibold sm:text-2xl md:text-start">HIGH QUALITY FULLY OPTIMIZED 3D MODELS</h1>
           <p className="text-xs text-center sm:text-justify ">
             Fully optimized VR models can also reduce file size and memory
             usage, allowing for faster loading and rendering times.
@@ -128,6 +128,7 @@ export default function Home() {
         </div>
       </div>
 
+      {/* CardCarousel */}
       <div className="bg-black">
         <div className="w-full bg-black flex flex-col items-center justify-center text-white">
           <h2 className="text-white text-2xl mt-4 mb-4 font-bold uppercase">
@@ -144,49 +145,50 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex h-fit max-md:flex-col gap-7 max-md:px-1 max-md:p-1 p-20 px-20 justify-center items-center">
-        <div className="text-white w-1/3 h-full flex flex-col gap-2">
-          <h1 className="text-xl font-semibold">
-            HIGH QUALITY FULLY OPTIMIZED 3D MODELS
+      {/* Archviz section */}
+      <div className="flex h-fit max-md:flex-col gap-10 max-md:px-1 max-md:p-1 p-5 mt-5 px-20 justify-center items-center">
+        <div className="text-white text-center w-2/3 lg:w-1/3 h-full flex flex-col gap-6">
+          <h1 className="uppercase text-md font-semibold sm:text-2xl md:text-start">
+          Archviz professionals
           </h1>
-          <p className="text-xs text-justify ">
+          <p className="text-xs text-center sm:text-justify ">
             A solution specifically tailored for architectural visualization
             professionals, offering a comprehensive 3D library to meet the
             evolving demands of architects and interior designers.
           </p>
-          <h1 className="text-xl font-semibold">
-            HIGH QUALITY FULLY OPTIMIZED 3D MODELS
+          <h1 className="uppercase text-md font-semibold sm:text-2xl md:text-start">
+          100% free CCO
           </h1>
-          <p className="text-xs text-justify ">
+          <p className="text-xs text-center sm:text-justify ">
             CC0 (Creative Commons Zero) is a type of public domain dedication
             that allows creators to waive all rights to their work and place it
             in the public domain.
           </p>
-          <p className="text-xs text-justify ">
+          <p className="text-xs text-center sm:text-justify ">
             This means that anyone can use, reproduce, modify, and distribute
             the work without obtaining permission or paying royalties.
           </p>
-          <p className="text-xs text-justify ">
+          <p className="text-xs text-center sm:text-justify ">
             You won't be asked to pay for it, nor will you need to go through a
             lengthy sign-up process. Enjoy hassle-free access to what you need -
             no hidden costs, no registration needed. Simply download what you
             need and start using it right away, without any worries.
           </p>
-          <p className="text-xs text-justify ">
+          <p className="text-xs text-center sm:text-justify ">
             Fully optimized AR models can also reduce file size and memory
             usage, allowing for faster loading and rendering times, and
             providing smooth experience for users.
           </p>
-          <h1 className="text-xl font-semibold uppercase">
+          <h1 className="uppercase text-md font-semibold sm:text-2xl md:text-start">
             blender native files, .fbx & .obj
           </h1>
-          <div className="w-fit flex-wrap flex justify-between gap-6 mt-2">
+          <div className="w-full md:w-fit flex-wrap flex justify-center gap-6 mt-2 items-center">
             <img src={blend} alt="blend" className="p-2 bg-black rounded-xl" />
             <img src={fbx} alt="fbx" className="p-2 bg-black rounded-xl" />
             <img src={obj} alt="obj" className="p-2 bg-black rounded-xl" />
           </div>
         </div>
-        <div className=" w-2/4 h-full pl-6">
+        <div className="p-3 md:w-2/3">
           <img src={house} alt="" />
         </div>
       </div>
