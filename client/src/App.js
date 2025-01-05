@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import ShowModel from "./pages/ShowModel";
 import { SearchProvider } from "./context/SearchContext";
+import About from "./components/About";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/model" element={<ShowModel />} />
+              <Route path="/about" element={<About />} />
               <Route
                 path="/dashboard"
                 element={
