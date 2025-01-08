@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { getAllUsers } from "../../services/adminService";
 import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const UsersSection = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { token } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getUsers = async () => {
@@ -24,6 +26,9 @@ const UsersSection = () => {
     getUsers();
   }, []);
 
+   const handleEdit = (id) => {
+    navigate(`/admin/user/${id}`);
+   }
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Manage Users</h2>
@@ -52,7 +57,7 @@ const UsersSection = () => {
                   <td className="p-3">{user.email}</td>
                   <td className="p-3">{user.isAdmin ? "Admin" : "User"}</td>
                   <td className="p-3">
-                    <button className="bg-lime-500 px-3 py-1 rounded hover:bg-lime-600 mr-2">
+                    <button onClick={()=>handleEdit(user._id)} className="bg-lime-500 px-3 py-1 rounded hover:bg-lime-600 mr-2">
                       Edit
                     </button>
                     <button className="bg-red-500 px-3 py-1 rounded hover:bg-red-600">
