@@ -126,7 +126,7 @@ export default function Home() {
           </p>
         </div>
         <div className="p-3 md:w-2/3">
-          <img src={model} alt="" />
+          <img src={model} alt="model" className="rounded-xl"  />
         </div>
       </div>
 
@@ -191,7 +191,7 @@ export default function Home() {
           </div>
         </div>
         <div className="p-3 md:w-2/3">
-          <img src={house} alt="" />
+          <img src={house} alt="house" className="rounded-xl shadow-md shadow-black" />
         </div>
       </div>
 
