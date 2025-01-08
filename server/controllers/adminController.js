@@ -14,8 +14,6 @@ const getAllUsers = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const getUserById = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
-  console.log('here');
-  console.log(user);
     
   if (!user) {
     res.status(404);
