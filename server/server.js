@@ -4,6 +4,7 @@ const express = require('express');
 const connectDB = require('./config/db');  // Import DB connection
 const cors = require('cors');  // For handling cross-origin requests
 const apiRoutes = require('./routes/api'); // Import API routes
+const adminRoutes = require('./routes/adminRoutes'); // Import Admin routes
 const userRoutes = require('./routes/userRoutes'); 
 const authRoutes = require('./routes/authRoutes'); 
 const menuRoutes = require('./routes/menuRoutes'); 
@@ -24,6 +25,9 @@ app.use(express.json());  // Parse incoming JSON requests
 app.use(cors());  // Enable CORS for handling cross-origin requests
 
 
+///////  ADMIN ROUTES /////
+// Admin Api 
+app.use('/api/admin/', adminRoutes);
 
 //// Use API routes
 // auth routes
