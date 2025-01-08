@@ -14,7 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import ShowModel from "./pages/ShowModel";
 import { SearchProvider } from "./context/SearchContext";
-import About from "./components/About";
+import About from "./pages/About";
 import AdminPanel from "./pages/AdminPanel";
 
 const App = () => {
