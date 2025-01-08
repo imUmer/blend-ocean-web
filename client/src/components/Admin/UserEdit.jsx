@@ -21,7 +21,6 @@ const UserEdit = () => {
 
   useEffect(() => {
     const getUserDetails = async () => {
-      console.log(id);
       
       try {
         setLoading(true);
@@ -55,8 +54,8 @@ const UserEdit = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateUserById(id, formData); // Update user details
-      navigate("/admin/users"); // Redirect to user management page
+      await updateUserById(token, id, formData); // Update user details
+      navigate("/admin"); // Redirect to admin management page
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update user");
     }

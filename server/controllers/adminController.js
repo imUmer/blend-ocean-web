@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel"); // Import the User schema
 
 // @desc    Get all users
-// @route   GET /api/users
+// @route   GET /api/admin/users
 // @access  Private/Admin
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find({});
@@ -10,7 +10,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get user by ID
-// @route   GET /api/users/:id
+// @route   GET /api/admin/users/:id
 // @access  Private/Admin
 const getUserById = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
@@ -24,7 +24,7 @@ const getUserById = asyncHandler(async (req, res) => {
 });
 
 // @desc    Update user by ID
-// @route   PUT /api/users/:id
+// @route   PUT /api/admin/users/:id
 // @access  Private/Admin
 const updateUserById = asyncHandler(async (req, res) => {
   const { name, username, email, password, isAdmin, photoUrl } = req.body;
@@ -56,7 +56,7 @@ const updateUserById = asyncHandler(async (req, res) => {
 });
 
 // @desc    Delete user by ID
-// @route   DELETE /api/users/:id
+// @route   DELETE /api/admin/users/:id
 // @access  Private/Admin
 const deleteUserById = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
