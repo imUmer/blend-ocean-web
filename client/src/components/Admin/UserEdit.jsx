@@ -21,6 +21,8 @@ const UserEdit = () => {
 
   useEffect(() => {
     const getUserDetails = async () => {
+      console.log(id);
+      
       try {
         setLoading(true);
         const user = await fetchUserById(token, id); // Fetch user details by ID
@@ -64,8 +66,8 @@ const UserEdit = () => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">Edit User</h2>
+    <div className="my-6 mx-2 max-w-lg sm:mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+      <h2 className="text-white text-2xl font-bold mb-4">Edit User</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -145,7 +147,7 @@ const UserEdit = () => {
         </div>
         <button
           type="submit"
-          className="bg-lime-500 px-6 py-2 rounded-lg text-gray-900 hover:bg-lime-600"
+          className=" bg-lime-500 px-3 w-full sm:px-6 py-2 rounded-lg text-gray-900 hover:bg-lime-600"
         >
           Save Changes
         </button>
