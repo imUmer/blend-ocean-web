@@ -17,6 +17,7 @@ import { SearchProvider } from "./context/SearchContext";
 import About from "./pages/About";
 import AdminPanel from "./pages/AdminPanel";
 import UserEdit from "./components/Admin/UserEdit";
+import MenuEdit from "./components/Admin/MenuEdit";
 
 const App = () => {
   return (
@@ -69,6 +70,14 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                   {/* <AssetEdit /> */}
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/menu"
+                element={
+                  <ProtectedRoute>
+                  <MenuEdit />
                   </ProtectedRoute>
                 }
               />
