@@ -29,3 +29,13 @@ export const fetchUserById = async (token, userId) => {
     });
     return response.data;
   };
+  
+  // Delete a user by ID
+  export const deleteUserById = async (token, userId) => {
+    const response = await axiosInstance.delete(`/admin/users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  };
