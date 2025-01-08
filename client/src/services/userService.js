@@ -42,13 +42,3 @@ export const updateProfile = async (updatedData, token) => {
   });
   return response.data;
 };
-
-// Fetch all users (admin only)
-export const getAllUsers = async (token) => {
-  const response = await axiosInstance.get("/users", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
-};
