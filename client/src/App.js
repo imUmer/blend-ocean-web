@@ -15,6 +15,7 @@ import Footer from "./components/Footer";
 import ShowModel from "./pages/ShowModel";
 import { SearchProvider } from "./context/SearchContext";
 import About from "./components/About";
+import AdminPanel from "./pages/AdminPanel";
 
 const App = () => {
   return (
@@ -43,6 +44,14 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminPanel />
                   </ProtectedRoute>
                 }
               />
