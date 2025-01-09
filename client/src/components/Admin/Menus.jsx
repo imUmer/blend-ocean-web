@@ -1,134 +1,297 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 
-const initialMenu = [
-  { id: 1, name: "Models", parentId: null, type: "menu", category: null, count: null },
-  { id: 2, name: "Furniture", parentId: 1, type: "submenu", category: "Models", count: 5 },
-  { id: 3, name: "Chairs", parentId: 2, type: "item", category: "Furniture", count: 5 },
-];
+const MenuSection = () => {
+  const [menus, setMenus] = useState([]);
+  const [submenus, setSubmenus] = useState([]);
+  const [items, setItems] = useState([]);
+  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [selectedSubmenu, setSelectedSubmenu] = useState(null);
 
-const MenusSection = () => {
-  const [menus, setMenus] = useState(initialMenu);
-  const [menuName, setMenuName] = useState("");
-  const [menuType, setMenuType] = useState("menu");
-  const [parentId, setParentId] = useState(null);
-  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [type, setType] = useState("Menu");
+  const [editId, setEditId] = useState(null);
 
-  const addMenu = () => {
-    if (menuName) {
-      const newMenu = {
-        id: menus.length + 1,
-        name: menuName,
-        parentId: parentId ? parseInt(parentId) : null,
-        type: menuType,
-        category: menuType !== "menu" ? menus.find((m) => m.id === parseInt(parentId))?.name || null : null,
-        count: menuType === "item" ? 0 : null,
-      };
-      setMenus([...menus, newMenu]);
-      setMenuName("");
-      setParentId(null);
-      setMenuType("menu");
+  useEffect(() => {
+    // Fetch the menu data from the API
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/menu/"); // Replace with actual API URL
+        const data = await response.json();
+        
+        const menus = data.filter(item => item.category === "menu");
+        const submenus = data.filter(item => item.category === "submenu");
+        const items = data.filter(item => item.category === "item");
+
+        setMenus(menus);
+        setSubmenus(submenus);
+        setItems(items);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+ // Handle Add or Update
+ const handleAddOrUpdate = () => {
+  if (!name) return alert("Please enter a name.");
+
+  if (editId) {
+    // Update logic
+    if (type === "Menu") {
+      setMenus((prev) =>
+        prev.map((menu) => (menu.id === editId ? { ...menu, name } : menu))
+      );
+    } else if (type === "Submenu") {
+      setSubmenus((prev) =>
+        prev.map((submenu) =>
+          submenu.id === editId ? { ...submenu, name } : submenu
+        )
+      );
+    } else if (type === "Item") {
+      setItems((prev) =>
+        prev.map((item) => (item.id === editId ? { ...item, name } : item))
+      );
     }
-  };
-  
-  const editMenu = (id) => {
-    navigate(`/admin/menu/${id}`)
-  };
-  const deleteMenu = (id) => {
-    const updatedMenus = menus.filter((menu) => menu.id !== id && menu.parentId !== id);
-    setMenus(updatedMenus);
-  };
+  } else {
+    // Add logic
+    if (type === "Menu") {
+      const newMenu = { id: Date.now(), name, count: 0 };
+      setMenus([...menus, newMenu]);
+    } else if (type === "Submenu") {
+      if (!selectedMenu)
+        return alert("Please select a parent menu for the submenu.");
+      const newSubmenu = {
+        id: Date.now(),
+        name,
+        parentId: selectedMenu,
+        count: 0,
+      };
+      setSubmenus([...submenus, newSubmenu]);
+    } else if (type === "Item") {
+      if (!selectedSubmenu)
+        return alert("Please select a parent submenu for the item.");
+      const newItem = { id: Date.now(), name, parentId: selectedSubmenu };
+      setItems([...items, newItem]);
 
-  return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Manage Menus</h2>
-      <p className="mb-4">Add, edit, or remove menus, submenus, and items.</p>
+      // Update the parent submenu count
+      setSubmenus((prev) =>
+        prev.map((submenu) =>
+          submenu.id === selectedSubmenu
+            ? { ...submenu, count: submenu.count + 1 }
+            : submenu
+        )
+      );
+    }
+  }
 
-      {/* Add New Menu */}
-      <div className="flex items-center mb-4 space-x-4">
+  // Reset fields
+  setName("");
+  setEditId(null);
+  setType("Menu");
+};
+
+// Handle Edit
+const handleEdit = (id, type) => {
+  setEditId(id);
+  setType(type);
+
+  if (type === "Menu") {
+    const menu = menus.find((menu) => menu.id === id);
+    setName(menu.name);
+  } else if (type === "Submenu") {
+    const submenu = submenus.find((submenu) => submenu.id === id);
+    setName(submenu.name);
+  } else if (type === "Item") {
+    const item = items.find((item) => item.id === id);
+    setName(item.name);
+  }
+};
+
+// Handle Delete
+const handleDelete = (id, type) => {
+  if (type === "Menu") {
+    setMenus((prev) => prev.filter((menu) => menu.id !== id));
+    setSubmenus((prev) => prev.filter((submenu) => submenu.parentId !== id));
+    setItems((prev) => prev.filter((item) => !submenus.some((s) => s.id === item.parentId)));
+  } else if (type === "Submenu") {
+    setSubmenus((prev) => prev.filter((submenu) => submenu.id !== id));
+    setItems((prev) => prev.filter((item) => item.parentId !== id));
+  } else if (type === "Item") {
+    setItems((prev) => prev.filter((item) => item.id !== id));
+    const parentSubmenu = submenus.find((submenu) => submenu.id === selectedSubmenu);
+    if (parentSubmenu) {
+      setSubmenus((prev) =>
+        prev.map((submenu) =>
+          submenu.id === selectedSubmenu
+            ? { ...submenu, count: submenu.count - 1 }
+            : submenu
+        )
+      );
+    }
+  }
+};
+
+return (
+  <div className="p-6 bg-gray-800 text-gray-300">
+    <h2 className="text-2xl font-bold mb-6">Manage Menus</h2>
+
+    {/* Add/Edit Form */}
+    <div className="mb-6">
+      <div className="flex flex-col md:flex-row md:items-center gap-4">
         <input
           type="text"
-          value={menuName}
-          onChange={(e) => setMenuName(e.target.value)}
-          placeholder="Name"
-          className="flex-grow py-2 px-3 bg-gray-700 rounded text-gray-300"
+          placeholder="Enter Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="flex-grow py-2 px-4 bg-gray-700 rounded text-gray-300 focus:outline-none"
         />
         <select
-          value={menuType}
-          onChange={(e) => setMenuType(e.target.value)}
-          className="py-2 px-3 bg-gray-700 rounded text-gray-300"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          className="py-2 px-4 bg-gray-700 rounded text-gray-300 focus:outline-none"
         >
-          <option value="menu">Menu</option>
-          <option value="submenu">Submenu</option>
-          <option value="item">Item</option>
+          <option value="Menu">Menu</option>
+          <option value="Submenu">Submenu</option>
+          <option value="Item">Item</option>
         </select>
-        {menuType !== "menu" && (
+
+        {/* Submenu Parent Menu */}
+        {type === "Submenu" && (
           <select
-            value={parentId || ""}
-            onChange={(e) => setParentId(e.target.value)}
-            className="py-2 px-3 bg-gray-700 rounded text-gray-300"
+            value={selectedMenu}
+            onChange={(e) => setSelectedMenu(parseInt(e.target.value))}
+            className="py-2 px-4 bg-gray-700 rounded text-gray-300 focus:outline-none"
           >
-            <option value="">Select Parent</option>
-            {menus
-              .filter((menu) => menu.type === "menu" || menu.type === "submenu")
-              .map((menu) => (
-                <option key={menu.id} value={menu.id}>
-                  {menu.name}
+            <option value="">Select Parent Menu</option>
+            {menus.map((menu) => (
+              <option key={menu._id} value={menu._id}>
+                {menu.name}
+              </option>
+            ))}
+          </select>
+        )}
+
+        {/* Item Parent Submenu */}
+        {type === "Item" && (
+          <select
+            value={selectedSubmenu}
+            onChange={(e) => setSelectedSubmenu(parseInt(e.target.value))}
+            className="py-2 px-4 bg-gray-700 rounded text-gray-300 focus:outline-none"
+          >
+            <option value="">Select Parent Submenu</option>
+            {submenus
+              .filter((submenu) => submenu.parentId === selectedMenu)
+              .map((submenu) => (
+                <option key={submenu._id} value={submenu._id}>
+                  {submenu.name}
                 </option>
               ))}
           </select>
         )}
+
         <button
-          onClick={addMenu}
-          className="bg-lime-500 px-4 py-2 rounded hover:bg-lime-600"
+          onClick={handleAddOrUpdate}
+          className="py-2 px-4 bg-lime-500 text-black rounded hover:bg-lime-600"
         >
-          Add
+          {editId ? "Update" : "Add"}
         </button>
       </div>
-
-      {/* List of Menus */}
-      <ul className="text-gray-300">
-        {menus
-          .filter((menu) => menu.parentId === null)
-          .map((menu) => (
-            <MenuItem key={menu.id} menu={menu} menus={menus} editMenu={editMenu} deleteMenu={deleteMenu} />
-          ))}
-      </ul>
     </div>
-  );
-};
 
-const MenuItem = ({ menu, menus, editMenu, deleteMenu }) => {
-  const children = menus.filter((child) => child.parentId === menu.id);
-
-  return (
-    <li className="bg-gray-700 rounded p-3 mb-2">
-      <div className="flex justify-between items-center">
-        <span>{menu.name}</span>
-        <div>
-          <button
-            onClick={() => editMenu(menu?.id)}
-            className="bg-lime-500 px-3 py-1 rounded hover:bg-lime-600 ml-2"
-          >
-            Edit
-          </button>
-          <button
-            onClick={() => deleteMenu(menu.id)}
-            className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 ml-2"
-          >
-            Delete
-          </button>
-        </div>
-      </div>
-      {children.length > 0 && (
-        <ul className="ml-6 mt-2">
-          {children.map((child) => (
-            <MenuItem key={child.id} menu={child} menus={menus} deleteMenu={deleteMenu} />
+    {/* Menus List */}
+    <div className="grid md:grid-cols-3 gap-6">
+      <div>
+        <h3 className="text-lg font-bold mb-4">Menus</h3>
+        <ul>
+          {menus.map((menu) => (
+            <li
+              key={menu._id}
+              className="flex justify-between items-center bg-gray-700 rounded p-3 mb-2"
+            >
+              {menu.name}
+              <div>
+                <button
+                  onClick={() => handleEdit(menu._id, "Menu")}
+                  className="px-3 py-1 bg-lime-500 text-black rounded hover:bg-lime-600 mr-2"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(menu._id, "Menu")}
+                  className="px-3 py-1 bg-red-500 rounded hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
           ))}
         </ul>
-      )}
-    </li>
-  );
-};
+      </div>
 
-export default MenusSection;
+      {/* Submenus List */}
+      <div>
+        <h3 className="text-lg font-bold mb-4">Submenus</h3>
+        <ul>
+          {submenus.map((submenu) => (
+            <li
+              key={submenu._id}
+              className="flex justify-between items-center bg-gray-700 rounded p-3 mb-2"
+            >
+              <span>
+                {submenu?.name} (Items: {submenu.count}){" "}
+                <span className="text-gray-500">{" - Parent: " + menus.find(menu => menu._id )?.name}</span>
+              </span>
+              <div>
+                <button
+                  onClick={() => handleEdit(submenu._id, "Submenu")}
+                  className="px-3 py-1 bg-lime-500 text-black rounded hover:bg-lime-600 mr-2"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(submenu._id, "Submenu")}
+                  className="px-3 py-1 bg-red-500 rounded hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Items List */}
+      <div>
+        <h3 className="text-lg font-bold mb-4">Items</h3>
+        <ul>
+          {items.map((item) => (
+            <li
+              key={item._id}
+              className="flex justify-between items-center bg-gray-700 rounded p-3 mb-2"
+            >
+              {item.name}
+              <div>
+                <button
+                  onClick={() => handleEdit(item._id, "Item")}
+                  className="px-3 py-1 bg-lime-500 text-black rounded hover:bg-lime-600 mr-2"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(item._id, "Item")}
+                  className="px-3 py-1 bg-red-500 rounded hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+);
+}
+export default MenuSection;
