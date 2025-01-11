@@ -92,31 +92,43 @@ const MenuSection = () => {
         }
       }
     } else {
-      const response = await createMenus(token, name, type);
-      if (response.ok) {
-      if (type === "Menu") {
-        const newMenu = { id: Date.now().toString(), name };
+        if (type === "Menu") {
+         const category = type.toLowerCase()
+        const response = await createMenus(token, name, category);
+      if (response) {
+        const newMenu = { id: response._id, name, category };
         setMenus([...menus, newMenu]);
+      }
       } else if (type === "Submenu") {
         if (!selectedMenu)
           return alert("Please select a parent menu for the submenu.");
+        const category = type.toLowerCase()
+        const response = await createMenus(token, name, category, selectedMenu);
+        if (response) {
         const newSubmenu = {
-          id: Date.now().toString(),
+          id: response._id,
           name,
+          category,
           parentId: selectedMenu,
+          count:0,
         };
         setSubmenus([...submenus, newSubmenu]);
+      }
       } else if (type === "Item") {
         if (!selectedSubmenu)
           return alert("Please select a parent submenu for the item.");
+        const category = type.toLowerCase()
+        const response = await createMenus(token, name, category, selectedSubmenu);
         const newItem = {
-          id: Date.now().toString(),
+          id:  response._id,
           name,
+          category,
           parentId: selectedSubmenu,
+          count:0,
         };
         setItems([...items, newItem]);
       }
-    }}
+    }
     } catch (error) {
       
     }

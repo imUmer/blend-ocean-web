@@ -66,8 +66,8 @@ export const fetchUserById = async (token, userId) => {
     return response.data;
 };
 // Create a menu
-export const createMenus = async (token, menuId, name) => {
-  const response = await axiosInstance.post(`/menu/${menuId}`, name, {
+export const createMenus = async (token, name, category, parentId=null, count=0) => {
+  const response = await axiosInstance.post(`/menu/create/`, {name, category, parentId, count}, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

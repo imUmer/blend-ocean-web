@@ -72,6 +72,7 @@ const createSubMenu = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const createMenu = asyncHandler(async (req, res) => {
   const { name, parentId, category, count } = req.body;
+  console.log(name, parentId, category);
 
   // Validate required fields
   if (!name || !category) {
@@ -91,7 +92,7 @@ const createMenu = asyncHandler(async (req, res) => {
     name,
     parentId: parentId || null, // Default to null if not provided
     category,
-    count: count || null, // Default to null if not provided
+    count: count || 0, // Default to 0 if not provided
   });
 
   const createdMenu = await menu.save();

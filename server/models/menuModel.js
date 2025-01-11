@@ -18,7 +18,7 @@ const menuSchema = mongoose.Schema(
     },
     count: {
       type: Number,
-      default: null, // Allows null for top-level menus or submenus without count
+      default: 0, // Allows null for top-level menus or submenus without count
     },
   },
   {
