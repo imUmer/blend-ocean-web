@@ -18,6 +18,8 @@ import About from "./pages/About";
 import AdminPanel from "./pages/AdminPanel";
 import UserEdit from "./components/Admin/UserEdit";
 import MenuEdit from "./components/Admin/MenuEdit";
+import AssetAdd from "./components/Admin/AssetAdd";
+import AssetEdit from "./components/Admin/AssetEdit";
 
 const App = () => {
   return (
@@ -69,7 +71,15 @@ const App = () => {
                 path="/admin/assets"
                 element={
                   <ProtectedRoute>
-                  {/* <AssetEdit /> */}
+                  <AssetAdd />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/assets/:id"
+                element={
+                  <ProtectedRoute>
+                  <AssetEdit />
                   </ProtectedRoute>
                 }
               />
