@@ -1,5 +1,8 @@
 import axiosInstance from "../utils/axiosInstance"; // Adjust the path as needed
 
+
+//////////   USER /////////////
+
 // Fetch all users (admin only)
 export const getAllUsers = async (token) => {
   const response = await axiosInstance.get("/admin/users", {
@@ -33,6 +36,20 @@ export const fetchUserById = async (token, userId) => {
   // Delete a user by ID
   export const deleteUserById = async (token, userId) => {
     const response = await axiosInstance.delete(`/admin/users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  };
+
+
+//////////  MENUS /////////////
+
+  // Delete a menu by ID
+  export const deleteMenuById = async (token, menuId) => {
+    const response = await axiosInstance.delete(`/menu/${menuId}`, {
+      method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
       },

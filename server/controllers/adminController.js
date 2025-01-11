@@ -66,7 +66,7 @@ const deleteUserById = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 
-  res.status(200).json({ message: "User removed successfully" });
+  res.status(200).json({ message: "User removed successfully", status: 'ok' });
 });
 
 module.exports = {

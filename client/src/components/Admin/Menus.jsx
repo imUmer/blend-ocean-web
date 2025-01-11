@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import ConfirmationAlert from "../anim/ConfirmationAlert";
+import {deleteMenuById } from "../../services/adminService";
+import { useAuth } from "../../context/AuthContext";
 
 const MenuSection = () => {
   const [menus, setMenus] = useState([]);
@@ -6,10 +9,14 @@ const MenuSection = () => {
   const [items, setItems] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [selectedSubmenu, setSelectedSubmenu] = useState(null);
-
   const [name, setName] = useState("");
   const [type, setType] = useState("Menu");
   const [editId, setEditId] = useState(null);
+
+  const { token } = useAuth();
+  
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   // Transform API data
   const transformData = (data) => {
@@ -128,17 +135,55 @@ const MenuSection = () => {
   };
 
   // Handle Delete
-  const handleDelete = (id, type) => {
-    if (type === "Menu") {
-      setMenus((prev) => prev.filter((menu) => menu.id !== id));
-      setSubmenus((prev) => prev.filter((submenu) => submenu.parentId !== id));
-      setItems((prev) => prev.filter((item) => item.parentId !== id));
-    } else if (type === "Submenu") {
-      setSubmenus((prev) => prev.filter((submenu) => submenu.id !== id));
-      setItems((prev) => prev.filter((item) => item.parentId !== id));
-    } else if (type === "Item") {
-      setItems((prev) => prev.filter((item) => item.id !== id));
+  // const handleDelete = (id, type) => {
+  //   if (type === "Menu") {
+  //     setMenus((prev) => prev.filter((menu) => menu.id !== id));
+  //     setSubmenus((prev) => prev.filter((submenu) => submenu.parentId !== id));
+  //     setItems((prev) => prev.filter((item) => item.parentId !== id));
+  //   } else if (type === "Submenu") {
+  //     setSubmenus((prev) => prev.filter((submenu) => submenu.id !== id));
+  //     setItems((prev) => prev.filter((item) => item.parentId !== id));
+  //   } else if (type === "Item") {
+  //     setItems((prev) => prev.filter((item) => item.id !== id));
+  //   }
+  // };
+
+
+  // Handle deleting an item
+const handleDelete = async () => {
+  try {
+    const response = await deleteMenuById(token, itemToDelete);
+    console.log(type, response);
+    if (response.ok) {
+      // Remove from local state after successful deletion
+      
+      if (type === "Menu") {
+        setMenus((prev) => prev.filter((menu) => menu.id !== itemToDelete));
+        setSubmenus((prev) => prev.filter((submenu) => submenu.parentId !== itemToDelete));
+        setItems((prev) => prev.filter((item) => item.parentId !== itemToDelete));
+      } else if (type === "Submenu") {
+        setSubmenus((prev) => prev.filter((submenu) => submenu.id !== itemToDelete));
+        setItems((prev) => prev.filter((item) => item.parentId !== itemToDelete));
+      } else if (type === "Item") {
+        setItems((prev) => prev.filter((item) => item.id !== itemToDelete));
+      }
     }
+    setIsConfirmationOpen(false); // Close the confirmation dialog
+  } catch (error) {
+    console.error("Error deleting item:", error);
+  }
+};
+
+
+  // Confirmation Dialog Handlers
+  const handleDeleteClick = (id, type) => {
+    setItemToDelete(id);
+    setType(type);
+    setIsConfirmationOpen(true);
+  };
+
+  const closeConfirmationDialog = () => {
+    setIsConfirmationOpen(false);
   };
 
   // Handle menu selection
@@ -155,6 +200,14 @@ const MenuSection = () => {
   return (
     <div className="p-6 bg-gray-800 text-gray-300">
       <h2 className="text-2xl font-bold mb-6">Manage Menus</h2>
+
+      {/* Confirmation Alert */}
+      <ConfirmationAlert
+        isOpen={isConfirmationOpen}
+        onClose={closeConfirmationDialog}
+        onConfirm={handleDelete}
+        message="Are you sure you want to delete this item?"
+      />
 
       {/* Add/Edit Form */}
       <div className="mb-6">
@@ -175,41 +228,6 @@ const MenuSection = () => {
             <option value="Submenu">Submenu</option>
             <option value="Item">Item</option>
           </select>
-
-          {/* Submenu Parent Menu */}
-          {type === "Submenu" && (
-            <select
-              value={selectedMenu || ""}
-              onChange={(e) => setSelectedMenu(e.target.value)}
-              className="py-2 px-4 bg-gray-700 rounded text-gray-300 focus:outline-none"
-            >
-              <option value="">Select Parent Menu</option>
-              {menus.map((menu) => (
-                <option key={menu.id} value={menu.id}>
-                  {menu.name}
-                </option>
-              ))}
-            </select>
-          )}
-
-          {/* Item Parent Submenu */}
-          {type === "Item" && (
-            <select
-              value={selectedSubmenu || ""}
-              onChange={(e) => setSelectedSubmenu(e.target.value)}
-              className="py-2 px-4 bg-gray-700 rounded text-gray-300 focus:outline-none"
-            >
-              <option value="">Select Parent Submenu</option>
-              {submenus
-                .filter((submenu) => submenu.parentId === selectedMenu)
-                .map((submenu) => (
-                  <option key={submenu.id} value={submenu.id}>
-                    {submenu.name}
-                  </option>
-                ))}
-            </select>
-          )}
-
           <button
             onClick={handleAddOrUpdate}
             className="py-2 px-4 bg-lime-500 text-black rounded hover:bg-lime-600"
@@ -246,7 +264,7 @@ const MenuSection = () => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleDelete(menu.id, "Menu");
+                      handleDeleteClick(menu.id, "Menu");
                     }}
                     className="text-red-400 hover:underline"
                   >
@@ -273,15 +291,6 @@ const MenuSection = () => {
                   onClick={() => handleSubmenuClick(submenu.id)}
                 >
                   <span>{submenu.name}</span>
-                  <div className="flex flex-col text-wrap mx-auto justify-start">
-                  <span >
-                    Count: {submenu.count}
-                  </span>
-                  <span >
-                    Parent: {submenu.parentName}
-                  </span>
-                  </div>
-                  
                   <div className="flex gap-2">
                     <button
                       onClick={(e) => {
@@ -295,7 +304,7 @@ const MenuSection = () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(submenu.id, "Submenu");
+                        handleDeleteClick(submenu.id, "Submenu");
                       }}
                       className="text-red-400 hover:underline"
                     >
@@ -319,15 +328,6 @@ const MenuSection = () => {
                   className="flex justify-between items-center bg-gray-700 rounded p-3 mb-2"
                 >
                   <span>{item.name}</span>
-                  <div className="flex flex-col text-wrap mx-auto justify-start">
-                  <span >
-                    Count: {item.count}
-                  </span>
-                  <span >
-                    Parent: {item.parentName}
-                  </span>
-                  </div>
-
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEdit(item.id, "Item")}
@@ -336,7 +336,7 @@ const MenuSection = () => {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(item.id, "Item")}
+                      onClick={() => handleDeleteClick(item.id, "Item")}
                       className="text-red-400 hover:underline"
                     >
                       Delete

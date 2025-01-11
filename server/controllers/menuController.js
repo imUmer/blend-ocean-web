@@ -136,10 +136,10 @@ const deleteMenu = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const menu = await Menu.findById(id);
-
+  
   if (menu) {
-    await menu.remove();
-    res.json({ message: "Menu removed successfully" });
+    await Menu.findByIdAndDelete(id);
+    res.status(200).json({ message: "Menu removed successfully", ok:"ok" });
   } else {
     res.status(404);
     throw new Error("Menu item not found");
