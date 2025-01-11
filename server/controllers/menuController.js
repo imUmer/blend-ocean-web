@@ -122,7 +122,7 @@ const updateMenu = asyncHandler(async (req, res) => {
     menu.count = count !== undefined ? count : menu.count;
 
     const updatedMenu = await menu.save();
-    res.status(200).json(updatedMenu);
+    res.status(200).json({updatedMenu, ok:"ok"});
   } else {
     res.status(404);
     throw new Error("Menu item not found");

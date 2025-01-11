@@ -55,3 +55,22 @@ export const fetchUserById = async (token, userId) => {
     });
     return response.data;
   };
+
+  // Update a menu by ID
+  export const updateMenuById = async (token, menuId, name) => {
+    const response = await axiosInstance.put(`/menu/${menuId}`, {name}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+};
+// Create a menu
+export const createMenus = async (token, menuId, name) => {
+  const response = await axiosInstance.post(`/menu/${menuId}`, name, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};

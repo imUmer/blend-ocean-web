@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ConfirmationAlert from "../anim/ConfirmationAlert";
-import {deleteMenuById } from "../../services/adminService";
+import {createMenus, updateMenuById, deleteMenuById } from "../../services/adminService";
 import { useAuth } from "../../context/AuthContext";
 
 const MenuSection = () => {
@@ -67,26 +67,33 @@ const MenuSection = () => {
   }, []);
 
   // Handle Add or Update
-  const handleAddOrUpdate = () => {
+  const handleAddOrUpdate = async () => {
     if (!name) return alert("Please enter a name.");
-
-    if (editId) {
-      if (type === "Menu") {
-        setMenus((prev) =>
-          prev.map((menu) => (menu.id === editId ? { ...menu, name } : menu))
-        );
-      } else if (type === "Submenu") {
-        setSubmenus((prev) =>
-          prev.map((submenu) =>
-            submenu.id === editId ? { ...submenu, name } : submenu
-          )
-        );
-      } else if (type === "Item") {
-        setItems((prev) =>
-          prev.map((item) => (item.id === editId ? { ...item, name } : item))
-        );
+    try {
+      
+      if (editId) {
+      const response = await updateMenuById(token, editId, name);
+      if (response.ok) {
+        
+        if (type === "Menu") {
+          setMenus((prev) =>
+            prev.map((menu) => (menu.id === editId ? { ...menu, name } : menu))
+          );
+        } else if (type === "Submenu") {
+          setSubmenus((prev) =>
+            prev.map((submenu) =>
+              submenu.id === editId ? { ...submenu, name } : submenu
+            )
+          );
+        } else if (type === "Item") {
+          setItems((prev) =>
+            prev.map((item) => (item.id === editId ? { ...item, name } : item))
+          );
+        }
       }
     } else {
+      const response = await createMenus(token, name, type);
+      if (response.ok) {
       if (type === "Menu") {
         const newMenu = { id: Date.now().toString(), name };
         setMenus([...menus, newMenu]);
@@ -109,7 +116,11 @@ const MenuSection = () => {
         };
         setItems([...items, newItem]);
       }
+    }}
+    } catch (error) {
+      
     }
+    
 
     setName("");
     setEditId(null);
@@ -117,45 +128,33 @@ const MenuSection = () => {
   };
 
   // Handle Edit
-  const handleEdit = (id, type) => {
-    setEditId(id);
-    setType(type);
-    if (type === "Menu") {
-      const menu = menus.find((menu) => menu.id === id);
-      setName(menu.name);
-    } else if (type === "Submenu") {
-      const submenu = submenus.find((submenu) => submenu.id === id);
-      setName(submenu.name);
-      setSelectedMenu(submenu.parentId);
-    } else if (type === "Item") {
-      const item = items.find((item) => item.id === id);
-      setName(item.name);
-      setSelectedSubmenu(item.parentId);
-    }
+  const handleEdit = async (id, type) => {
+    try {
+      setEditId(id);
+      setType(type);
+        if (type === "Menu") {
+          const menu = menus.find((menu) => menu.id === id);
+          setName(menu.name);
+        } else if (type === "Submenu") {
+          const submenu = submenus.find((submenu) => submenu.id === id);
+          setName(submenu.name);
+          setSelectedMenu(submenu.parentId);
+        } else if (type === "Item") {
+          const item = items.find((item) => item.id === id);
+          setName(item.name);
+          setSelectedSubmenu(item.parentId);
+        }
+    } catch (error) {
+    }     
   };
-
-  // Handle Delete
-  // const handleDelete = (id, type) => {
-  //   if (type === "Menu") {
-  //     setMenus((prev) => prev.filter((menu) => menu.id !== id));
-  //     setSubmenus((prev) => prev.filter((submenu) => submenu.parentId !== id));
-  //     setItems((prev) => prev.filter((item) => item.parentId !== id));
-  //   } else if (type === "Submenu") {
-  //     setSubmenus((prev) => prev.filter((submenu) => submenu.id !== id));
-  //     setItems((prev) => prev.filter((item) => item.parentId !== id));
-  //   } else if (type === "Item") {
-  //     setItems((prev) => prev.filter((item) => item.id !== id));
-  //   }
-  // };
 
 
   // Handle deleting an item
 const handleDelete = async () => {
   try {
     const response = await deleteMenuById(token, itemToDelete);
-    console.log(type, response);
+
     if (response.ok) {
-      // Remove from local state after successful deletion
       
       if (type === "Menu") {
         setMenus((prev) => prev.filter((menu) => menu.id !== itemToDelete));
@@ -197,6 +196,7 @@ const handleDelete = async () => {
     setSelectedSubmenu(submenuId);
   };
 
+
   return (
     <div className="p-6 bg-gray-800 text-gray-300">
       <h2 className="text-2xl font-bold mb-6">Manage Menus</h2>
@@ -208,6 +208,7 @@ const handleDelete = async () => {
         onConfirm={handleDelete}
         message="Are you sure you want to delete this item?"
       />
+
 
       {/* Add/Edit Form */}
       <div className="mb-6">
