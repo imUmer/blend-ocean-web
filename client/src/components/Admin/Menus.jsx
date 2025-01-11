@@ -245,7 +245,7 @@ const handleDelete = async () => {
             {menus.map((menu) => (
               <li
                 key={menu.id}
-                className={`flex justify-between items-center bg-gray-700 rounded p-3 mb-2 ${
+                className={`flex justify-between cursor-pointer items-center bg-gray-700 rounded p-3 mb-2 ${
                   menu.id === selectedMenu ? "bg-gray-600" : ""
                 }`}
                 onClick={() => handleMenuClick(menu.id)}
@@ -285,12 +285,13 @@ const handleDelete = async () => {
               .map((submenu) => (
                 <li
                   key={submenu.id}
-                  className={`flex justify-between items-center bg-gray-700 rounded p-3 mb-2 ${
+                  className={`flex justify-between cursor-pointer items-center bg-gray-700 rounded p-3 mb-2 ${
                     submenu.id === selectedSubmenu ? "bg-gray-600" : ""
                   }`}
                   onClick={() => handleSubmenuClick(submenu.id)}
                 >
                   <span>{submenu.name}</span>
+                  <span>{submenu.count}</span>
                   <div className="flex gap-2">
                     <button
                       onClick={(e) => {
@@ -325,9 +326,10 @@ const handleDelete = async () => {
               .map((item) => (
                 <li
                   key={item.id}
-                  className="flex justify-between items-center bg-gray-700 rounded p-3 mb-2"
+                  className="flex justify-between cursor-cell items-center bg-gray-700 rounded p-3 mb-2"
                 >
                   <span>{item.name}</span>
+                  <span>{item.count}</span>
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEdit(item.id, "Item")}

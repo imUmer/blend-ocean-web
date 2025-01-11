@@ -129,22 +129,80 @@ const updateMenu = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Delete a menu by ID
+// @desc    Delete a menu, submenu, or item by ID
 // @route   DELETE /api/menu/:id
 // @access  Private/Admin
 const deleteMenu = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const menu = await Menu.findById(id);
-  
-  if (menu) {
-    await Menu.findByIdAndDelete(id);
-    res.status(200).json({ message: "Menu removed successfully", ok:"ok" });
-  } else {
+  // Find the entity by ID
+  const entity = await Menu.findById(id);
+
+  if (!entity) {
     res.status(404);
-    throw new Error("Menu item not found");
+    throw new Error("Entity not found");
+  }
+
+  // If it's a top-level menu, delete all related submenus and items
+  if (entity.category === "menu") {
+    // Find all submenus related to this menu
+    const submenus = await Menu.find({ parentId: id, category: "submenu" });
+
+    for (const submenu of submenus) {
+      // Delete all items related to the submenu
+      await Menu.deleteMany({ parentId: submenu._id, category: "item" });
+    }
+
+    // Delete all submenus related to this menu
+    await Menu.deleteMany({ parentId: id, category: "submenu" });
+
+    // Delete the menu itself
+    await Menu.findByIdAndDelete(id);
+
+    res.status(200).json({ message: "Menu and related submenus/items deleted successfully", ok:"ok" });
+    return;
+  }
+
+  // If it's a submenu, delete all related items and update the parent's count
+  if (entity.category === "submenu") {
+    // Delete all items related to the submenu
+    await Menu.deleteMany({ parentId: id, category: "item" });
+
+    // Delete the submenu itself
+    await Menu.findByIdAndDelete(id);
+
+    // Update the count for the parent menu
+    const parentMenuId = entity.parentId;
+    const remainingSubmenus = await Menu.find({ parentId: parentMenuId, category: "submenu" });
+
+    // Sum the counts of remaining submenus
+    const totalSubmenuCount = remainingSubmenus.reduce((sum, submenu) => sum + (submenu.count || 0), 0);
+    await Menu.findByIdAndUpdate(parentMenuId, { count: totalSubmenuCount });
+
+    res.status(200).json({ message: "Submenu and related items deleted successfully", ok:"ok" });
+    return;
+  }
+
+  // If it's an item, update counts for its parent submenu
+  if (entity.category === "item") {
+    // Delete the item
+    await Menu.findByIdAndDelete(id);
+
+    // Update the count for the parent submenu
+    const parentSubmenuId = entity.parentId;
+
+    // Get all remaining items in the submenu
+    const remainingItems = await Menu.find({ parentId: parentSubmenuId, category: "item" });
+
+    // Sum the counts of remaining items
+    const totalItemCount = remainingItems.reduce((sum, item) => sum + (item.count || 0), 0);
+    await Menu.findByIdAndUpdate(parentSubmenuId, { count: totalItemCount });
+
+    res.status(200).json({ message: "Item deleted and submenu count updated successfully", ok:"ok" });
+    return;
   }
 });
+
 
 module.exports = {
   createMenu,

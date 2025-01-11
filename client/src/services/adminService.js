@@ -49,7 +49,6 @@ export const fetchUserById = async (token, userId) => {
   // Delete a menu by ID
   export const deleteMenuById = async (token, menuId) => {
     const response = await axiosInstance.delete(`/menu/${menuId}`, {
-      method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
       },
