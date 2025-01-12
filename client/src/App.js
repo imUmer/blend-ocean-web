@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { MenuProvider } from "./context/MenuContext";
+import { SearchProvider } from "./context/SearchContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 // import Login from "./pages/Login";
 import Login from "./pages/Signin";
@@ -13,7 +14,6 @@ import Test from './components/Test'; // This is for testing purpose
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import ShowModel from "./pages/ShowModel";
-import { SearchProvider } from "./context/SearchContext";
 import About from "./pages/About";
 import AdminPanel from "./pages/AdminPanel";
 import UserEdit from "./components/Admin/UserEdit";

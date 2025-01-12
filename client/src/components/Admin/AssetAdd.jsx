@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import { createAsset } from "../../services/assetService";
+import { useMenu } from "../../context/MenuContext"; // Context for dropdown data
 
 const AssetAdd = () => {
   const navigate = useNavigate();
+  const { types, categories, fetchMenus } = useMenu(); // Fetch type and category options from Context
 
   const [formData, setFormData] = useState({
     type: "Model",
@@ -14,8 +15,17 @@ const AssetAdd = () => {
     exportFormats: "",
     earlyAccess: false,
     isNew: false,
+    images: [],
   });
   const [error, setError] = useState(null);
+  const [uploadError, setUploadError] = useState(null);
+
+  // Ensure types and categories are loaded
+  useEffect(() => {
+    if (!types || !categories) {
+      fetchMenus(); // Fetch menus if not already loaded
+    }
+  }, [types, categories, fetchMenus]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -25,10 +35,34 @@ const AssetAdd = () => {
     }));
   };
 
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files || e.dataTransfer?.files || []);
+    const validFiles = files.filter((file) => file.type.startsWith("image/"));
+    if (!validFiles.length) {
+      setUploadError("Please upload valid image files.");
+      return;
+    }
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ...validFiles],
+    }));
+    setUploadError(null);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    handleImageUpload(e);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const exportFormatsArray = formData.exportFormats.split(",").map((f) => f.trim());
+      // Add code to upload images here if needed
       // await createAsset({ ...formData, exportFormats: exportFormatsArray });
       navigate("/assets");
     } catch (err) {
@@ -76,17 +110,42 @@ const AssetAdd = () => {
           />
         </div>
         <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-300 mb-1">Type</label>
+          <select
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 bg-gray-700 text-gray-300 rounded-lg"
+          >
+            <option value="">Select Type</option>
+            {types &&
+              types.map((type) => (
+                <option key={type.id} value={type.name}>
+                  {type.name}
+                </option>
+              ))}
+          </select>
+        </div>
+        <div className="mb-4">
           <label className="block text-sm font-medium text-gray-300 mb-1">
             Category
           </label>
-          <input
-            type="text"
+          <select
             name="category"
             value={formData.category}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 bg-gray-700 text-gray-300 rounded-lg focus:outline-none"
-          />
+            className="w-full px-4 py-2 bg-gray-700 text-gray-300 rounded-lg"
+          >
+            <option value="">Select Category</option>
+            {categories &&
+              categories.map((category) => (
+                <option key={category.id} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
+          </select>
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -115,6 +174,32 @@ const AssetAdd = () => {
             className="w-full px-4 py-2 bg-gray-700 text-gray-300 rounded-lg focus:outline-none"
           />
         </div>
+        <div
+          className="mb-4 p-4 border-2 border-dashed border-gray-500 rounded-lg bg-gray-700 text-gray-300 text-center"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+        >
+          <p className="text-sm">
+            Drag and drop images here or{" "}
+            <span className="text-lime-500 underline cursor-pointer">
+              click to select
+            </span>
+          </p>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageUpload}
+            className="hidden"
+            id="imageUpload"
+          />
+          <label htmlFor="imageUpload" className="cursor-pointer">
+            Browse Files
+          </label>
+        </div>
+        {uploadError && (
+          <p className="text-red-500 text-center text-sm mb-2">{uploadError}</p>
+        )}
         <div className="mb-4 flex items-center">
           <input
             type="checkbox"
