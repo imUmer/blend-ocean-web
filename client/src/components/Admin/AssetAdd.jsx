@@ -18,7 +18,7 @@ const AssetAdd = () => {
     isNew: false,
     images: [],
   });
-  const [newFormat, setNewFormat] = useState(""); 
+  const [newFormat, setNewFormat] = useState("");
   const [error, setError] = useState(null);
   const [uploadError, setUploadError] = useState(null);
 
@@ -37,12 +37,15 @@ const AssetAdd = () => {
     }));
     if (name === "type") {
       console.log(value);
-      setParent(value)
+      setParent(value);
     }
   };
 
   const handleAddFormat = () => {
-    if (newFormat.trim() && !formData.exportFormats.includes(newFormat.trim())) {
+    if (
+      newFormat.trim() &&
+      !formData.exportFormats.includes(newFormat.trim())
+    ) {
       setFormData((prev) => ({
         ...prev,
         exportFormats: [...prev.exportFormats, newFormat.trim()],
@@ -84,7 +87,9 @@ const AssetAdd = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const exportFormatsArray = formData.exportFormats.split(",").map((f) => f.trim());
+      const exportFormatsArray = formData.exportFormats
+        .split(",")
+        .map((f) => f.trim());
       // Add code to upload images here if needed
       // await createAsset({ ...formData, exportFormats: exportFormatsArray });
       navigate("/assets");
@@ -116,7 +121,9 @@ const AssetAdd = () => {
         Back
       </button>
 
-      <h2 className="text-white text-2xl font-bold mb-4 text-center">Add New Asset</h2>
+      <h2 className="text-white text-2xl font-bold mb-4 text-center">
+        Add New Asset
+      </h2>
       {error && <p className="text-center text-red-500 mb-4">{error}</p>}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -133,7 +140,9 @@ const AssetAdd = () => {
           />
         </div>
         <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-300 mb-1">Type</label>
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Type
+          </label>
           <select
             name="type"
             value={formData.type}
@@ -141,7 +150,9 @@ const AssetAdd = () => {
             required
             className="w-full px-4 py-2 bg-gray-700 text-gray-300 rounded-lg"
           >
-            <option key="0" value="">Select Type</option>
+            <option key="0" value="">
+              Select Type
+            </option>
             {types &&
               types?.map((type) => (
                 <option key={type._id} value={type.name}>
@@ -161,14 +172,18 @@ const AssetAdd = () => {
             required
             className="w-full px-4 py-2 bg-gray-700 text-gray-300 rounded-lg"
           >
-            <option key="0" value="">Select Category</option>
+            <option key="0" value="">
+              Select Category
+            </option>
             {categories &&
-              categories.map((category) => (
-                parent === category.parentId.name && 
-                (<option key={category._id} value={category.name}>
-                  {category.name} 
-                </option>)
-              ))}
+              categories.map(
+                (category) =>
+                  parent === category.parentId.name && (
+                    <option key={category._id} value={category.name}>
+                      {category.name}
+                    </option>
+                  )
+              )}
           </select>
         </div>
         <div className="mb-4">
@@ -223,28 +238,55 @@ const AssetAdd = () => {
           </div>
         </div>
         <div
-          className="mb-4 p-4 border-2 border-dashed border-gray-500 rounded-lg bg-gray-700 text-gray-300 text-center"
+          className="mb-4 p-4 border-2 border-dashed border-gray-500 rounded-lg bg-gray-700 text-gray-300 text-center cursor-pointer"
           onDrop={handleDrop}
           onDragOver={handleDragOver}
         >
-          <p className="text-sm">
-            Drag and drop images here or{" "}
-            <span className="text-lime-500 underline cursor-pointer">
-              click to select
-            </span>
-          </p>
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageUpload}
-            className="hidden"
-            id="imageUpload"
-          />
-          <label htmlFor="imageUpload" className="cursor-pointer">
-            Browse Files
+          <label
+            htmlFor="imageUpload"
+            className="flex flex-col items-center justify-center cursor-pointer h-full"
+          >
+            <p className="text-sm mb-2">
+              Drag and drop images here or{" "}
+              <span className="text-lime-500">click to select</span>
+            </p>
+            <p className="text-sm text-gray-400">(images)</p>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageUpload}
+              className="hidden"
+              id="imageUpload"
+            />
           </label>
         </div>
+        {formData.images.length > 0 && (
+          <div className="grid grid-cols-3 gap-2 mt-4 mb-4">
+            {/* {formData?.images?.map((image, index) => (
+              <div key={index} className="relative group">
+                <img
+                  src={URL.createObjectURL(image)}
+                  alt="Uploaded Thumbnail"
+                  className="rounded-lg object-cover w-full h-24"
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      images: prev.images.filter((_, i) => i !== index),
+                    }))
+                  }
+                  className="absolute top-1 right-1 bg-slate-400/20 text-white p-2 rounded-full w-auto opacity-0 group-hover:opacity-100 hover:bg-slate-400/10"
+                >
+                  &times;
+                </button>
+              </div>
+            ))} */}
+          </div>
+        )}
+
         {uploadError && (
           <p className="text-red-500 text-center text-sm mb-2">{uploadError}</p>
         )}
@@ -256,7 +298,9 @@ const AssetAdd = () => {
             onChange={handleChange}
             className="w-5 h-5 text-lime-500 focus:ring-lime-400 rounded mr-2"
           />
-          <label className="text-sm font-medium text-gray-300">Early Access</label>
+          <label className="text-sm font-medium text-gray-300">
+            Early Access
+          </label>
         </div>
         <div className="mb-4 flex items-center">
           <input
