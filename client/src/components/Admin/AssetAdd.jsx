@@ -5,6 +5,7 @@ import { useMenu } from "../../context/MenuContext"; // Context for dropdown dat
 const AssetAdd = () => {
   const navigate = useNavigate();
   const { types, categories, fetchMenus } = useMenu(); // Fetch type and category options from Context
+  const [parent, setParent] = useState("");
 
   const [formData, setFormData] = useState({
     type: "Model",
@@ -33,6 +34,10 @@ const AssetAdd = () => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+    if (name === "type") {
+      console.log(value);
+      setParent(value)
+    }
   };
 
   const handleImageUpload = (e) => {
@@ -118,10 +123,10 @@ const AssetAdd = () => {
             required
             className="w-full px-4 py-2 bg-gray-700 text-gray-300 rounded-lg"
           >
-            <option value="">Select Type</option>
+            <option key="0" value="">Select Type</option>
             {types &&
-              types.map((type) => (
-                <option key={type.id} value={type.name}>
+              types?.map((type) => (
+                <option key={type._id} value={type.name}>
                   {type.name}
                 </option>
               ))}
@@ -138,12 +143,13 @@ const AssetAdd = () => {
             required
             className="w-full px-4 py-2 bg-gray-700 text-gray-300 rounded-lg"
           >
-            <option value="">Select Category</option>
+            <option key="0" value="">Select Category</option>
             {categories &&
               categories.map((category) => (
-                <option key={category.id} value={category.name}>
-                  {category.name}
-                </option>
+                parent === category.parentId.name && 
+                (<option key={category._id} value={category.name}>
+                  {category.name} 
+                </option>)
               ))}
           </select>
         </div>

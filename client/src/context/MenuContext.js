@@ -23,8 +23,8 @@ export const MenuProvider = ({ children }) => {
       setMenus(menuData); // Store the full menu data
 
       // Separate types and categories
-      const menuTypes = menuData.filter((menu) => !menu.parentId); // Menus without parentId are types
-      const menuCategories = menuData.filter((menu) => menu.parentId); // Menus with parentId are categories
+      const menuTypes = menuData.filter((menu) => menu.category === "menu"); // Menus without parentId are types
+      const menuCategories = menuData.filter((menu) => menu.category === "submenu"); // Menus with parentId are categories
 
       setTypes(menuTypes);
       setCategories(menuCategories);
