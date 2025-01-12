@@ -13,11 +13,12 @@ const AssetAdd = () => {
     category: "",
     releaseDate: "",
     downloads: 0,
-    exportFormats: "",
+    exportFormats: [],
     earlyAccess: false,
     isNew: false,
     images: [],
   });
+  const [newFormat, setNewFormat] = useState(""); 
   const [error, setError] = useState(null);
   const [uploadError, setUploadError] = useState(null);
 
@@ -38,6 +39,23 @@ const AssetAdd = () => {
       console.log(value);
       setParent(value)
     }
+  };
+
+  const handleAddFormat = () => {
+    if (newFormat.trim() && !formData.exportFormats.includes(newFormat.trim())) {
+      setFormData((prev) => ({
+        ...prev,
+        exportFormats: [...prev.exportFormats, newFormat.trim()],
+      }));
+      setNewFormat("");
+    }
+  };
+
+  const handleRemoveFormat = (format) => {
+    setFormData((prev) => ({
+      ...prev,
+      exportFormats: prev.exportFormats.filter((f) => f !== format),
+    }));
   };
 
   const handleImageUpload = (e) => {
@@ -79,7 +97,7 @@ const AssetAdd = () => {
     <div className="my-6 mx-2 max-w-lg sm:mx-auto p-6 bg-gray-800 rounded-lg shadow-lg relative">
       <button
         onClick={() => navigate(-1)}
-        className="absolute -top-4 left-0 text-lime-500 hover:text-lime-600 text-sm sm:text-base font-medium flex items-center"
+        className="absolute sm:top-4 top-2 sm:left-5 left-2 text-lime-500 hover:text-lime-600 text-sm sm:text-base font-medium flex items-center"
       >
         <svg
           className="w-5 h-5 mr-2"
@@ -168,17 +186,41 @@ const AssetAdd = () => {
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-300 mb-1">
-            Export Formats (comma separated)
+            Export Formats
           </label>
-          <input
-            type="text"
-            name="exportFormats"
-            value={formData.exportFormats}
-            onChange={handleChange}
-            placeholder=".obj, .blend, .fbx"
-            required
-            className="w-full px-4 py-2 bg-gray-700 text-gray-300 rounded-lg focus:outline-none"
-          />
+          <div className="flex items-center gap-2 mb-2">
+            <input
+              type="text"
+              value={newFormat}
+              onChange={(e) => setNewFormat(e.target.value)}
+              placeholder="Add export format (e.g., .obj)"
+              className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg focus:outline-none flex-1"
+            />
+            <button
+              type="button"
+              onClick={handleAddFormat}
+              className="bg-lime-500 cursor-pointer px-3 py-2 rounded-lg text-gray-900 hover:bg-lime-600"
+            >
+              +
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {formData?.exportFormats?.map((format, index) => (
+              <span
+                key={index}
+                className="flex items-center bg-lime-600 text-orange-200 px-3 py-1 rounded-lg text-sm"
+              >
+                {format}
+                <button
+                  type="button"
+                  onClick={() => handleRemoveFormat(format)}
+                  className="ml-2 text-black hover:text-rose-600"
+                >
+                  &times;
+                </button>
+              </span>
+            ))}
+          </div>
         </div>
         <div
           className="mb-4 p-4 border-2 border-dashed border-gray-500 rounded-lg bg-gray-700 text-gray-300 text-center"

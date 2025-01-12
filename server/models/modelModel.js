@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const modelSchema = new mongoose.Schema({
-  type: { type: String, enum: ['Model', 'Texture', 'HDRI'], required: true },
+  type: { type: String, required: true },
   title: { type: String, required: true },
   category: { type: String, required: true },
   releaseDate: { type: Date, default: Date.now }, // Store the release date
