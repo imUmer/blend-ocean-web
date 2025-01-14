@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Model = require('../models/modelModel');
+const {Menu} = require('../models/menuModel');
 
 
 // the date setup dynamically
@@ -215,7 +216,7 @@ console.log(searchTerm);
 
 
 
-// @desc    Create a new model
+// @desc    Create a new asset
 // @route   POST /api/model/create
 // @access  Public
 const createModel = async (req, res, next) => {
@@ -223,7 +224,9 @@ const createModel = async (req, res, next) => {
     type,
     title,
     category,
+    categoryId,
     collection,
+    collectionId,
     images=[],
     releaseDate, // Optional; defaults to current date
     downloads = 0, // Optional; defaults to 0
@@ -232,8 +235,6 @@ const createModel = async (req, res, next) => {
     isNew = true,
   } = req.body;
 
-  console.log("Go  "+ type,title, category, collection);
-  
   try {
     if (!type || !title || !category || !collection ) {
       return res.status(400).json({ message: 'Missing required fields' });
@@ -253,8 +254,17 @@ const createModel = async (req, res, next) => {
       isNew,
     });
 
+    
     // Save the model to the database
     await model.save();
+
+    // increment the category and collection count to the database
+    const categoryCount = await Menu.findById(categoryId);
+    const collectionCount = await Menu.findById(collectionId);
+    categoryCount.count = categoryCount.count + 1;
+    collectionCount.count = collectionCount.count + 1;
+    await categoryCount.save();
+    await collectionCount.save();
 
     res.status(201).json({ message: 'Model created successfully', model });
   } catch (error) {

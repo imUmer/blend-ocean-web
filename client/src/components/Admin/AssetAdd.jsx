@@ -12,10 +12,13 @@ const AssetAdd = () => {
   const [subParent, setSubParent] = useState("");
 
   const [formData, setFormData] = useState({
-    type: "Model",
+    type: "",
+    typeId: "",
     title: "",
     category: "",
+    categoryId: "",
     collection: "",
+    collectionId: "",
     releaseDate: "",
     downloads: 0,
     exportFormats: [],
@@ -44,12 +47,29 @@ const AssetAdd = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
     if (name === "type") {
-      console.log(value);
       setParent(value);
+      const selectedType = types.find((type) => type.name === value);
+      setFormData((prev) => ({
+        ...prev,
+        typeId : selectedType?._id,
+      }));
     }
     if (name === "category") {
-      console.log(value);
       setSubParent(value);
+      const selectedType = categories.find((type) => type.name === value);
+      console.log(selectedType);
+      setFormData((prev) => ({
+        ...prev,
+        categoryId : selectedType?._id,
+      }));
+    }
+    if (name === "collection") {
+      const selectedType = collections.find((type) => type.name === value);
+      console.log(selectedType);
+      setFormData((prev) => ({
+        ...prev,
+        collectionId : selectedType?._id,
+      }));
     }
   };
 
@@ -99,7 +119,6 @@ const AssetAdd = () => {
   };
 
   const handleSubmit = async (e) => {
-      console.log("here");
     e.preventDefault();
     try {
       const exportFormatsArray = formData.exportFormats.map((f) => f.trim());
