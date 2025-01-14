@@ -39,8 +39,8 @@ const AssetAdd = () => {
   }, [types, categories, fetchMenus]);
 
   const handleChange = (e) => {
-    setError("")
-    setMessage("")
+    setError("");
+    setMessage("");
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -74,6 +74,8 @@ const AssetAdd = () => {
   };
 
   const handleAddFormat = () => {
+    setError("");
+    setMessage("");
     if (
       newFormat.trim() &&
       !formData.exportFormats.includes(newFormat.trim())
@@ -89,6 +91,8 @@ const AssetAdd = () => {
   };
 
   const handleRemoveFormat = (format) => {
+    setError("");
+    setMessage("");
     setFormData((prev) => ({
       ...prev,
       exportFormats: prev.exportFormats.filter((f) => f !== format),
@@ -96,6 +100,8 @@ const AssetAdd = () => {
   };
 
   const handleImageUpload = (e) => {
+    setError("");
+    setMessage("");
     const files = Array.from(e.target.files || e.dataTransfer?.files || []);
     const validFiles = files.filter((file) => file.type.startsWith("image/"));
     if (!validFiles.length) {
@@ -111,11 +117,15 @@ const AssetAdd = () => {
 
   const handleDrop = (e) => {
     e.preventDefault();
+    setError("");
+    setMessage("");
     handleImageUpload(e);
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
+    setError("");
+    setMessage("");
   };
 
   const handleSubmit = async (e) => {
