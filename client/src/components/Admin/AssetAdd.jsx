@@ -4,13 +4,15 @@ import { useMenu } from "../../context/MenuContext"; // Context for dropdown dat
 
 const AssetAdd = () => {
   const navigate = useNavigate();
-  const { types, categories, fetchMenus } = useMenu(); // Fetch type and category options from Context
+  const { types, categories, collections, fetchMenus } = useMenu(); // Fetch type and category options from Context
   const [parent, setParent] = useState("");
+  const [subParent, setSubParent] = useState("");
 
   const [formData, setFormData] = useState({
     type: "Model",
     title: "",
     category: "",
+    collection: "",
     releaseDate: "",
     downloads: 0,
     exportFormats: [],
@@ -39,6 +41,10 @@ const AssetAdd = () => {
       console.log(value);
       setParent(value);
     }
+    if (name === "category") {
+      console.log(value);
+      setSubParent(value);
+    }
   };
 
   const handleAddFormat = () => {
@@ -51,7 +57,9 @@ const AssetAdd = () => {
         exportFormats: [...prev.exportFormats, newFormat.trim()],
       }));
       setNewFormat("");
+      console.log(formData);
     }
+    
   };
 
   const handleRemoveFormat = (format) => {
@@ -85,15 +93,17 @@ const AssetAdd = () => {
   };
 
   const handleSubmit = async (e) => {
+      console.log("here");
     e.preventDefault();
     try {
-      const exportFormatsArray = formData.exportFormats
-        .split(",")
-        .map((f) => f.trim());
+      const exportFormatsArray = formData.exportFormats.map((f) => f.trim());
+
       // Add code to upload images here if needed
       // await createAsset({ ...formData, exportFormats: exportFormatsArray });
-      navigate("/assets");
-    } catch (err) {
+      // navigate("/assets");
+      const data = {...formData, exportFormats: exportFormatsArray};
+      console.log(data);
+    } catch (err) { 
       setError(err.response?.data?.message || "Failed to add asset");
     }
   };
@@ -188,6 +198,31 @@ const AssetAdd = () => {
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-300 mb-1">
+            Collection
+          </label>
+          <select
+            name="collection"
+            value={formData.collection}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 bg-gray-700 text-gray-300 rounded-lg"
+          >
+            <option key="0" value="">
+              Select Collection
+            </option> 
+            {collections &&
+              collections.map(
+                (collection) =>
+                  subParent === collection.parentId.name && (
+                    <option key={collection._id} value={collection.name}>
+                      {collection.name}
+                    </option>
+                  )
+              )}
+          </select>
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-300 mb-1">
             Release Date
           </label>
           <input
@@ -263,7 +298,7 @@ const AssetAdd = () => {
         </div>
         {formData.images.length > 0 && (
           <div className="grid grid-cols-3 gap-2 mt-4 mb-4">
-            {/* {formData?.images?.map((image, index) => (
+            {formData?.images?.map((image, index) => (
               <div key={index} className="relative group">
                 <img
                   src={URL.createObjectURL(image)}
@@ -278,12 +313,12 @@ const AssetAdd = () => {
                       images: prev.images.filter((_, i) => i !== index),
                     }))
                   }
-                  className="absolute top-1 right-1 bg-slate-400/20 text-white p-2 rounded-full w-auto opacity-0 group-hover:opacity-100 hover:bg-slate-400/10"
+                  className="absolute top-1 right-1 bg-slate-700/50 text-white p-2 rounded-full w-auto opacity-0 group-hover:opacity-100 hover:bg-slate-600/30"
                 >
                   &times;
                 </button>
               </div>
-            ))} */}
+            ))}
           </div>
         )}
 

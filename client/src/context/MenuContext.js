@@ -13,6 +13,7 @@ export const MenuProvider = ({ children }) => {
   const [menus, setMenus] = useState(null); // Full menu data from the API
   const [types, setTypes] = useState(null); // Types (menus)
   const [categories, setCategories] = useState(null); // Categories (submenus)
+  const [collections, setCollection] = useState(null); // Categories (submenus)
 
   // Function to fetch menu data
   const fetchMenus = async () => {
@@ -23,11 +24,15 @@ export const MenuProvider = ({ children }) => {
       setMenus(menuData); // Store the full menu data
 
       // Separate types and categories
-      const menuTypes = menuData.filter((menu) => menu.category === "menu"); // Menus without parentId are types
-      const menuCategories = menuData.filter((menu) => menu.category === "submenu"); // Menus with parentId are categories
+      const menuTypes = menuData.filter((menu) => menu.category === "menu"); //  
+      const menuCategories = menuData.filter((menu) => menu.category === "submenu"); //  
+      const menuCollections = menuData.filter((menu) => menu.category === "item"); // 
 
       setTypes(menuTypes);
       setCategories(menuCategories);
+      setCollection(menuCollections);
+      console.log(collections);
+      
     } catch (error) {
       console.error("Failed to fetch menus:", error);
     }
@@ -41,7 +46,7 @@ export const MenuProvider = ({ children }) => {
   }, [menus]);
 
   return (
-    <MenuContext.Provider value={{ menus, setMenus, types, setTypes, categories, setCategories, fetchMenus }}>
+    <MenuContext.Provider value={{ menus, setMenus, types, setTypes, categories, setCategories, collections, setCollection, fetchMenus }}>
       {children}
     </MenuContext.Provider>
   );
