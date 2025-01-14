@@ -223,16 +223,19 @@ const createModel = async (req, res, next) => {
     type,
     title,
     category,
+    collection,
     images=[],
     releaseDate, // Optional; defaults to current date
     downloads = 0, // Optional; defaults to 0
     exportFormats,
-    earlyAccess = false, // Optional; defaults to false
+    earlyAccess, // Optional; defaults to false
     isNew = true,
   } = req.body;
 
+  console.log("Go  "+ type,title, category, collection);
+  
   try {
-    if (!type || !title || !category || !exportFormats) {
+    if (!type || !title || !category || !collection ) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
@@ -241,6 +244,7 @@ const createModel = async (req, res, next) => {
       type,
       title,
       category,
+      collection,
       images,
       releaseDate: releaseDate || Date.now(), // Use provided release date or current date
       downloads,

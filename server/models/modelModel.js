@@ -4,6 +4,7 @@ const modelSchema = new mongoose.Schema({
   type: { type: String, required: true },
   title: { type: String, required: true },
   category: { type: String, required: true },
+  collection: { type: String, required: true },
   releaseDate: { type: Date, default: Date.now }, // Store the release date
   downloads: { type: Number, default: 0 },
   exportFormats: { type: [String], required: true }, // Array of formats (e.g., ['.obj', '.blend'])

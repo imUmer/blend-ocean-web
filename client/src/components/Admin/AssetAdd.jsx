@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMenu } from "../../context/MenuContext"; // Context for dropdown data
+import { useMenu } from "../../context/MenuContext"; 
+import { createAsset } from "../../services/adminService";
+import { useAuth } from "../../context/AuthContext"; 
 
 const AssetAdd = () => {
   const navigate = useNavigate();
+  const {token} = useAuth();
   const { types, categories, collections, fetchMenus } = useMenu(); // Fetch type and category options from Context
   const [parent, setParent] = useState("");
   const [subParent, setSubParent] = useState("");
@@ -22,6 +25,7 @@ const AssetAdd = () => {
   });
   const [newFormat, setNewFormat] = useState("");
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
   const [uploadError, setUploadError] = useState(null);
 
   // Ensure types and categories are loaded
@@ -32,6 +36,8 @@ const AssetAdd = () => {
   }, [types, categories, fetchMenus]);
 
   const handleChange = (e) => {
+    setError("")
+    setMessage("")
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -97,12 +103,12 @@ const AssetAdd = () => {
     e.preventDefault();
     try {
       const exportFormatsArray = formData.exportFormats.map((f) => f.trim());
+      const data = {...formData, exportFormats: exportFormatsArray};
 
       // Add code to upload images here if needed
-      // await createAsset({ ...formData, exportFormats: exportFormatsArray });
-      // navigate("/assets");
-      const data = {...formData, exportFormats: exportFormatsArray};
-      console.log(data);
+      const response = await createAsset(token, data);
+      navigate("/admin");
+      setMessage(response?.data?.message || "Asset created!")
     } catch (err) { 
       setError(err.response?.data?.message || "Failed to add asset");
     }
@@ -135,6 +141,7 @@ const AssetAdd = () => {
         Add New Asset
       </h2>
       {error && <p className="text-center text-red-500 mb-4">{error}</p>}
+      {message && <p className="text-center text-lime-500 mb-4">{message}</p>}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -230,7 +237,6 @@ const AssetAdd = () => {
             name="releaseDate"
             value={formData.releaseDate}
             onChange={handleChange}
-            required
             className="w-full px-4 py-2 bg-gray-700 text-gray-300 rounded-lg focus:outline-none"
           />
         </div>

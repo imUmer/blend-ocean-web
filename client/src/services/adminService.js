@@ -74,3 +74,17 @@ export const createMenus = async (token, name, category, parentId=null, count=0)
   });
   return response.data;
 };
+
+
+
+//////////  Assets /////////////
+
+  export const createAsset = async (token, formData) => {
+    const response = await axiosInstance.post(`/models/create/`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  };
+  
