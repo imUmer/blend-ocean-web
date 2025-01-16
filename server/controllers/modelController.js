@@ -281,11 +281,11 @@ const deleteModel = asyncHandler(async (req, res) => {
   const model = await Model.findById(req.params.id);
 
   if (model) {
-    await model.remove();
-    res.json({ message: 'Menu removed successfully' });
+    await Model.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Model removed successfully' });
   } else {
     res.status(404);
-    throw new Error('Menu not found');
+    throw new Error('Model not found');
   }
 });
 
