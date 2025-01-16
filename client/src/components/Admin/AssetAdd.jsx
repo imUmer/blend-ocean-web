@@ -235,6 +235,7 @@ const AssetAdd = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(token)
     try {
       const exportFormatsArray = formData.exportFormats.map((f) => f.trim());
       const data = {...formData, exportFormats: exportFormatsArray};
