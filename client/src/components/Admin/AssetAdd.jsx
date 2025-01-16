@@ -193,6 +193,7 @@ const AssetAdd = () => {
           setFormData((prev) => ({
             ...prev,
             assetImagesId: docRef.id,
+            images: [base64Images],
           }));
           loadImages(docRef.id)
       }

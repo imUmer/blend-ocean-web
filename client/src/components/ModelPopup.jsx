@@ -4,14 +4,39 @@ import { db } from "../firebase";
 
 const ModelPopup = ({ model, onClose }) => {
   const [selectedImage, setSelectedImage] = useState(
-    model?.images?.length > 0
-      ? model.images[0]
-      : "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg"
+     "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg"
   );
   const [documentData, setDocumentData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Function to fetch document
+  const fetchDocument = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const docRef = doc(db, "assetImages", model?.assetImagesId); // Adjust collection/document IDs
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setDocumentData(docSnap.data()); // Save document data to state
+        setSelectedImage(docSnap.data()?.images[0])
+      } else {
+        setError("No such document!");
+      }
+    } catch (err) {
+      console.error("Error fetching document:", err);
+      setError("Error fetching document.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch document on component mount
+  useEffect(() => {
+    fetchDocument();
+  }, []);
 
   if (!model) return null; // Return nothing if no model is selected
   return (
@@ -49,7 +74,13 @@ const ModelPopup = ({ model, onClose }) => {
             </div>
 
             {/* Thumbnail Images */}
+            
             <div className="flex gap-2 max-md:justify-center overflow-x-auto">
+            { loading  ? (
+              <div className="absolute inset-0 flex items-center justify-center z-30 bg-neutral-800 bg-opacity-50">
+                <div className="w-10 h-10 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            ) : ""}
               {documentData?.images?.length > 0 ? (
                 documentData?.images.map((image, index) => (
                   <img
