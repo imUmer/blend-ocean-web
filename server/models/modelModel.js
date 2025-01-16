@@ -11,6 +11,7 @@ const modelSchema = new mongoose.Schema({
   earlyAccess: { type: Boolean, default: false },
   isNew: { type: Boolean, default: true }, // Whether it's new or old
   images: { type: [String], default: [] }, 
+  assetImagesId: { type: String, default: "" }, 
 });
 
 const Model = mongoose.model('Model', modelSchema);

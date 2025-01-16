@@ -228,6 +228,7 @@ const createModel = async (req, res, next) => {
     collection,
     collectionId,
     images=[],
+    assetImagesId,
     releaseDate, // Optional; defaults to current date
     downloads = 0, // Optional; defaults to 0
     exportFormats,
@@ -247,6 +248,7 @@ const createModel = async (req, res, next) => {
       category,
       collection,
       images,
+      assetImagesId,
       releaseDate: releaseDate || Date.now(), // Use provided release date or current date
       downloads,
       exportFormats,

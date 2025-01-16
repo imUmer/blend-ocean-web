@@ -34,6 +34,7 @@ const AssetAdd = () => {
           earlyAccess: false,
           isNew: false,
           images: [],
+          assetImagesId: "",
         };
   });
   const [newFormat, setNewFormat] = useState("");
@@ -179,7 +180,8 @@ const AssetAdd = () => {
           await updateDoc(docRef, {
             images: arrayUnion(...base64Images), // Push new images to the existing array
           });
-        console.log(docRef);
+          loadImages(docId)
+          console.log(docRef);
       }
         else {
           const docRef = await addDoc(collection(db, "assetImages"), {
@@ -188,13 +190,12 @@ const AssetAdd = () => {
             date: new Date(),
           });
           localStorage.setItem("documentId", docRef.id);
+          setFormData((prev) => ({
+            ...prev,
+            assetImagesId: docRef.id,
+          }));
+          loadImages(docRef.id)
       }
-
-        setFormData((prev) => ({
-          ...prev,
-          images: [docId],
-        }));
-        loadImages(docId)
         setMessage(`Image loaded successfully!`);
       } catch (error) {
         console.error("Error saving image: ", error);
@@ -207,6 +208,9 @@ const AssetAdd = () => {
       setError(null);
     
       try {
+        console.log(localStorage.getItem("documentId"));
+        
+        if (!localStorage.getItem("documentId")) return;
         const docRef = doc(db, "assetImages", docId); // Adjust collection/document IDs
         const docSnap = await getDoc(docRef);
   
@@ -219,7 +223,6 @@ const AssetAdd = () => {
         }
       } catch (err) {
         console.error("Error fetching document:", err);
-        setError("Error fetching document.");
       } finally {
         setImagesLoading(false);
       }
