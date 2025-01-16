@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { doc, getDoc } from "firebase/firestore";  
+import { db } from "../firebase"; 
 
 const ModelPopup = ({ model, onClose }) => {
   const [selectedImage, setSelectedImage] = useState(
@@ -6,9 +8,12 @@ const ModelPopup = ({ model, onClose }) => {
       ? model.images[0]
       : "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg"
   );
+  const [documentData, setDocumentData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
 
   if (!model) return null; // Return nothing if no model is selected
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
       <div className="bg-gray-800 text-gray-200 rounded-lg shadow-lg max-w-4xl w-full p-6 relative">
@@ -45,8 +50,8 @@ const ModelPopup = ({ model, onClose }) => {
 
             {/* Thumbnail Images */}
             <div className="flex gap-2 max-md:justify-center overflow-x-auto">
-              {model?.images?.length > 0 ? (
-                model.images.map((image, index) => (
+              {documentData?.images?.length > 0 ? (
+                documentData?.images.map((image, index) => (
                   <img
                     key={index}
                     src={image}

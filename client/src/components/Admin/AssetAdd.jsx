@@ -3,40 +3,68 @@ import { useNavigate } from "react-router-dom";
 import { useMenu } from "../../context/MenuContext"; 
 import { createAsset } from "../../services/adminService";
 import { useAuth } from "../../context/AuthContext"; 
+import { db } from "../../firebase";
+import { collection, addDoc, doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 
 const AssetAdd = () => {
   const navigate = useNavigate();
-  const {token} = useAuth();
-  const { types, categories, collections, fetchMenus } = useMenu(); // Fetch type and category options from Context
+  const { token } = useAuth();
+  const { types, categories, collections, fetchMenus } = useMenu();
+  
+  const [loading, setLoading] = useState(true); // Loading state
+  const [imagesLoading, setImagesLoading] = useState(false); // Loading state
   const [parent, setParent] = useState("");
   const [subParent, setSubParent] = useState("");
 
-  const [formData, setFormData] = useState({
-    type: "",
-    typeId: "",
-    title: "",
-    category: "",
-    categoryId: "",
-    collection: "",
-    collectionId: "",
-    releaseDate: "",
-    downloads: 0,
-    exportFormats: [],
-    earlyAccess: false,
-    isNew: false,
-    images: [],
+  const [formData, setFormData] = useState(() => {
+    const savedData = localStorage.getItem("assetFormData");
+    return savedData
+      ? JSON.parse(savedData)
+      : {
+          type: "",
+          typeId: "",
+          title: "",
+          category: "",
+          categoryId: "",
+          collection: "",
+          collectionId: "",
+          releaseDate: "",
+          downloads: 0,
+          exportFormats: [],
+          earlyAccess: false,
+          isNew: false,
+          images: [],
+        };
   });
   const [newFormat, setNewFormat] = useState("");
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const [uploadError, setUploadError] = useState(null);
-
-  // Ensure types and categories are loaded
+  const [documentId, setDocumentId] = useState(null);
+  
+  
   useEffect(() => {
-    if (!types || !categories) {
-      fetchMenus(); // Fetch menus if not already loaded
+    localStorage.setItem("assetFormData", JSON.stringify(formData));
+  }, [formData]);
+
+  useEffect(() => {
+    const loadMenus = async () => {
+      setLoading(true);
+      try {
+        await fetchMenus(); // Ensure fetchMenus populates `types` and `categories`
+      } catch (err) {
+        setError("Failed to fetch menu data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (!types || !categories || !collections) {
+      loadMenus();
+    } else {
+      setLoading(false);
     }
-  }, [types, categories, fetchMenus]);
+  }, [types, categories, collections, fetchMenus]);
 
   const handleChange = (e) => {
     setError("");
@@ -51,24 +79,22 @@ const AssetAdd = () => {
       const selectedType = types.find((type) => type.name === value);
       setFormData((prev) => ({
         ...prev,
-        typeId : selectedType?._id,
+        typeId: selectedType?._id,
       }));
     }
     if (name === "category") {
       setSubParent(value);
-      const selectedType = categories.find((type) => type.name === value);
-      console.log(selectedType);
+      const selectedCategory = categories.find((category) => category.name === value);
       setFormData((prev) => ({
         ...prev,
-        categoryId : selectedType?._id,
+        categoryId: selectedCategory?._id,
       }));
     }
     if (name === "collection") {
-      const selectedType = collections.find((type) => type.name === value);
-      console.log(selectedType);
+      const selectedCollection = collections.find((collection) => collection.name === value);
       setFormData((prev) => ({
         ...prev,
-        collectionId : selectedType?._id,
+        collectionId: selectedCollection?._id,
       }));
     }
   };
@@ -108,25 +134,100 @@ const AssetAdd = () => {
       setUploadError("Please upload valid image files.");
       return;
     }
-    setFormData((prev) => ({
-      ...prev,
-      images: [...prev.images, ...validFiles],
-    }));
+
+     // Convert valid image files to Base64 strings
+    const imagePromises = validFiles.map((file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result); // Base64 string
+        reader.onerror = () => reject("Error reading file");
+        reader.readAsDataURL(file); // Read file as Base64
+      });
+    });
+
+      Promise.all(imagePromises)
+      .then((base64Images) => {
+        
+        setUploadError(null);
+        console.log("Images as Base64:", base64Images);
+        saveImage({base64Images}); // Save Base64 strings
+      })
+      .catch((error) => {
+        console.error(error);
+        setUploadError("Error processing images.");
+      });
     setUploadError(null);
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    setError("");
-    setMessage("");
     handleImageUpload(e);
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
-    setError("");
-    setMessage("");
   };
+
+  /// add images to firebase document and get the id of images
+  const saveImage = async ({ base64Images }) => {
+      try {
+        
+        const docId = localStorage.getItem("documentId");
+        console.log("here", docId);
+        if (docId) {
+          const docRef = doc(db, "assetImages", docId); // Adjust collection and document IDs
+          await updateDoc(docRef, {
+            images: arrayUnion(...base64Images), // Push new images to the existing array
+          });
+        console.log(docRef);
+      }
+        else {
+          const docRef = await addDoc(collection(db, "assetImages"), {
+            images :arrayUnion(...base64Images),
+            id: new Date(),
+            date: new Date(),
+          });
+          localStorage.setItem("documentId", docRef.id);
+      }
+
+        setFormData((prev) => ({
+          ...prev,
+          images: [docId],
+        }));
+        loadImages(docId)
+        setMessage(`Image loaded successfully!`);
+      } catch (error) {
+        console.error("Error saving image: ", error);
+        setError("Failed to load image.");
+      }
+    };
+
+    const loadImages = async (docId) => {
+      setImagesLoading(true);
+      setError(null);
+    
+      try {
+        const docRef = doc(db, "assetImages", docId); // Adjust collection/document IDs
+        const docSnap = await getDoc(docRef);
+  
+        if (docSnap.exists()) {
+          setImagesData(docSnap.data()); // Save document data to state
+          console.log(imagesData);
+          
+        } else {
+          setError("No such document!");
+        }
+      } catch (err) {
+        console.error("Error fetching document:", err);
+        setError("Error fetching document.");
+      } finally {
+        setImagesLoading(false);
+      }
+    }
+    // To retrieve images 
+    const [imagesData, setImagesData] = useState(() => {
+      const savedImages = loadImages(localStorage.getItem("documentId"));
+      return savedImages});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -138,10 +239,20 @@ const AssetAdd = () => {
       const response = await createAsset(token, data);
       navigate("/admin");
       setMessage(response?.data?.message || "Asset created!")
+      localStorage.removeItem("assetFormData");
+      localStorage.removeItem("documentId");
     } catch (err) { 
       setError(err.response?.data?.message || "Failed to add asset");
     }
   };
+  
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-white text-lg">Loading data...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="my-6 mx-2 max-w-lg sm:mx-auto p-6 bg-gray-800 rounded-lg shadow-lg relative">
@@ -331,12 +442,17 @@ const AssetAdd = () => {
             />
           </label>
         </div>
-        {formData.images.length > 0 && (
-          <div className="grid grid-cols-3 gap-2 mt-4 mb-4">
-            {formData?.images?.map((image, index) => (
+        {imagesData?.images?.length > 0 && (
+          <div className="relative grid grid-cols-3 gap-2 mt-4 mb-4">
+            { imagesLoading  ? (
+              <div className="absolute inset-0 flex items-center justify-center z-30 bg-neutral-800 bg-opacity-50">
+                <div className="w-10 h-10 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            ) :
+            imagesData?.images?.map((image, index) => (
               <div key={index} className="relative group">
                 <img
-                  src={URL.createObjectURL(image)}
+                  src={image}
                   alt="Uploaded Thumbnail"
                   className="rounded-lg object-cover w-full h-24"
                 />
@@ -360,6 +476,7 @@ const AssetAdd = () => {
         {uploadError && (
           <p className="text-red-500 text-center text-sm mb-2">{uploadError}</p>
         )}
+
         <div className="mb-4 flex items-center">
           <input
             type="checkbox"
