@@ -19,7 +19,7 @@ const ModelPopup = ({ model, onClose }) => {
       const docRef = doc(db, "assetImages", model?.assetImagesId); // Adjust collection/document IDs
       const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
+      if (docSnap.exists() && docSnap.data()?.images[0]) {
         setDocumentData(docSnap.data()); // Save document data to state
         setSelectedImage(docSnap.data()?.images[0])
       } else {

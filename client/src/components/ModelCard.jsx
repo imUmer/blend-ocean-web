@@ -3,7 +3,7 @@ import React, {useState} from "react";
 const ModelCard = ({ model, handleModelClick }) => {
   const [selectedImage, setSelectedImage] = useState(
      ()=> {
-      const image = `data:${model?.contentType};base64,${model?.images}`;
+      const image = `data:${model?.contentType};base64,${model?.images.toString("base64")}`;
       return model?.contentType !== "" ? image :
      "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg"
      }
