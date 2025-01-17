@@ -193,7 +193,6 @@ const AssetAdd = () => {
           setFormData((prev) => ({
             ...prev,
             assetImagesId: docRef.id,
-            images: [base64Images],
           }));
           loadImages(docRef.id)
       }
@@ -217,8 +216,7 @@ const AssetAdd = () => {
   
         if (docSnap.exists()) {
           setImagesData(docSnap.data()); // Save document data to state
-          console.log(imagesData);
-          
+          console.log(docSnap.data());
         } else {
           setError("No such document!");
         }
@@ -265,8 +263,9 @@ const AssetAdd = () => {
     if(token)
     try {
       const exportFormatsArray = formData.exportFormats.map((f) => f.trim());
-      const data = {...formData, exportFormats: exportFormatsArray};
-
+      const data = {...formData, exportFormats: exportFormatsArray, images: [imagesData?.images.length > 0 ? imagesData.images[0] : ""]};
+      console.log(data);
+      
       // Add code to upload images here if needed
       const response = await createAsset(token, data);
       navigate("/admin");
