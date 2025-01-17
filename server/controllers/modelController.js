@@ -235,19 +235,36 @@ const createModel = async (req, res, next) => {
     earlyAccess, // Optional; defaults to false
     isNew = true,
   } = req.body;
-
+  const contentType = "";
+  const buffer = "";
   try {
     if (!type || !title || !category || !collection ) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
+    if (images[0] !== "") {
+      const base64Image = images[0];
+      // Extract the content type and base64 string
+      const matches = base64Image.match(/^data:(.+);base64,(.+)$/);
+      if (!matches || matches.length !== 3) {
+        return res.status(400).json({ error: "something gose wrong!!" });
+      }
+      contentType = matches[1]; // e.g., "image/png"
+      const base64Data = matches[2]; // The actual base64 string
+
+      // Convert base64 string to Buffer
+      buffer = Buffer.from(base64Data, "base64");
+    }
+    console.log(contentType, buffer);
+    
     // Create a new model
     const model = new Model({
       type,
       title,
       category,
       collection,
-      images,
+      contentType:contentType,
+      images:buffer,
       assetImagesId,
       releaseDate: releaseDate || Date.now(), // Use provided release date or current date
       downloads,
@@ -256,11 +273,11 @@ const createModel = async (req, res, next) => {
       isNew,
     });
 
-    
+
     // Save the model to the database
     await model.save();
 
-    // increment the category and collection count to the database
+    // // increment the category and collection count to the database
     const categoryCount = await Menu.findById(categoryId);
     const collectionCount = await Menu.findById(collectionId);
     categoryCount.count = categoryCount.count + 1;
@@ -271,6 +288,8 @@ const createModel = async (req, res, next) => {
     res.status(201).json({ message: 'Model created successfully', model });
   } catch (error) {
     next(error);
+    console.log(error);
+    
   }
 };
 

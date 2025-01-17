@@ -10,6 +10,7 @@ const modelSchema = new mongoose.Schema({
   exportFormats: { type: [String], required: true }, // Array of formats (e.g., ['.obj', '.blend'])
   earlyAccess: { type: Boolean, default: false },
   isNew: { type: Boolean, default: true }, // Whether it's new or old
+  contentType: { type: String, default: [] }, 
   images: { type: [Buffer], default: [] }, 
   assetImagesId: { type: String, default: "" }, 
 });

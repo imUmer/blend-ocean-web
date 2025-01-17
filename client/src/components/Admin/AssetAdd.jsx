@@ -268,12 +268,14 @@ const AssetAdd = () => {
       
       // Add code to upload images here if needed
       const response = await createAsset(token, data);
-      navigate("/admin");
+      // navigate("/admin");
       setMessage(response?.data?.message || "Asset created!")
-      localStorage.removeItem("assetFormData");
-      localStorage.removeItem("documentId");
+      // localStorage.removeItem("assetFormData");
+      // localStorage.removeItem("documentId");
     } catch (err) { 
-      setError(err.response?.data?.message || "Failed to add asset");
+      console.log(err);
+      
+      setError(err.response?.data?.error || "Failed to add asset");
     }
   };
   
