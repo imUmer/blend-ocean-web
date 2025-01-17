@@ -4,7 +4,7 @@ import { useMenu } from "../../context/MenuContext";
 import { createAsset } from "../../services/adminService";
 import { useAuth } from "../../context/AuthContext"; 
 import { db } from "../../firebase";
-import { collection, addDoc, doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
+import { collection, addDoc, doc, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
 
 const AssetAdd = () => {
   const navigate = useNavigate();
@@ -232,6 +232,33 @@ const AssetAdd = () => {
     const [imagesData, setImagesData] = useState(() => {
       const savedImages = loadImages(localStorage.getItem("documentId"));
       return savedImages});
+
+    const removeImage = async (image) => {
+      console.log(image);
+      const docId = localStorage.getItem("documentId");
+      if (!docId) return;
+      
+      const documentRef = doc(db, "assetImages", docId);
+
+      try {
+        // Update the document and remove the specific image ID from the array
+        const docRef = await updateDoc(documentRef, {
+          images: arrayRemove(image),
+        });
+
+        const docSnapshot = await getDoc(documentRef);
+        if (docSnapshot.exists()) {
+          console.log("Document data:", docSnapshot.data());
+          setImagesData(docSnapshot.data());
+        } else {
+          console.log("No such document!");
+        }
+        console.log(docRef);
+      } catch (error) {
+        console.error("Error removing image:", error);
+      }
+    }
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -464,10 +491,11 @@ const AssetAdd = () => {
                 <button
                   type="button"
                   onClick={() =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      images: prev.images.filter((_, i) => i !== index),
-                    }))
+                    removeImage(image)
+                    // setImagesData((prev) => ({
+                    //   ...prev,
+                    //   images: prev.images.filter((_, i) => i !== index),
+                    // }))
                   }
                   className="absolute top-1 right-1 bg-slate-700/50 text-white p-2 rounded-full w-auto opacity-0 group-hover:opacity-100 hover:bg-slate-600/30"
                 >

@@ -8,7 +8,7 @@ router.get('/chunk', getModels);
 router.get('/eamodels', getEAModel);
 router.get('/search', searchModel);
 router.post('/create', createModel);
-router.delete('/:id', deleteModel); // Delete user
+router.delete('/:id', protect, admin, deleteModel); // Delete user
 
 
 module.exports = router;

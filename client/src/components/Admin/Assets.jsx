@@ -24,7 +24,7 @@ const AssetsSection = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete this asset?");
     if (confirmDelete) {
       try {
-        await axios.delete(`/api/assets/${id}`); // Replace with your actual API endpoint
+        await axios.delete(`/api/models/${id}`); // Replace with your actual API endpoint
         setAssets((prevAssets) => prevAssets.filter((asset) => asset._id !== id)); // Update state
         alert("Asset deleted successfully!");
       } catch (error) {
