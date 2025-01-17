@@ -95,8 +95,8 @@ export const createMenus = async (token, name, category, parentId=null, count=0)
     });
     return response.data;
   };
-  export const updateAssetById = async (token, formData, id) => {
-    const response = await axiosInstance.post(`/models/${id}`, formData, {
+  export const updateAssetById = async (token, id, formData) => {
+    const response = await axiosInstance.put(`/models/${id}`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

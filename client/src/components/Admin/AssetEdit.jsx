@@ -220,7 +220,7 @@ const AssetEdit = () => {
         setError(null);
       
         try {
-          
+          if(!docId) return;
           const docRef = doc(db, "assetImages", docId); // Adjust collection/document IDs
           const docSnap = await getDoc(docRef);
     
@@ -270,11 +270,11 @@ const AssetEdit = () => {
     e.preventDefault();
     try {
       const exportFormatsArray = formData.exportFormats.map((f) => f.trim());
-      // const data = {...formData, exportFormats: exportFormatsArray, images: [imagesData?.images.length > 0 ? imagesData.images[0] : ""]};
+      const data = {...formData, exportFormats: exportFormatsArray, images: [imagesData?.images.length > 0 ? imagesData.images[0] : ""]};
       
-      // const response = await updateAssetById(id, { ...formData, data });
+      const response = await updateAssetById(token, id, data);
+      setMessage(response?.data?.message || "Asset created!")
       navigate("/admin");
-      // setMessage(response?.data?.message || "Asset created!")
     } catch (err) { 
       console.log(err);
       setError(err.response?.data?.error || "Failed to update asset");

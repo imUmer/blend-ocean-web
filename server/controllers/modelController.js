@@ -271,6 +271,87 @@ const createModel = async (req, res, next) => {
   }
 };
 
+// @desc    update a asset
+// @route   POST /api/models/:id
+// @access  Private Admin
+const updateModel = async (req, res, next) => {
+  const { 
+    type,
+    title,
+    category,
+    categoryId,
+    collection,
+    collectionId,
+    images=[],
+    assetImagesId,
+    releaseDate, // Optional; defaults to current date
+    downloads = 0, // Optional; defaults to 0
+    exportFormats,
+    earlyAccess, // Optional; defaults to false
+    isNew = true,
+  } = req.body;
+  console.log(type, req.params.id);
+  
+  let contentType = "";
+  let buffer = "";
+  try {
+    if (!type || !title || !category || !collection ) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    if (images[0] !== "") {
+      const base64Image = images[0];
+      // Extract the content type and base64 string
+      const matches = base64Image.match(/^data:(.+);base64,(.+)$/);
+      if (!matches || matches.length !== 3) {
+        return res.status(400).json({ error: "something gose wrong!!" });
+      }
+      contentType = matches[1]; // e.g., "image/png"
+      const base64Data = matches[2]; // The actual base64 string
+
+      // Convert base64 string to Buffer
+      buffer = Buffer.from(base64Data, "base64");
+    }
+    console.log(contentType, buffer);
+    
+
+    // Update Asset
+    const updatedModel = await Model.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          type,
+          title,
+          category,
+          categoryId,
+          collection,
+          collectionId,
+          images,
+          assetImagesId,
+          releaseDate, 
+          downloads, 
+          exportFormats,
+          earlyAccess, 
+          isNew,
+        },
+      },
+      { new: true }
+    )
+
+    // Updated the Asset to the database
+    res.status(200).json(
+      { 
+        message: "Asset updated successfully",
+      }
+    );
+
+  } catch (error) {
+    next(error);
+    console.log(error);
+    
+  }
+};
+
 // @desc    Delete a model by ID (Admin only)
 // @route   DELETE /api/model/:id
 // @access  Private/Admin
@@ -290,6 +371,7 @@ module.exports = {
   getAllModel,
   getEAModel,
   createModel,
+  updateModel,
   deleteModel,
   getModels,
   getModel,
