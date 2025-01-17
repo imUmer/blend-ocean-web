@@ -76,6 +76,8 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("documentId");
+    localStorage.removeItem("assetFormData");
     setToken("");
     setUser("");
     navigate("/login");

@@ -268,10 +268,10 @@ const AssetAdd = () => {
       
       // Add code to upload images here if needed
       const response = await createAsset(token, data);
-      // navigate("/admin");
+      navigate("/admin");
       setMessage(response?.data?.message || "Asset created!")
-      // localStorage.removeItem("assetFormData");
-      // localStorage.removeItem("documentId");
+      localStorage.removeItem("assetFormData");
+      localStorage.removeItem("documentId");
     } catch (err) { 
       console.log(err);
       

@@ -1,6 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 
 const ModelCard = ({ model, handleModelClick }) => {
+  const [selectedImage, setSelectedImage] = useState(
+     ()=> {
+      const image = `data:${model?.contentType};base64,${model?.images}`;
+      return model?.contentType !== "" ? image :
+     "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg"
+     }
+  );
+
+  
   return (
     <div className="relative bg-black/40 w-full hover:bg-gray-700 hover:text-lime-500 cursor-pointer rounded-lg shadow hover:shadow-lg" onClick={() => handleModelClick(model)} >
           {/* {model.earlyAccess === true ? <p className="text-lime-400 font-bold pl-2">•</p> : <p className="text-slate-400 font-bold pl-2">•</p> }   */}
@@ -10,7 +19,7 @@ const ModelCard = ({ model, handleModelClick }) => {
 
       <div className="flex items-center justify-center m-0.5 rounded-tl-lg rounded-tr-lg h-48 overflow-hidden ">
         <img
-          src={model?.image || "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg"}
+          src={selectedImage}
           alt={model.title}
           className="h-auto rounded-lg"
         />

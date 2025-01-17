@@ -235,8 +235,8 @@ const createModel = async (req, res, next) => {
     earlyAccess, // Optional; defaults to false
     isNew = true,
   } = req.body;
-  const contentType = "";
-  const buffer = "";
+  let contentType = "";
+  let buffer = "";
   try {
     if (!type || !title || !category || !collection ) {
       return res.status(400).json({ message: 'Missing required fields' });
