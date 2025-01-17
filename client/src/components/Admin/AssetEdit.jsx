@@ -274,8 +274,8 @@ const AssetEdit = () => {
       console.log(data);
       
       const response = await updateAssetById(token, id, data);
-      // setMessage(response?.data?.message || "Asset created!")
-      // navigate("/admin");
+      setMessage(response?.data?.message || "Asset created!")
+      navigate("/admin");
     } catch (err) { 
       console.log(err);
       setError(err.response?.data?.error || "Failed to update asset");

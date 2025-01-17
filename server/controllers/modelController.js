@@ -316,7 +316,7 @@ const updateModel = async (req, res, next) => {
     
 
     // Update Asset
-    const updatedModel = await Model.findByIdAndUpdate(
+    await Model.findByIdAndUpdate(
       req.params.id,
       {
         $set: {
