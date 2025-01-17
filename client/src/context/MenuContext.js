@@ -30,9 +30,7 @@ export const MenuProvider = ({ children }) => {
 
       setTypes(menuTypes);
       setCategories(menuCategories);
-      setCollection(menuCollections);
-      console.log(collections);
-      
+      setCollection(menuCollections);      
     } catch (error) {
       console.error("Failed to fetch menus:", error);
     }

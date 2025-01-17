@@ -46,6 +46,8 @@ const AssetAdd = () => {
   
   useEffect(() => {
     localStorage.setItem("assetFormData", JSON.stringify(formData));
+    setParent(formData?.type)
+    setSubParent(formData?.category)
   }, [formData]);
 
   useEffect(() => {
@@ -208,8 +210,6 @@ const AssetAdd = () => {
       setError(null);
     
       try {
-        console.log(localStorage.getItem("documentId"));
-        
         if (!localStorage.getItem("documentId")) return;
         const docRef = doc(db, "assetImages", docId); // Adjust collection/document IDs
         const docSnap = await getDoc(docRef);
@@ -408,7 +408,7 @@ const AssetAdd = () => {
           <input
             type="date"
             name="releaseDate"
-            value={formData.releaseDate}
+            value={formData?.releaseDate ? formData.releaseDate.split("T")[0] : ""}
             onChange={handleChange}
             className="w-full px-4 py-2 bg-gray-700 text-gray-300 rounded-lg focus:outline-none"
           />

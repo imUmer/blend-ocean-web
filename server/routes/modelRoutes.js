@@ -1,5 +1,5 @@
 const express = require('express');
-const {getAllModel, getEAModel, createModel, getModels, searchModel, deleteModel } = require('../controllers/modelController')
+const {getAllModel, getEAModel, createModel, getModels, getModel, searchModel, deleteModel } = require('../controllers/modelController')
 const router = express.Router();
 const { protect, admin } = require('../middlewares/authMiddleware');
 
@@ -7,6 +7,7 @@ router.get('/', getAllModel);
 router.get('/chunk', getModels);
 router.get('/eamodels', getEAModel);
 router.get('/search', searchModel);
+router.get('/:id', getModel);
 router.post('/create',protect, admin, createModel);
 router.delete('/:id', protect, admin, deleteModel); // Delete user
 

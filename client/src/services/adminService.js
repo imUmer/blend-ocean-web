@@ -87,4 +87,20 @@ export const createMenus = async (token, name, category, parentId=null, count=0)
     });
     return response.data;
   };
+  export const fetchAssetById = async (token, id) => {
+    const response = await axiosInstance.get(`/models/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  };
+  export const updateAssetById = async (token, formData, id) => {
+    const response = await axiosInstance.post(`/models/${id}`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  };
   

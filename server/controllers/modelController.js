@@ -37,45 +37,23 @@ const getEAModel = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get single models
-// @route   GET /api/model/:id
+// @desc    Get single model
+// @route   GET /api/models/:id
 // @access  Public
 const getModel = asyncHandler(async (req, res) => {
+
   try {
-    // Query parameters for filtering and pagination
-    const { type, category, images, isNew, earlyAccess, page = 1, limit = 10 } = req.query;
+    // Fetch only model 
+    const model = await Model.findById(req.params.id);
 
-    // Build query filters
-    const filters = {};
-    if (type) filters.type = type;
-    if (category) filters.category = category;
-    if (isNew !== undefined) filters.isNew = isNew === 'true';
-    if (earlyAccess !== undefined) filters.earlyAccess = earlyAccess === 'true';
-    if (images) filters.images = { $in: images.split(',') }; // Assuming images are passed as a comma-separated list
+    if (model) {
+      res.status(200).json(model);
+    } else {
+      return res.status(404).json({ message: 'No models found.' });
+    }
 
-    // Paginate results
-    const skip = (page - 1) * limit;
-
-    // Fetch models from the database
-    const models = await Model.find(filters).skip(skip).limit(parseInt(limit)).lean();
-
-    // Add relative time for releaseDate
-    const results = models.map((model) => ({
-      ...model,
-      release: getRelativeTime(new Date(model.releaseDate)), // Add relative release time
-    }));
-
-    // Count total documents for pagination
-    const total = await Model.countDocuments(filters);
-
-    res.json({
-      total,
-      page: parseInt(page),
-      limit: parseInt(limit),
-      results,
-    });
   } catch (error) {
-    console.error('Failed to fetch models:', error);
+    console.error('Failed to model:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -314,5 +292,6 @@ module.exports = {
   createModel,
   deleteModel,
   getModels,
+  getModel,
   searchModel,
 };
