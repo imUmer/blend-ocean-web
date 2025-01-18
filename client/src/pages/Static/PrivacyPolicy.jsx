@@ -2,7 +2,7 @@ import React from "react";
 
 const PrivacyPolicy = () => {
   return (
-    <div className="p-6 bg-gray-800 text-gray-300">
+    <div className="p-6 text-center sm:text-start text-xs text-gray-300 sm:h-screen flex-1 py-12 px-6 sm:px-12">
       <h1 className="text-3xl font-bold mb-4">Privacy Policy</h1>
       <p className="mb-4">
         At Blend Ocean, we take your privacy seriously. This policy outlines how

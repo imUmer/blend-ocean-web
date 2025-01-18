@@ -8,7 +8,6 @@ const data = {
     { id: 5, name: "Learn", path: "/learn" },
     { id: 6, name: "Blogs", path: "/blogs" },
     { id: 7, name: "About", path: "/about" },
-    { id: 8, name: "Contact", path: "/contact" },
   ],
 };
 
