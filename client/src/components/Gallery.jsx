@@ -8,6 +8,7 @@ import { useMenu } from "../context/MenuContext";
 
 const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
   const [models, setModels] = useState([]);
+  const [allModels, setAllModels] = useState([]);
   const [earlyAccessToggle, setEarlyAccessToggle] = useState(false);
   // const [modelDetail, setModelDetail] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -24,6 +25,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
   // Fetch models dynamically
   const fetchModels = async (page) => {
     setLoading(true);
+    setEarlyAccessToggle(false);
     try {
       const { data } = await axios.get('/api/models/search', {
         params: {
@@ -37,6 +39,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
       });
   
       setModels(data.models);
+      setAllModels(data.models)
       console.log("Gallery: ", data, " total: " +data.total);
       // console.log("Gallery filters: ", filters);
   
@@ -63,36 +66,36 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
     }
   }; 
 
-  const getEarlyAccessModels = async () => {
-    if (earlyAccessToggle === true) {
-      try {
-        setLoading(true); // Show loading spinner
-        const { data } = await axios.get(`/api/models/chunk?page=${page}&limit=8`);
-        setModels(data.models);
-      
-        setEarlyAccessToggle(false);
-        setPages(data.pages);
-        setTotal(data.total);
-      } catch (error) {
-        console.error("Failed to fetch models:", error);
-      } finally {
-        setLoading(false); // Hide loading spinner
+  const getEarlyAccessModels = () => {
+    if (allModels.length === 0) {
+      console.error("No models available to filter!");
+      return;
+    }
+  
+    setLoading(true); // Show loading spinner
+  
+    try {
+      if (earlyAccessToggle) {
+        // If early access is ON, show all models
+        setModels(allModels); // Reset to show all models
+        setPages(Math.ceil(allModels.length / 8)); // Set pages for all models
+        setTotal(allModels.length); // Set total count for all models
+        setEarlyAccessToggle(false); // Turn OFF early access filter
+      } else {
+        // If early access is OFF, filter models for early access
+        const earlyAccessModels = models.filter((model) => model.earlyAccess); // Assuming `isEarlyAccess` is a property
+        setModels(earlyAccessModels); // Update the state to show only early access models
+        setPages(Math.ceil(earlyAccessModels.length / 8)); // Set pages for early access models
+        setTotal(earlyAccessModels.length); // Set total count for early access models
+        setEarlyAccessToggle(true); // Turn ON early access filter
       }
-    } else
-      try {
-        setLoading(true); // Show loading spinner
-        const { data } = await axios.get(`/api/models/chunk?page=${page}&limit=8&earlyaccess=true`);
-        setModels(data.models);
-        
-        setEarlyAccessToggle(true);
-        setPages(data.pages);
-        setTotal(data.total);
-      } catch (error) {
-        console.error("Failed to fetch models:", error);
-      } finally {
-        setLoading(false); // Hide loading spinner
-      }
+    } catch (error) {
+      console.error("Failed to apply early access filter:", error);
+    } finally {
+      setLoading(false); // Hide loading spinner
+    }
   };
+  
 
   return (
     <div className="relative flex gap-3 p-4 text-white lg:text-sm text-xs">
@@ -103,7 +106,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
         </div>
       )}
 
-      <div className="flex flex-col">
+      <div className="w-full h-full flex flex-col">
         <div className="flex max-sm:flex-col gap-2 max-sm:items-center justify-between items-center mb-6">
           <div className="flex justify-start max-sm:w-full items-start gap-5">
             <img
@@ -114,7 +117,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
             />
             
             <div className="flex flex-col">
-              <h2 className="text-2xl w-full font-bold">{models[0]?.type}</h2>
+              <h2 className="text-2xl w-full font-bold">{models[0]?.type || "Select"}</h2>
               <p className="text-gray-400 ">
                 {models[0]?.category || "All"} - {total} Results
               </p>
@@ -137,49 +140,56 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
         </div>
         
         {/* Models cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2" >
-        {models?.map((model) => (
-        <ModelCard key={model._id} model={model} handleModelClick={handleModelClick}  />
-        ))}
-      </div>
-
+        {total > 0 ?
+        <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2" >
+          {models?.map((model) => (
+          <ModelCard key={model._id} model={model} handleModelClick={handleModelClick}  />
+          ))           
+          }
+        </div> 
+        : 
+        <div className=" w-full h-72 flex justify-center items-center text-center" >
+          {<> {"No models"}</>}
+        </div>
+        }
+        
 
         {/* Pagination */}
-      <div className="flex justify-center mt-6 space-x-2">
-        <button
-          onClick={() => handlePageChange(page - 1)}
-          className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
-          disabled={page === 1}
-        >
-          Previous
-        </button>
-        {Array.from({ length: pages }, (_, i) => i + 1).map((pageNumber) => (
+        <div className="flex justify-center mt-6 space-x-2">
           <button
-            key={pageNumber}
-            onClick={() => handlePageChange(pageNumber)}
-            className={`px-3 py-1 ${
-              page === pageNumber ? "bg-lime-500" : "bg-gray-700"
-            } text-white rounded hover:bg-gray-600`}
+            onClick={() => handlePageChange(page - 1)}
+            className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+            disabled={page === 1}
           >
-            {pageNumber}
+            Previous
           </button>
-        ))}
-        <button
-          onClick={() => handlePageChange(page + 1)}
-          className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
-          disabled={page === pages}
-        >
-          Next
-        </button>
-      </div>
+          {Array.from({ length: pages }, (_, i) => i + 1).map((pageNumber) => (
+            <button
+              key={pageNumber}
+              onClick={() => handlePageChange(pageNumber)}
+              className={`px-3 py-1 ${
+                page === pageNumber ? "bg-lime-500" : "bg-gray-700"
+              } text-white rounded hover:bg-gray-600`}
+            >
+              {pageNumber}
+            </button>
+          ))}
+          <button
+            onClick={() => handlePageChange(page + 1)}
+            className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+            disabled={page === pages}
+          >
+            Next
+          </button>
+        </div>
 
-      {/* Popup */}
-      {selectedModel && (
-        <ModelPopup
-          model={selectedModel}
-          onClose={() => setSelectedModel(null)}
-        />
-      )}
+        {/* Popup */}
+        {selectedModel && (
+          <ModelPopup
+            model={selectedModel}
+            onClose={() => setSelectedModel(null)}
+          />
+        )}
       </div>
     </div>
   );

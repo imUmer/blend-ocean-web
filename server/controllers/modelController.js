@@ -150,6 +150,7 @@ const searchModel = asyncHandler(async (req, res) => {
     if (category) filters.category = category;
     if (selectedCollection) filters.collection = selectedCollection;
 
+    if (earlyAccess !== undefined) filters.earlyAccess = earlyAccess === 'true';
     // Add regex-based search for `title` and `category`
     if (searchTerm) {
       filters.$or = [
@@ -173,7 +174,6 @@ const searchModel = asyncHandler(async (req, res) => {
     console.log(filters.collection);
 
     // if (isNew !== undefined) filters.isNew = isNew === 'true';
-    if (earlyAccess !== undefined) filters.earlyAccess = earlyAccess === 'true';
 
     // Filter by images if provided (assumes comma-separated list)
     if (images) filters.images = { $in: images.split(",") };
