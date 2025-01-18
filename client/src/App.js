@@ -13,7 +13,10 @@ import Navbar from "./components/Navbar";
 import Test from './components/Test'; // This is for testing purpose
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
-import About from "./pages/About";
+import About from "./pages/Static/About";
+import Contact from "./pages/Static/Contact";
+import Terms from "./pages/Static/TermsAndConditions";
+import Privacy from "./pages/Static/PrivacyPolicy";
 import AdminPanel from "./pages/AdminPanel";
 import UserEdit from "./components/Admin/UserEdit";
 import MenuEdit from "./components/Admin/MenuEdit";
@@ -35,6 +38,9 @@ const App = () => {
               <Route path="/register" element={<Register />} />
               <Route path="/:type" element={<AssetPlot  />} />
               <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route
                 path="/dashboard"
                 element={

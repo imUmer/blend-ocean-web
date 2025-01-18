@@ -9,7 +9,6 @@ const data = {
     { id: 3, name: "Blogs", path: "/blogs" },
     { id: 3, name: "About", path: "/about" },
     { id: 4, name: "Contact", path: "/contact" },
-    { id: 5, name: "Services", path: "/services" },
   ],
   footer: "© 2024 My Website",
 };
