@@ -4,11 +4,13 @@ import model from "../assets/icons/model.svg";
 import texture from "../assets/icons/texture.svg";
 import hdris from "../assets/icons/hdris.svg";
 import arrow from "../assets/icons/arrow.svg";
+import { useMenu } from "../context/MenuContext";
 
 const Sidebar = ({ toggleSidebar }) => {
   const [subMenuOpen, setSubMenuOpen] = useState({});
   const [loading, setLoading] = useState(false);
   const [menuData, setMenuData] = useState([]);
+  const { setSelectedType, setSelectedCollection } = useMenu();
 
   // Fetch menu data from API
   const fetchMenuData = async () => {
@@ -17,7 +19,7 @@ const Sidebar = ({ toggleSidebar }) => {
       const response = await fetch("/api/menu/"); // Replace with your actual API endpoint
       const data = await response.json();
       console.log(data);
-      
+
       setMenuData(data); // Set fetched data to state
       setLoading(false);
     } catch (error) {
@@ -48,7 +50,25 @@ const Sidebar = ({ toggleSidebar }) => {
     fetchMenuData(); // Fetch menu data on component mount
   }, []);
 
+  // Find top-level menu
+  const findTopLevelMenu = (currentMenu) => {
+    if (!currentMenu.parentId) {
+      return currentMenu.name; // This is the top-level menu
+    }
+    const parentMenu = menuData.find((menu) => menu._id === currentMenu.parentId._id);
+    return findTopLevelMenu(parentMenu); // Recursive call
+  };
+
+  // Handle submenu toggle
   const toggleSubMenu = (menu) => {
+    const topLevelMenu = findTopLevelMenu(menu); // Determine top-level menu
+    if(menu?.category === "item"){
+      setSelectedType(topLevelMenu); // Set the top-level menu name in context
+      setSelectedCollection(menu?.name); // Set the top-level menu name in context
+    }
+      // console.log("Top-Level Menu:", topLevelMenu);
+
+    // Toggle submenu state
     setSubMenuOpen((prevState) => ({
       ...prevState,
       [menu.name]: !prevState[menu.name],
@@ -78,13 +98,15 @@ const Sidebar = ({ toggleSidebar }) => {
                 className="w-5"
               />
             )}
-            <span className={
-              menu.parentId === null
-                ? "text-lg font-bold"
-                : menu.submenus?.length > 0
-                ? "text-base text-gray-300"
-                : "text-sm text-gray-400"
-            }>
+            <span
+              className={
+                menu.parentId === null
+                  ? "text-lg font-bold"
+                  : menu.submenus?.length > 0
+                  ? "text-base text-gray-300"
+                  : "text-sm text-gray-400"
+              }
+            >
               {menu.name}
             </span>
           </div>
@@ -106,9 +128,7 @@ const Sidebar = ({ toggleSidebar }) => {
         </div>
 
         {subMenuOpen[menu.name] && menu.submenus?.length > 0 && (
-          <ul className="pl-6 mt-2">
-            {renderMenu(menu.submenus)}
-          </ul>
+          <ul className="pl-6 mt-2">{renderMenu(menu.submenus)}</ul>
         )}
       </li>
     ));

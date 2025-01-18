@@ -124,8 +124,8 @@ const getModels = asyncHandler(async (req, res) => {
 const searchModel = asyncHandler(async (req, res) => {
   try {
     // Extract query parameters
-    const { searchTerm, page = 1, limit = 8, title, type, category, isNew, earlyAccess, images } = req.query;
-console.log(searchTerm);
+    const { searchTerm, page = 1, limit = 8, title, type, selectedType, selectedCollection, category, isNew, earlyAccess, images } = req.query;
+    console.log(selectedType, selectedCollection);
 
     // Pagination setup
     const skip = (page - 1) * limit;
@@ -145,13 +145,19 @@ console.log(searchTerm);
       ];
     }
 
+    // Add specific filters if provided
+    if (selectedType) filters.type = selectedType;
+    if (category) filters.category = category;
+    if (selectedCollection) filters.collection = selectedCollection;
+
     // Add regex-based search for `title` and `category`
     if (searchTerm) {
       filters.$or = [
         { title: { $regex: searchTerm, $options: "i" } },
         { category: { $regex: searchTerm, $options: "i" } },
       ]
-    }
+    console.log('addddd');
+  }
     else{
       const total = await Model.countDocuments(filters);
       const models = await Model.find(filters).skip(skip).limit(Number(limit)).lean();
@@ -164,12 +170,9 @@ console.log(searchTerm);
       return;
     }
 
-    
+    console.log(filters.collection);
 
-    // Add specific filters if provided
-    if (type) filters.type = type;
-    // if (category) filters.category = category;
-    if (isNew !== undefined) filters.isNew = isNew === 'true';
+    // if (isNew !== undefined) filters.isNew = isNew === 'true';
     if (earlyAccess !== undefined) filters.earlyAccess = earlyAccess === 'true';
 
     // Filter by images if provided (assumes comma-separated list)
@@ -178,7 +181,8 @@ console.log(searchTerm);
     // Fetch total count and filtered models
     const total = await Model.countDocuments(filters);
     const models = await Model.find(filters).skip(skip).limit(Number(limit)).lean();
-
+    console.log(models);
+    
     // Respond with paginated results
     res.json({
       models,

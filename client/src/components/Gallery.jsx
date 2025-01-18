@@ -4,6 +4,7 @@ import ModelPopup from "./ModelPopup";
 import burgermenuf from "../assets/icons/burger-menu-gray-f.svg";
 import axios from "axios";
 import { useSearch } from "../context/SearchContext";
+import { useMenu } from "../context/MenuContext";
 
 const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
   const [models, setModels] = useState([]);
@@ -15,6 +16,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
   const [total, setTotal] = useState(1);
   const [selectedModel, setSelectedModel] = useState(null); // For popup
   const { filters, searchTerm } = useSearch();
+  const { selectedType, selectedCollection } = useMenu();
 
   const handleModelClick = (model) => {
     setSelectedModel(model); 
@@ -28,6 +30,8 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
           page,
           limit: 8,
           searchTerm,
+          selectedType,
+          selectedCollection,
           ...filters, // Spread filters object into params
         },
       });
@@ -48,7 +52,10 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
 
   useEffect(() => {
     fetchModels(page);
-  }, [page, searchTerm, filters]);
+    console.log(selectedType);
+    console.log(selectedCollection);
+    
+  }, [page, searchTerm, filters, selectedType, selectedCollection]);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= pages) {
@@ -96,9 +103,6 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
         </div>
       )}
 
-      {/* <div className="w-64 h-full absolute md:h-full md:relative inline-block bg-black">
-        <h1>sfsafasdf</h1>
-      </div> */}
       <div className="flex flex-col">
         <div className="flex max-sm:flex-col gap-2 max-sm:items-center justify-between items-center mb-6">
           <div className="flex justify-start max-sm:w-full items-start gap-5">
@@ -110,9 +114,9 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
             />
             
             <div className="flex flex-col">
-              <h2 className="text-2xl w-full font-bold">MODELS</h2>
+              <h2 className="text-2xl w-full font-bold">{models[0]?.type}</h2>
               <p className="text-gray-400 ">
-                {models[0]?.category || "All "} - {total} Results
+                {models[0]?.category || "All"} - {total} Results
               </p>
             </div>
           </div>

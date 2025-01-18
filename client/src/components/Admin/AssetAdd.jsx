@@ -263,7 +263,7 @@ const AssetAdd = () => {
     if(token)
     try {
       const exportFormatsArray = formData.exportFormats.map((f) => f.trim());
-      const data = {...formData, exportFormats: exportFormatsArray, images: [imagesData?.images.length > 0 ? imagesData.images[0] : ""]};
+      const data = {...formData, exportFormats: exportFormatsArray, images: [imagesData?.images?.length > 0 ? imagesData.images[0] : ""]};
       console.log(data);
       
       // Add code to upload images here if needed
@@ -274,7 +274,6 @@ const AssetAdd = () => {
       localStorage.removeItem("documentId");
     } catch (err) { 
       console.log(err);
-      
       setError(err.response?.data?.error || "Failed to add asset");
     }
   };

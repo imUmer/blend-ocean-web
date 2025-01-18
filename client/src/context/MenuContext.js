@@ -13,8 +13,10 @@ export const MenuProvider = ({ children }) => {
   const [menus, setMenus] = useState(null); // Full menu data from the API
   const [types, setTypes] = useState(null); // Types (menus)
   const [categories, setCategories] = useState(null); // Categories (submenus)
-  const [collections, setCollection] = useState(null); // Categories (submenus)
-
+  const [collections, setCollection] = useState(null); // Collections (item)
+  const [selectedType, setSelectedType] = useState("Models"); // Selected Type 
+  const [selectedCollection, setSelectedCollection] = useState("Models"); // Selected Type 
+  
   // Function to fetch menu data
   const fetchMenus = async () => {
     try {
@@ -44,7 +46,7 @@ export const MenuProvider = ({ children }) => {
   }, [menus]);
 
   return (
-    <MenuContext.Provider value={{ menus, setMenus, types, setTypes, categories, setCategories, collections, setCollection, fetchMenus }}>
+    <MenuContext.Provider value={{ menus, setMenus, types, setTypes, categories, setCategories, collections, setCollection, fetchMenus, selectedType, setSelectedType, selectedCollection, setSelectedCollection }}>
       {children}
     </MenuContext.Provider>
   );
