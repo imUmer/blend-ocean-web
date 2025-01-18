@@ -14,8 +14,8 @@ export const MenuProvider = ({ children }) => {
   const [types, setTypes] = useState(null); // Types (menus)
   const [categories, setCategories] = useState(null); // Categories (submenus)
   const [collections, setCollection] = useState(null); // Collections (item)
-  const [selectedType, setSelectedType] = useState("Models"); // Selected Type 
-  const [selectedCollection, setSelectedCollection] = useState("Models"); // Selected Type 
+  const [selectedType, setSelectedType] = useState(localStorage.getItem("selectedType")); // Selected Type 
+  const [selectedCollection, setSelectedCollection] = useState(localStorage.getItem("selectedCollection")); // Selected Type 
   
   // Function to fetch menu data
   const fetchMenus = async () => {
@@ -44,6 +44,20 @@ export const MenuProvider = ({ children }) => {
       fetchMenus();
     }
   }, [menus]);
+
+    useEffect(() => {
+      if (selectedType) {
+        localStorage.setItem("selectedType", selectedType);
+      } else {
+        localStorage.removeItem("selectedType");
+      }
+  
+      if (selectedCollection) {
+        localStorage.setItem("selectedCollection", selectedCollection);
+      } else {
+        localStorage.removeItem("selectedCollection");
+      }
+    }, [selectedType, selectedCollection]);
 
   return (
     <MenuContext.Provider value={{ menus, setMenus, types, setTypes, categories, setCategories, collections, setCollection, fetchMenus, selectedType, setSelectedType, selectedCollection, setSelectedCollection }}>
