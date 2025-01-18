@@ -16,10 +16,11 @@ const Footer = () => {
       </div>
 
       {/* Links */}
-      <div className="mb-4"><ul className="flex justify-center space-x-6 text-xs">
+      <div className="mb-4 px-2"> 
+        <ul className="text-xs gap-2 flex justify-center flex-col sm:flex-row sm:space-x-6 ">
           {footer?.links?.map((link) => (
             <Link key={link.id} to={link.path}>
-              <li className="text-center cursor-pointer hover:text-lime-500">
+              <li className="cursor-pointer hover:text-lime-500">
                 {link.name}
               </li>
             </Link>

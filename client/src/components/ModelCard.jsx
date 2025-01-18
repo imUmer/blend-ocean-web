@@ -17,7 +17,7 @@ const ModelCard = ({ model, handleModelClick }) => {
             <circle id="new_texture_3" data-name="new texture 3" cx="3.5" cy="3.5" r="3.5" fill={`${model.earlyAccess ? "#abff00" : "#888888"}`}/>
           </svg>
 
-      <div className="flex items-center justify-center m-0.5 rounded-tl-lg rounded-tr-lg h-48 overflow-hidden ">
+      <div className="flex items-center bg-gray-950 p-2 justify-center m-0.5 rounded-tl-lg rounded-tr-lg h-48 overflow-hidden ">
         <img
           src={selectedImage}
           alt={model.title}
