@@ -154,16 +154,19 @@ const Navbar = () => {
           {isMenuOpen && (
             <div
               ref={menuRef}
-              className="absolute max-md:top-8 top-10 max-md:-right-6 -right-16 z-30 shadow-lg justify-center"
+              className="absolute max-md:top-8 top-10 max-md:-right-6 -right-16 z-40 shadow-lg justify-center"
             >
               <ul className="flex flex-col items-center bg-slate-800 w-40 p-1 text-xs text-gray-400 font-medium">
                 {data.links.map((link, i) => (
+                <Link className="w-full " to={link.path} onClick={()=>{setSelectedType(link.name); setSelectedCollection("");}}>
+
                   <li
                     key={i}
-                    className="w-full text-center py-2 px-3 m-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-500"
+                    className="text-center py-2 px-3 m-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-500"
                   >
-                    <Link to={link.path}>{link.name}</Link>
+                    {link.name}
                   </li>
+                  </Link>
                 ))}
 
                 {token ? (
