@@ -10,7 +10,6 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
   const [models, setModels] = useState([]);
   const [allModels, setAllModels] = useState([]);
   const [earlyAccessToggle, setEarlyAccessToggle] = useState(false);
-  // const [modelDetail, setModelDetail] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);

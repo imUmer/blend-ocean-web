@@ -5,9 +5,10 @@ import menu from "../assets/icons/burger-menu-gray.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { getUserProfile } from "../services/userService";
 import { useAuth } from "../context/AuthContext";
-import FirestoreUserProfile from "./FirestoreUserProfile";
-import {data} from "../Helper/data.js";
+import { useMenu } from "../context/MenuContext";
 import { useSearch } from "../context/SearchContext.js";
+import {data} from "../Helper/data.js";
+import FirestoreUserProfile from "./FirestoreUserProfile";
 import FilterPopup from "./FilterPopup";
 import AnimatedSearchBar from "./AnimatedSearchbar.jsx";
 
@@ -16,6 +17,8 @@ const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false); // Track if search is open
   const navigate = useNavigate();
   const { setSearchTerm } = useSearch();
+  const { setSelectedType, setSelectedCollection } = useMenu();
+  
   // token
   const { user, setUser, token, setToken } = useAuth();
 
@@ -123,12 +126,14 @@ const Navbar = () => {
           <div>
             <ul className="w-full truncate flex justify-center items-start max-lg:hidden text-xs gap-4 text-gray-400 font-medium">
               {data.links.map((link) => (
+                <Link to={link.path} onClick={()=>{setSelectedType(link.name); setSelectedCollection("");}}>
                 <li
                   key={link.id}
                   className=" text-center py-1 px-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-500"
                 >
-                  <Link to={link.path}>{link.name}</Link>
+                  {link.name}
                 </li>
+                </Link>
               ))}
             </ul>
           </div>

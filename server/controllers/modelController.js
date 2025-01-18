@@ -148,7 +148,7 @@ const searchModel = asyncHandler(async (req, res) => {
     // Add specific filters if provided
     if (selectedType) filters.type = selectedType;
     if (category) filters.category = category;
-    if (selectedCollection) filters.collection = selectedCollection;
+    if (selectedCollection && selectedCollection !== "All") filters.collection = selectedCollection;
 
     if (earlyAccess !== undefined) filters.earlyAccess = earlyAccess === 'true';
     // Add regex-based search for `title` and `category`
