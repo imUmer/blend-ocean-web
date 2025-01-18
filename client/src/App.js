@@ -98,8 +98,8 @@ const App = () => {
                 }
               />
             </Routes>
-          </Router>
           <Footer />
+          </Router>
         </SearchProvider>
       </MenuProvider>
     </AuthProvider>

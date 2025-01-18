@@ -3,24 +3,24 @@ const data = {
   links: [
     { id: 1, name: "Home", path: "/" },
     { id: 2, name: "Models", path: "/models" },
-    { id: 2, name: "Textures", path: "/textures" },
-    { id: 2, name: "Hdris", path: "/hdris" },
-    { id: 3, name: "Learn", path: "/learn" },
-    { id: 3, name: "Blogs", path: "/blogs" },
+    { id: 3, name: "Textures", path: "/textures" },
+    { id: 4, name: "Hdris", path: "/hdris" },
+    { id: 5, name: "Learn", path: "/learn" },
+    { id: 6, name: "Blogs", path: "/blogs" },
+    { id: 7, name: "About", path: "/about" },
+    { id: 8, name: "Contact", path: "/contact" },
+  ],
+};
+
+const footer = {
+  links: [
+    { id: 1, name: "Privacy Policy", path: "/privacy" },
+    { id: 2, name: "Terms of Service", path: "/terms" },
     { id: 3, name: "About", path: "/about" },
     { id: 4, name: "Contact", path: "/contact" },
   ],
-  footer: "© 2024 My Website",
-};
-
-const mainmenu = {
-  title: "Main Menu",
-  menus: [
-    { id: 1, name: "Textures", path: "/textures" },
-    { id: 2, name: "Models", path: "/models" },
-    { id: 3, name: "HDRI's", path: "/hdris" },
-  ]
+  message: "Blend Ocean Web App. All Rights Reserved.",
 };
 
 // Named exports for both constants
-export { data, mainmenu };
+export { data, footer };

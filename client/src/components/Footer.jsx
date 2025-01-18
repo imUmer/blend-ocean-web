@@ -1,8 +1,10 @@
 import React, { useMemo } from "react";
+import { Link } from "react-router-dom";
 import logo from "../assets/logos/logo.svg";
 import twitter from "../assets/icons/twitter.svg";
 import facebook from "../assets/icons/facebook.svg";
 import instagram from "../assets/icons/instagram.svg";
+import { footer } from "../Helper/data";
 
 const Footer = () => {
   const currentYear = useMemo(() => new Date().getFullYear(), []);
@@ -14,30 +16,17 @@ const Footer = () => {
       </div>
 
       {/* Links */}
-      <div className="mb-4">
-        <ul className="flex justify-center space-x-6 text-xs">
-          <li>
-            <a href="/" className="hover:text-lime-500">
-              Privacy Policy
-            </a>
-          </li>
-          <li>
-            <a href="/" className="hover:text-lime-500">
-              Terms of Service
-            </a>
-          </li>
-          <li>
-            <a href="/" className="hover:text-lime-500">
-              About Us
-            </a>
-          </li>
-          <li>
-            <a href="/" className="hover:text-lime-500">
-              Contact
-            </a>
-          </li>
+      <div className="mb-4"><ul className="flex justify-center space-x-6 text-xs">
+          {footer?.links?.map((link) => (
+            <Link key={link.id} to={link.path}>
+              <li className="text-center cursor-pointer hover:text-lime-500">
+                {link.name}
+              </li>
+            </Link>
+          ))}
         </ul>
       </div>
+      
 
       {/* Social Icons */}
       <div className="mb-4">
@@ -52,18 +41,13 @@ const Footer = () => {
               <img src={facebook} alt="Facebook" className="w-5 h-5" />
             </a>
           </li>
-          <li className="bg-white rounded-lg hover:bg-lime-500">
-            <a href="/" className=" ">
-              <img src={instagram} alt="LinkedIn" className="w-5 h-5" />
-            </a>
-          </li>
         </ul>
       </div>
 
       {/* Bottom Text */}
       <div className="text-xs text-gray-500">
         <p>
-          &copy; {currentYear} Blend Ocean Web. All Rights Reserved.
+          &copy; {currentYear} {footer?.message}
         </p>
       </div>
     </footer>
