@@ -98,7 +98,7 @@ const Gallery = ({ toggleSidebar, isSidebarOpen, model }) => {
   
 
   return (
-    <div className="relative flex gap-3 p-4 text-white lg:text-sm text-xs">
+    <div className="relative h-screen flex gap-3 p-4 text-white lg:text-sm text-xs">
       {/* Loading Spinner */}
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center z-30 bg-neutral-800 bg-opacity-50">
