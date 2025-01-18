@@ -13,13 +13,13 @@ import Navbar from "./components/Navbar";
 import Test from './components/Test'; // This is for testing purpose
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
-import ShowModel from "./pages/ShowModel";
 import About from "./pages/About";
 import AdminPanel from "./pages/AdminPanel";
 import UserEdit from "./components/Admin/UserEdit";
 import MenuEdit from "./components/Admin/MenuEdit";
 import AssetAdd from "./components/Admin/AssetAdd";
 import AssetEdit from "./components/Admin/AssetEdit";
+import AssetPlot from "./pages/AssetPage/AssetPlot";
 
 const App = () => {
   return (
@@ -33,7 +33,7 @@ const App = () => {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/models" element={<ShowModel />} />
+              <Route path="/:type" element={<AssetPlot  />} />
               <Route path="/about" element={<About />} />
               <Route
                 path="/dashboard"

@@ -63,7 +63,7 @@ const Footer = () => {
       {/* Bottom Text */}
       <div className="text-xs text-gray-500">
         <p>
-          &copy; {currentYear} Blend Ocean. All Rights Reserved.
+          &copy; {currentYear} Blend Ocean Web App. All Rights Reserved.
         </p>
       </div>
     </footer>
