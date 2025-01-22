@@ -5,6 +5,7 @@ import burgermenuf from "../../assets/icons/burger-menu-gray-f.svg";
 import axios from "axios";
 import { useSearch } from "../../context/SearchContext";
 import { useMenu } from "../../context/MenuContext";
+import nodata from "../../assets/svgs/nodata.svg";
 
 export default function ShowAssets({ toggleSidebar, type }) {
   const [models, setModels] = useState([]);
@@ -13,35 +14,33 @@ export default function ShowAssets({ toggleSidebar, type }) {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
-  const [total, setTotal] = useState(1);
-  const [selectedModel, setSelectedModel] = useState(null); // For popup
+  const [total, setTotal] = useState(0);
+  const [selectedModel, setSelectedModel] = useState(null);
   const { filters, searchTerm } = useSearch();
   const { selectedType, selectedCollection } = useMenu();
 
   const handleModelClick = (model) => {
-    setSelectedModel(model); 
+    setSelectedModel(model);
   };
+
   // Fetch models dynamically
   const fetchModels = async (page) => {
     setLoading(true);
     setEarlyAccessToggle(false);
     try {
-      const { data } = await axios.get('/api/models/search', {
+      const { data } = await axios.get("/api/models/search", {
         params: {
           page,
           limit: 8,
           searchTerm,
           selectedType,
           selectedCollection,
-          ...filters, // Spread filters object into params
+          ...filters,
         },
       });
-  
+
       setModels(data.models);
-      setAllModels(data.models)
-      console.log("Gallery: ", data, " total: " +data.total);
-      // console.log("Gallery filters: ", filters);
-  
+      setAllModels(data.models);
       setPages(data.pages);
       setTotal(data.total);
     } catch (error) {
@@ -50,51 +49,39 @@ export default function ShowAssets({ toggleSidebar, type }) {
       setLoading(false);
     }
   };
-  
 
   useEffect(() => {
     fetchModels(page);
-    console.log(selectedType);
-    console.log(selectedCollection);
-    
   }, [page, searchTerm, filters, selectedType, selectedCollection]);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= pages) {
       setPage(newPage);
     }
-  }; 
+  };
 
   const getEarlyAccessModels = () => {
-    if (allModels.length === 0) {
-      console.error("No models available to filter!");
-      return;
-    }
-  
-    setLoading(true); // Show loading spinner
-  
+    setLoading(true);
+
     try {
       if (earlyAccessToggle) {
-        // If early access is ON, show all models
-        setModels(allModels); // Reset to show all models
-        setPages(Math.ceil(allModels.length / 8)); // Set pages for all models
-        setTotal(allModels.length); // Set total count for all models
-        setEarlyAccessToggle(false); // Turn OFF early access filter
+        setModels(allModels);
+        setPages(Math.ceil(allModels.length / 8));
+        setTotal(allModels.length);
+        setEarlyAccessToggle(false);
       } else {
-        // If early access is OFF, filter models for early access
-        const earlyAccessModels = models.filter((model) => model.earlyAccess); // Assuming `isEarlyAccess` is a property
-        setModels(earlyAccessModels); // Update the state to show only early access models
-        setPages(Math.ceil(earlyAccessModels.length / 8)); // Set pages for early access models
-        setTotal(earlyAccessModels.length); // Set total count for early access models
-        setEarlyAccessToggle(true); // Turn ON early access filter
+        const earlyAccessModels = models.filter((model) => model.earlyAccess);
+        setModels(earlyAccessModels);
+        setPages(Math.ceil(earlyAccessModels.length / 8));
+        setTotal(earlyAccessModels.length);
+        setEarlyAccessToggle(true);
       }
     } catch (error) {
-      console.error("Failed to apply early access filter:", error);
+      console.error("Failed to filter models:", error);
     } finally {
-      setLoading(false); // Hide loading spinner
+      setLoading(false);
     }
   };
-  
 
   return (
     <div className="relative sm:h-screen flex gap-3 p-4 text-white lg:text-sm text-xs">
@@ -111,85 +98,85 @@ export default function ShowAssets({ toggleSidebar, type }) {
             <img
               src={burgermenuf}
               className="w-8 mt-2 cursor-pointer bg-transparent hover:bg-gray-600 rounded-lg"
-              alt=""
+              alt="Toggle Sidebar"
               onClick={toggleSidebar}
             />
-            
+
             <div className="flex flex-col">
               <h2 className="text-2xl w-full font-bold">{models[0]?.type || "Select"}</h2>
-              <p className="text-gray-400 ">
+              <p className="text-gray-400">
                 {models[0]?.category || "All"} - {total} Results
               </p>
             </div>
           </div>
-          <div className="flex items-center justify-center  max-sm:w-fit flex-col sm:flex-row gap-3 py-2">
+          <div className="flex items-center justify-center max-sm:w-fit flex-col sm:flex-row gap-3 py-2">
             <button
               onClick={getEarlyAccessModels}
-              className="px-4 py-2 w-full  bg-lime-500 lg:text-sm text-xs hover:bg-lime-600 rounded-full"
+              className="px-4 py-2 w-full bg-lime-500 lg:text-sm text-xs hover:bg-lime-600 rounded-full text-black"
             >
               {earlyAccessToggle ? "All Items" : "Early Access Items"}
             </button>
 
-            <select className="bg-gray-900  w-52 lg:text-sm text-xs text-white px-4 py-2  rounded-full">
+            <select className="bg-gray-900 w-52 lg:text-sm text-xs text-white px-4 py-2 rounded-full">
               <option>Sorted By: Newest</option>
               <option>Sorted By: Oldest</option>
-
             </select>
           </div>
         </div>
-        
+
         {/* Models cards */}
-        {total > 0 ?
-        <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2" >
-          {models?.map((model) => (
-          <ModelCard key={model._id} model={model} handleModelClick={handleModelClick}  />
-          ))           
-          }
-        </div> 
-        : 
-        <div className=" w-full h-72 flex justify-center items-center text-center" >
-          {<> {"No models"}</>}
-        </div>
-        }
-        
+        {total > 0 ? (
+          <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {models?.map((model) => (
+              <ModelCard key={model._id} model={model} handleModelClick={handleModelClick} />
+            ))}
+          </div>
+        ) : (
+          // No data image
+          <div className="flex flex-col justify-center items-center h-full">
+            <img src={nodata} alt="No data available" className="w-full max-w-xs sm:max-w-sm md:max-w-md" />
+            <p className="text-gray-500 mt-4 text-sm">No data available</p>
+          </div>
+        )}
 
         {/* Pagination */}
-        <div className="flex justify-center mt-6 space-x-2">
-          <button
-            onClick={() => handlePageChange(page - 1)}
-            className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
-            disabled={page === 1}
-          >
-            Previous
-          </button>
-          {Array.from({ length: pages }, (_, i) => i + 1).map((pageNumber) => (
-            <button
-              key={pageNumber}
-              onClick={() => handlePageChange(pageNumber)}
-              className={`px-3 py-1 ${
-                page === pageNumber ? "bg-lime-500" : "bg-gray-700"
-              } text-white rounded hover:bg-gray-600`}
-            >
-              {pageNumber}
-            </button>
-          ))}
-          <button
-            onClick={() => handlePageChange(page + 1)}
-            className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
-            disabled={page === pages}
-          >
-            Next
-          </button>
-        </div>
+        {total > 0 && (
+          <div className="flex justify-center mt-6 space-x-2">
+            {page > 1 && (
+              <button
+                onClick={() => handlePageChange(page - 1)}
+                className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+              >
+                Previous
+              </button>
+            )}
+            {Array.from({ length: pages }, (_, i) => i + 1).map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => handlePageChange(pageNumber)}
+                className={`px-3 py-1 ${
+                  page === pageNumber ? "bg-lime-500 text-black" : "bg-gray-700 text-white"
+                } rounded hover:bg-gray-600`}
+              >
+                {pageNumber}
+              </button>
+            ))}
+            {page < pages && (
+              <button
+                onClick={() => handlePageChange(page + 1)}
+                className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+              >
+                Next
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Popup */}
         {selectedModel && (
-          <ModelPopup
-            model={selectedModel}
-            onClose={() => setSelectedModel(null)}
-          />
+          <ModelPopup model={selectedModel} onClose={() => setSelectedModel(null)} />
         )}
       </div>
     </div>
-  )
+  );
 }
