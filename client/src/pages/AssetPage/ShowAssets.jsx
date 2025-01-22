@@ -103,11 +103,16 @@ export default function ShowAssets({ toggleSidebar, type }) {
             />
 
             <div className="flex flex-col">
-              <h2 className="text-2xl w-full font-bold">{models[0]?.type || "Select"}</h2>
+              <h2 className="text-2xl w-full font-bold">{selectedType || "Select"}</h2>
               <p className="text-gray-400">
-                {models[0]?.category || "All"} - {total} Results
+                {models.length > 0
+                  ? [...new Set(models.map((model) => model.category))].length === 1
+                    ? models[0].category
+                    : "All"
+                  : "No Results"} - {total} Results
               </p>
             </div>
+
           </div>
           <div className="flex items-center justify-center max-sm:w-fit flex-col sm:flex-row gap-3 py-2">
             <button
@@ -135,7 +140,12 @@ export default function ShowAssets({ toggleSidebar, type }) {
           // No data image
           <div className="flex flex-col justify-center items-center h-full">
             <img src={nodata} alt="No data available" className="w-full max-w-xs sm:max-w-sm md:max-w-md" />
-            <p className="text-gray-500 mt-4 text-sm">No data available</p>
+            <p className="text-gray-400 text-lg sm:text-xl">
+              No Results Found
+            </p>
+            <p className="text-gray-500 text-sm sm:text-base">
+              Try adjusting the filters or searching for something else.
+            </p>
           </div>
         )}
 
