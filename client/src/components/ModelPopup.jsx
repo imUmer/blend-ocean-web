@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { doc, getDoc } from "firebase/firestore";  
-import { db } from "../firebase"; 
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 const ModelPopup = ({ model, onClose }) => {
   const [selectedImage, setSelectedImage] = useState(
-     "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg"
+    "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg"
   );
   const [documentData, setDocumentData] = useState(null);
+  const [selectedFormats, setSelectedFormats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -21,7 +22,7 @@ const ModelPopup = ({ model, onClose }) => {
 
       if (docSnap.exists() && docSnap.data()?.images[0]) {
         setDocumentData(docSnap.data()); // Save document data to state
-        setSelectedImage(docSnap.data()?.images[0])
+        setSelectedImage(docSnap.data()?.images[0]);
       } else {
         setError("No such document!");
       }
@@ -30,6 +31,17 @@ const ModelPopup = ({ model, onClose }) => {
       setError("Error fetching document.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle format selection
+  const handleFormatChange = (format) => {
+    if (selectedFormats.includes(format)) {
+      // If already selected, remove it
+      setSelectedFormats(selectedFormats.filter((f) => f !== format));
+    } else {
+      // Otherwise, add it
+      setSelectedFormats([...selectedFormats, format]);
     }
   };
 
@@ -51,15 +63,15 @@ const ModelPopup = ({ model, onClose }) => {
         </button>
 
         {/* New Model */}
-
         <div className="absolute top-2 left-2">
           <h1
-            className={`${model.isNew ? "" : "hidden"} px-3 py-1 bg-lime-500 text-black font-medium rounded`}
+            className={`${
+              model.isNew ? "" : "hidden"
+            } px-3 py-1 bg-lime-500 text-black font-medium rounded`}
           >
             {model.isNew ? "New" : ""}
           </h1>
         </div>
-
 
         <div className="flex flex-wrap md:flex-nowrap">
           {/* Left: Image Gallery */}
@@ -74,13 +86,14 @@ const ModelPopup = ({ model, onClose }) => {
             </div>
 
             {/* Thumbnail Images */}
-            
             <div className="flex gap-2 max-md:justify-center overflow-x-auto">
-            { loading  ? (
-              <div className="absolute inset-0 flex items-center justify-center z-30 bg-neutral-800 bg-opacity-50">
-                <div className="w-10 h-10 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              </div>
-            ) : ""}
+              {loading ? (
+                <div className="absolute inset-0 flex items-center justify-center z-30 bg-neutral-800 bg-opacity-50">
+                  <div className="w-10 h-10 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              ) : (
+                ""
+              )}
               {documentData?.images?.length > 0 ? (
                 documentData?.images.map((image, index) => (
                   <img
@@ -123,22 +136,44 @@ const ModelPopup = ({ model, onClose }) => {
               <strong>Downloads:</strong> {model.downloads}
             </p>
 
-            <p className="text-gray-300 mb-4">
-              <strong>Export Formats:</strong> {model.exportFormats.join(", ")}
+            {/* Export Formats */}
+            <p className="text-gray-300 mb-2">
+              <strong>Export Formats:</strong>
             </p>
+            <div className="flex flex-wrap gap-2">
+              {model.exportFormats.map((format, index) => (
+                <label
+                  key={index}
+                  className="flex items-center gap-2 text-gray-300"
+                >
+                  <input
+                    type="checkbox"
+                    value={format}
+                    checked={selectedFormats.includes(format)}
+                    onChange={() => handleFormatChange(format)}
+                    className="form-checkbox text-lime-500"
+                  />
+                  {format}
+                </label>
+              ))}
+            </div>
 
-            <ul className="flex flex-col text-sm text-lime-400 mb-4 gap-2">
+            <ul className="flex flex-col text-sm text-lime-400 my-3 gap-2">
               <li>
                 <strong >Early Access:</strong>{" "}
                 <span className="text-gray-400">{model.earlyAccess ? "Yes" : "No"}</span>
               </li>
             </ul>
-            
+
             {/* Buttons */}
             <div className="mt-6 flex flex-col gap-3">
               <button
                 className="bg-gray-950 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg hover:bg-slate-900"
-                onClick={() => alert("Download initiated")}
+                onClick={() =>
+                  alert(
+                    `Download initiated with formats: ${selectedFormats.join(", ")}`
+                  )
+                }
               >
                 Download
               </button>
@@ -149,7 +184,6 @@ const ModelPopup = ({ model, onClose }) => {
                 Patreon (No More Ads)
               </button>
             </div>
-
           </div>
         </div>
       </div>
