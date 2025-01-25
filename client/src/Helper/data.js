@@ -21,5 +21,28 @@ const footer = {
   message: "Blend Ocean Web App. All Rights Reserved.",
 };
 
+const learnMenuData = [
+  {
+    name: "Blender Tutorials",
+    submenus: [
+      { name: "New Tutorials" },
+      { name: "Old Tutorials" }
+    ]
+  },
+  {
+    name: "VFX Tutorials",
+    submenus: [
+      { name: "New Tutorials" },
+      { name: "Old Tutorials" }
+    ]
+  },
+  {
+    name: "Projects Files",
+    submenus: [
+      { name: "Download Files" }
+    ]
+  }
+];
+
 // Named exports for both constants
-export { data, footer };
+export { data, footer, learnMenuData };

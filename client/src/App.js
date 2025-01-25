@@ -23,6 +23,7 @@ import MenuEdit from "./components/Admin/MenuEdit";
 import AssetAdd from "./components/Admin/AssetAdd";
 import AssetEdit from "./components/Admin/AssetEdit";
 import AssetPlot from "./pages/AssetPage/AssetPlot";
+import LearnPlot from "./pages/Learn/LearnPlot";
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/:type" element={<AssetPlot  />} />
+              <Route path="/learn" element={<LearnPlot  />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/terms" element={<Terms />} />
