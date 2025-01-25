@@ -6,14 +6,14 @@ export default function LearnPopup({ videoSrc, details, onClose }) {
       {/* Popup Container */}
       <div className="bg-neutral-900 rounded-lg shadow-lg overflow-hidden w-[90%] md:w-[80%] lg:w-[70%] max-h-[90vh] flex flex-col md:flex-row">
         {/* Left Side: Video */}
-        <div className="w-full md:w-1/2 bg-black relative">
+        <div className="w-full md:w-2/3 bg-black relative">
           <iframe
             src={videoSrc.replace("watch?v=", "embed/")}
             title={details?.title || "Video"}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-            className="w-full h-64 md:h-full object-cover rounded-t-lg md:rounded-l-lg md:rounded-t-none"
+            className="w-full h-[350px] md:h-[500px] object-cover rounded-t-lg md:rounded-l-lg md:rounded-t-none"
           ></iframe>
           {/* Play Icon for Mobile */}
           {!videoSrc && (
@@ -24,38 +24,36 @@ export default function LearnPopup({ videoSrc, details, onClose }) {
         </div>
 
         {/* Right Side: Details */}
-        <div className="w-full md:w-1/2 p-6 flex flex-col justify-between text-white">
+        <div className="w-full md:w-1/3 p-6 flex flex-col justify-between text-white">
           {/* Details */}
           <div>
-            <h2 className="text-2xl font-bold mb-4">{details?.title}</h2>
-            <ul className="space-y-2 text-sm text-gray-400">
+            <h2 className="text-2xl md:text-3xl font-extrabold mb-4 text-gradient">{details?.title}</h2>
+            <ul className="space-y-3 text-sm md:text-base text-gray-300">
               <li>
-                <strong>Tutorial: </strong> {details?.tutorial}
+                <strong className="text-lime-500">Tutorial: </strong> {details?.tutorial}
               </li>
               <li>
-                <strong>Category: </strong> {details?.category}
+                <strong className="text-lime-500">Category: </strong> {details?.category}
               </li>
               <li>
-                <strong>Date: </strong> {details?.date}
+                <strong className="text-lime-500">Date: </strong> {details?.date}
               </li>
             </ul>
           </div>
 
           {/* Buttons */}
-          <div className="mt-6 space-y-4">
+          <div className="mt-6 flex flex-col gap-3">
             <button
               onClick={() => window.open(details?.downloadLink, "_blank")}
-              className="w-full bg-lime-500 text-black text-sm font-semibold py-2 rounded-lg hover:bg-lime-400"
+              className="bg-gray-950 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg hover:bg-slate-900 transition"
             >
-              PROJECT FILE DOWNLOAD
+              Download
             </button>
             <button
               onClick={() => window.open(details?.supportLink, "_blank")}
-              className="w-full bg-lime-600 text-black text-sm font-semibold py-2 rounded-lg hover:bg-lime-500"
+              className="bg-lime-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-lime-600 transition"
             >
-              Support us on Patreon
-              <br />
-              <span className="text-xs text-gray-900">No more ADS</span>
+              Patreon (No More Ads)
             </button>
           </div>
         </div>
@@ -63,7 +61,7 @@ export default function LearnPopup({ videoSrc, details, onClose }) {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 bg-gray-700 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-600"
+          className="absolute top-4 right-4 bg-gray-700 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-600 transition"
         >
           ✕
         </button>
