@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import Checkbox from "./Checkbox"; 
 
 const ModelPopup = ({ model, onClose }) => {
   const [selectedImage, setSelectedImage] = useState(
@@ -141,21 +142,18 @@ const ModelPopup = ({ model, onClose }) => {
               <strong>Export Formats:</strong>
             </p>
             <div className="flex flex-wrap gap-2">
-              {model.exportFormats.map((format, index) => (
-                <label
-                  key={index}
-                  className="flex items-center gap-2 text-gray-300"
-                >
-                  <input
-                    type="checkbox"
-                    value={format}
+              {model.exportFormats && model.exportFormats.length > 0 ? (
+                model.exportFormats.map((format, index) => (
+                  <Checkbox
+                    key={index}
+                    label={format}
                     checked={selectedFormats.includes(format)}
                     onChange={() => handleFormatChange(format)}
-                    className="form-checkbox text-lime-500"
                   />
-                  {format}
-                </label>
-              ))}
+                ))
+              ) : (
+                <p className="text-gray-400 italic">No formats available.</p>
+              )}
             </div>
 
             <ul className="flex flex-col text-sm text-lime-400 my-3 gap-2">
