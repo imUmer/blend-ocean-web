@@ -4,29 +4,6 @@ import circleIcon from "../../assets/icons/circle.svg";
 import arrowIcon from "../../assets/icons/arrow.svg"; 
 import { learnMenuData } from '../../Helper/data';
 
-const menuData = [
-  {
-    name: "Blender Tutorials",
-    submenus: [
-      { name: "New Tutorials" },
-      { name: "Old Tutorials" }
-    ]
-  },
-  {
-    name: "VFX Tutorials",
-    submenus: [
-      { name: "New Tutorials" },
-      { name: "Old Tutorials" }
-    ]
-  },
-  {
-    name: "Projects Files",
-    submenus: [
-      { name: "Download Files" }
-    ]
-  }
-];
-
 const LearnSidebar = ({ toggleSidebar }) => {
   const [subMenuOpen, setSubMenuOpen] = useState({});
 
