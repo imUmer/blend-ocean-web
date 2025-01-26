@@ -30,7 +30,7 @@ const LearnSidebar = ({ toggleSidebar }) => {
 
       {/* Menu List */}
       <ul className="p-4 space-y-2">
-        {learnMenuData.map((menu, index) => (
+        {learnMenuData?.map((menu, index) => (
           <li key={index} className="mb-2">
             <div
               className="flex justify-between items-center px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-700 hover:text-lime-500"
