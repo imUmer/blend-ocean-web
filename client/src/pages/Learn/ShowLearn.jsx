@@ -64,14 +64,7 @@ export default function ShowLearn({ toggleSidebar }) {
                 <LearnCard key={idx} tutorial={tutorial} />
               ))}
             </div>
-
-            {/* Project Tutorials */}
-            <h3 className="text-xl font-semibold mb-4">Project Tutorials</h3>
-            <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-              {filterTutorialsByCategory("project_files").map((tutorial, idx) => (
-                <LearnCard key={idx} tutorial={tutorial} />
-              ))}
-            </div>
+            
           </div>
         ) : (
           <div className="flex flex-col justify-center items-center h-full">
