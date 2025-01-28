@@ -9,6 +9,7 @@ const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes'); 
 const menuRoutes = require('./routes/menuRoutes'); 
 const modelRoutes = require('./routes/modelRoutes'); 
+const learnRoutes = require("./routes/learnRoutes");
 const errorHandler = require('./middlewares/errorHandler');
 
 /// Create an Express app
@@ -41,6 +42,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/menu', menuRoutes);
 // Model Api 
 app.use('/api/models', modelRoutes);
+// Learn Api 
+app.use("/api/learn", learnRoutes);
 
 /// Error handling middleware
 app.use(errorHandler);  

@@ -1,98 +1,61 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import LearnCard from "./LearnCard";
+import burgermenuf from "../../assets/icons/burger-menu-gray-f.svg";
+import nodata from "../../assets/svgs/nodata.svg";
 
-export default function ShowLearn() {
-  const categories = [
-    {
-      title: "Blender Tutorials",
-      description: "Blender",
-      videos: [
-        {
-          image: "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg",
-          title: "How to download Blender in 2023",
-          description: "Learn how to get started with Blender.",
-          videoSrc: "https://www.youtube.com/watch?v=hNzQ1G3bZI0",
-          details: {
-            title: "How to download Blender in 2023",
-            tutorial: "Tutorial_01",
-            category: "Blender Tutorials",
-            date: "Jan 5, 2023",
-            downloadLink: "https://example.com/download1",
-            supportLink: "https://patreon.com/support1",
-          },
-        },
-        {
-          image: "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg",
-          title: "Blender Beginner's Guide",
-          description: "A complete beginner's guide to Blender.",
-          videoSrc: "https://www.youtube.com/watch?v=hNzQ1G3bZI0&pp=ygUIYmxlbmRlciA%3D",
-          details: {
-            title: "Blender Beginner's Guide",
-            tutorial: "Tutorial_02",
-            category: "Blender Tutorials",
-            date: "Feb 10, 2023",
-            downloadLink: "https://example.com/download2",
-            supportLink: "https://patreon.com/support2",
-          },
-        },
-      ],
-    },
-    {
-      title: "VFX Tutorials",
-      description: "Blender, After Effects, Photoshop...",
-      videos: [
-        {
-          image: "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg",
-          title: "Cloth burning VFX using Blender & AE",
-          description: "Create realistic VFX effects.",
-          videoSrc: "https://www.youtube.com/watch?v=example3",
-          details: {
-            title: "Cloth burning VFX using Blender & AE",
-            tutorial: "Tutorial_03",
-            category: "VFX Tutorials",
-            date: "Mar 15, 2023",
-            downloadLink: "https://example.com/download3",
-            supportLink: "https://patreon.com/support3",
-          },
-        },
-        {
-          image: "https://thumbs.dreamstime.com/b/no-photo-available-icon-isolated-dark-background-simple-vector-logo-no-photo-available-icon-isolated-dark-background-269301619.jpg",
-          title: "Lightning VFX in Blender",
-          description: "Learn lightning effects with Blender.",
-          videoSrc: "https://www.youtube.com/watch?v=example4",
-          details: {
-            title: "Lightning VFX in Blender",
-            tutorial: "Tutorial_04",
-            category: "VFX Tutorials",
-            date: "Apr 20, 2023",
-            downloadLink: "https://example.com/download4",
-            supportLink: "https://patreon.com/support4",
-          },
-        },
-      ],
-    },
-  ];
+export default function ShowLearn({ toggleSidebar }) {
+  const [tutorials, setTutorials] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios.get("http://localhost:5001/api/learn")
+      .then((response) => {
+        setTutorials(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching tutorials:", error);
+        setLoading(false);
+      });
+  }, []);
 
   return (
-    <div className="p-8 bg-neutral-900 text-white space-y-8">
-      {categories.map((category, index) => (
-        <div key={index}>
-          <h2 className="text-xl font-bold">{category.title}</h2>
-          <p className="text-sm text-gray-400 mb-4">{category.description}</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {category.videos.map((video, idx) => (
-              <LearnCard
-                key={idx}
-                image={video.image}
-                title={video.title}
-                description={video.description}
-                videoSrc={video.videoSrc}
-                details={video.details}
-              />
-            ))}
+    <div className="relative sm:h-screen flex gap-3 p-4 text-white lg:text-sm text-xs">
+      <div className="w-full h-full flex flex-col">
+        {/* Top Header */}
+        <div className="flex max-sm:flex-col gap-2 max-sm:items-center justify-between items-center mb-6">
+          <div className="flex justify-start max-sm:w-full items-start gap-5">
+            <img
+              src={burgermenuf}
+              className="w-8 mt-2 cursor-pointer bg-transparent hover:bg-gray-600 rounded-lg"
+              alt="Toggle Sidebar"
+              onClick={toggleSidebar}
+            />
+
+            <div className="flex flex-col">
+              <h2 className="text-2xl w-full font-bold">Learn</h2>
+              <p className="text-gray-400">{tutorials.length} Tutorials Available</p>
+            </div>
           </div>
         </div>
-      ))}
+
+        {/* Tutorials Grid */}
+        {loading ? (
+          <p className="text-center text-gray-400">Loading tutorials...</p>
+        ) : tutorials.length > 0 ? (
+          <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {tutorials.map((video, idx) => (
+              <LearnCard key={idx} tutorial={video} />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col justify-center items-center h-full">
+            <img src={nodata} alt="No data available" className="w-full max-w-xs sm:max-w-sm md:max-w-md" />
+            <p className="text-gray-400 text-lg sm:text-xl">No Tutorials Found</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
