@@ -3,14 +3,16 @@ import axios from "axios";
 import LearnCard from "./LearnCard";
 import burgermenuf from "../../assets/icons/burger-menu-gray-f.svg";
 import nodata from "../../assets/svgs/nodata.svg";
-import { useLearnMenuContext } from "../../context/LearnMenuContext"; // Import the context
+import { useLearnMenu } from "../../context/LearnMenuContext"; 
 
 export default function ShowLearn({ toggleSidebar }) {
   const [tutorials, setTutorials] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { selectedCategory, setCategory } = useLearnMenuContext(); // Use context
+  const { selectedCategory, setCategory, selectedCategoryName, setCategoryName } = useLearnMenu(); // Use context
 
   useEffect(() => {
+    setCategoryName("All")
+    setCategory("All")
     axios
       .get("http://localhost:5001/api/learn")
       .then((response) => {
@@ -28,7 +30,7 @@ export default function ShowLearn({ toggleSidebar }) {
   };
 
   const renderTutorials = () => {
-    if (selectedCategory === "all") {
+    if (selectedCategory === "All") {
       return (
         <>
           {/* Blender Tutorials */}
@@ -51,7 +53,6 @@ export default function ShowLearn({ toggleSidebar }) {
     } else {
       return (
         <div>
-          <h3 className="text-xl font-semibold mb-4">{selectedCategory} Tutorials</h3>
           <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
             {filterTutorialsByCategory(selectedCategory).map((tutorial, idx) => (
               <LearnCard key={idx} tutorial={tutorial} />
@@ -76,8 +77,8 @@ export default function ShowLearn({ toggleSidebar }) {
             />
 
             <div className="flex flex-col">
-              <h2 className="text-2xl w-full font-bold">Learn</h2>
-              <p className="text-gray-400">{tutorials.length} Tutorials Available</p>
+              <h2 className="text-2xl w-full font-bold">{selectedCategoryName}</h2>
+              <p className="text-gray-400">{tutorials?.length} Tutorials Available</p>
             </div>
           </div>
         </div>

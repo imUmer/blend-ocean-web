@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import circleIcon from "../../assets/icons/circle.svg";
 import arrowIcon from "../../assets/icons/arrow.svg";
-import { useLearnMenuContext } from "../../context/LearnMenuContext"; // Import LearnMenuContext for category management
+import { useLearnMenu } from "../../context/LearnMenuContext"; // Import LearnMenuContext for category management
 import { learnMenuData } from "../../Helper/data"; // Assuming you have this data
 
 const LearnSidebar = ({ toggleSidebar }) => {
   const [subMenuOpen, setSubMenuOpen] = useState({});
-  const { setCategory } = useLearnMenuContext(); // Use LearnMenuContext to set selected category
+  const { setCategory, setCategoryName, setType } = useLearnMenu(); // Use LearnMenuContext to set selected category
 
   const toggleSubMenu = (menuName) => {
     setSubMenuOpen((prevState) => ({
@@ -16,9 +16,9 @@ const LearnSidebar = ({ toggleSidebar }) => {
   };
 
   const handleCategoryClick = (submenu) => {
-    console.log(submenu?.category);
-    
     setCategory(submenu?.category); // Set selected category (e.g., "Blender" or "VFX")
+    setCategoryName(submenu?.categoryname); // Set selected category Name
+    setType(submenu?.isNew); // Set selected type
   };
 
   return (
