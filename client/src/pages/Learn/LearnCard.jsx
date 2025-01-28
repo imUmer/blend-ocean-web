@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import LearnPopup from "./LearnPopup";
 
-export default function LearnCard({ image, title, description, tutorial, details }) {
+export default function LearnCard({ tutorial }) {
   const [showPopup, setShowPopup] = useState(false);
 
   const handleOpenPopup = () => {
@@ -15,7 +15,7 @@ export default function LearnCard({ image, title, description, tutorial, details
   return (
     <div className="bg-neutral-900 rounded-lg shadow-md overflow-hidden">
       {/* Card Content */}
-      <img src={tutorial?.image} alt={title} className="w-full h-48 object-cover" />
+      <img src={tutorial?.image} alt={tutorial?.title} className="w-full h-48 object-cover" />
       <div className="p-4">
         <h3 className="text-lg font-bold text-white">{tutorial?.title}</h3>
         <p className="text-sm text-gray-400 mb-2">{tutorial?.description}</p>
@@ -31,7 +31,6 @@ export default function LearnCard({ image, title, description, tutorial, details
       {showPopup && (
         <LearnPopup
         tutorial={tutorial}
-          details={details}
           onClose={handleClosePopup}
         />
       )}

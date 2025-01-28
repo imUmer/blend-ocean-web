@@ -10,8 +10,8 @@ export default function LearnPopup({ tutorial, onClose }) {
         {/* Left Side: Video */}
         <div className="w-full md:w-2/3 bg-black relative">
           <iframe
-            src={tutorial.videoSrc.replace("watch?v=", "embed/")}
-            title={tutorial.title}
+            src={tutorial?.videoSrc?.replace("watch?v=", "embed/")}
+            title={tutorial?.title}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
@@ -21,19 +21,19 @@ export default function LearnPopup({ tutorial, onClose }) {
 
         {/* Right Side: Details */}
         <div className="w-full md:w-1/3 p-6 flex flex-col justify-between text-white">
-          <h2 className="text-2xl md:text-3xl font-extrabold mb-4">{tutorial.title}</h2>
+          <h2 className="text-2xl md:text-3xl font-extrabold mb-4">{tutorial?.title}</h2>
           <ul className="space-y-3 text-sm md:text-base text-gray-300">
-            <li><strong className="text-lime-500">Tutorial: </strong>{tutorial.tutorial}</li>
-            <li><strong className="text-lime-500">Category: </strong>{tutorial.categoryname}</li>
-            <li><strong className="text-lime-500">Date: </strong>{tutorial.date}</li>
+            <li><strong className="text-lime-500">Tutorial: </strong>{tutorial?.tutorial}</li>
+            <li><strong className="text-lime-500">Category: </strong>{tutorial?.categoryname}</li>
+            <li><strong className="text-lime-500">Date: </strong>{tutorial?.date}</li>
           </ul>
 
           {/* Buttons */}
           <div className="mt-6 flex flex-col gap-3">
-            <button onClick={() => window.open(tutorial.downloadLink, "_blank")} className="bg-gray-950 text-white font-bold py-2 px-4 rounded-lg shadow-md">
+            <button onClick={() => window.open(tutorial?.downloadLink, "_blank")} className="bg-gray-950 text-white font-bold py-2 px-4 rounded-lg shadow-md">
               Download
             </button>
-            <button onClick={() => window.open(tutorial.supportLink, "_blank")} className="bg-lime-500 text-white font-bold py-2 px-4 rounded-lg">
+            <button onClick={() => window.open(tutorial?.supportLink, "_blank")} className="bg-lime-500 text-white font-bold py-2 px-4 rounded-lg">
               Patreon (No Ads)
             </button>
           </div>

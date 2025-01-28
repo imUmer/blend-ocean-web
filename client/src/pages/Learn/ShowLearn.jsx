@@ -20,9 +20,13 @@ export default function ShowLearn({ toggleSidebar }) {
       });
   }, []);
 
+  const filterTutorialsByCategory = (category) => {
+    return tutorials.filter((tutorial) => tutorial.category === category);
+  };
+
   return (
-    <div className="relative sm:h-screen flex gap-3 p-4 text-white lg:text-sm text-xs">
-      <div className="w-full h-full flex flex-col">
+    <div className="relative sm:h-full flex gap-3 p-4 text-white lg:text-sm text-xs">
+      <div className="w-full h-fit flex flex-col">
         {/* Top Header */}
         <div className="flex max-sm:flex-col gap-2 max-sm:items-center justify-between items-center mb-6">
           <div className="flex justify-start max-sm:w-full items-start gap-5">
@@ -40,14 +44,34 @@ export default function ShowLearn({ toggleSidebar }) {
           </div>
         </div>
 
-        {/* Tutorials Grid */}
+        {/* Categories: Blender, VFX, Project */}
         {loading ? (
           <p className="text-center text-gray-400">Loading tutorials...</p>
-        ) : tutorials.length > 0 ? (
-          <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-            {tutorials.map((video, idx) => (
-              <LearnCard key={idx} tutorial={video} />
-            ))}
+        ) : tutorials?.length > 0 ? (
+          <div>
+            {/* Blender Tutorials */}
+            <h3 className="text-xl font-semibold mb-4">Blender Tutorials</h3>
+            <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
+              {filterTutorialsByCategory("blender_tutorials").map((tutorial, idx) => (
+                <LearnCard key={idx} tutorial={tutorial} />
+              ))}
+            </div>
+
+            {/* VFX Tutorials */}
+            <h3 className="text-xl font-semibold mb-4">VFX Tutorials</h3>
+            <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
+              {filterTutorialsByCategory("vfx_tutorials").map((tutorial, idx) => (
+                <LearnCard key={idx} tutorial={tutorial} />
+              ))}
+            </div>
+
+            {/* Project Tutorials */}
+            <h3 className="text-xl font-semibold mb-4">Project Tutorials</h3>
+            <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+              {filterTutorialsByCategory("project_files").map((tutorial, idx) => (
+                <LearnCard key={idx} tutorial={tutorial} />
+              ))}
+            </div>
           </div>
         ) : (
           <div className="flex flex-col justify-center items-center h-full">
