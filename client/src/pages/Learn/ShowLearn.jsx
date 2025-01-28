@@ -3,13 +3,16 @@ import axios from "axios";
 import LearnCard from "./LearnCard";
 import burgermenuf from "../../assets/icons/burger-menu-gray-f.svg";
 import nodata from "../../assets/svgs/nodata.svg";
+import { useLearnMenuContext } from "../../context/LearnMenuContext"; // Import the context
 
 export default function ShowLearn({ toggleSidebar }) {
   const [tutorials, setTutorials] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { selectedCategory, setCategory } = useLearnMenuContext(); // Use context
 
   useEffect(() => {
-    axios.get("http://localhost:5001/api/learn")
+    axios
+      .get("http://localhost:5001/api/learn")
       .then((response) => {
         setTutorials(response.data);
         setLoading(false);
@@ -22,6 +25,41 @@ export default function ShowLearn({ toggleSidebar }) {
 
   const filterTutorialsByCategory = (category) => {
     return tutorials.filter((tutorial) => tutorial.category === category);
+  };
+
+  const renderTutorials = () => {
+    if (selectedCategory === "all") {
+      return (
+        <>
+          {/* Blender Tutorials */}
+          <h3 className="text-xl font-semibold mb-4">Blender Tutorials</h3>
+          <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
+            {filterTutorialsByCategory("blender_tutorials").map((tutorial, idx) => (
+              <LearnCard key={idx} tutorial={tutorial} />
+            ))}
+          </div>
+
+          {/* VFX Tutorials */}
+          <h3 className="text-xl font-semibold mb-4">VFX Tutorials</h3>
+          <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
+            {filterTutorialsByCategory("vfx_tutorials").map((tutorial, idx) => (
+              <LearnCard key={idx} tutorial={tutorial} />
+            ))}
+          </div>
+        </>
+      );
+    } else {
+      return (
+        <div>
+          <h3 className="text-xl font-semibold mb-4">{selectedCategory} Tutorials</h3>
+          <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
+            {filterTutorialsByCategory(selectedCategory).map((tutorial, idx) => (
+              <LearnCard key={idx} tutorial={tutorial} />
+            ))}
+          </div>
+        </div>
+      );
+    }
   };
 
   return (
@@ -44,31 +82,18 @@ export default function ShowLearn({ toggleSidebar }) {
           </div>
         </div>
 
-        {/* Categories: Blender, VFX, Project */}
+        {/* Tutorials */}
         {loading ? (
           <p className="text-center text-gray-400">Loading tutorials...</p>
         ) : tutorials?.length > 0 ? (
-          <div>
-            {/* Blender Tutorials */}
-            <h3 className="text-xl font-semibold mb-4">Blender Tutorials</h3>
-            <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
-              {filterTutorialsByCategory("blender_tutorials").map((tutorial, idx) => (
-                <LearnCard key={idx} tutorial={tutorial} />
-              ))}
-            </div>
-
-            {/* VFX Tutorials */}
-            <h3 className="text-xl font-semibold mb-4">VFX Tutorials</h3>
-            <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
-              {filterTutorialsByCategory("vfx_tutorials").map((tutorial, idx) => (
-                <LearnCard key={idx} tutorial={tutorial} />
-              ))}
-            </div>
-            
-          </div>
+          renderTutorials()
         ) : (
           <div className="flex flex-col justify-center items-center h-full">
-            <img src={nodata} alt="No data available" className="w-full max-w-xs sm:max-w-sm md:max-w-md" />
+            <img
+              src={nodata}
+              alt="No data available"
+              className="w-full max-w-xs sm:max-w-sm md:max-w-md"
+            />
             <p className="text-gray-400 text-lg sm:text-xl">No Tutorials Found</p>
           </div>
         )}

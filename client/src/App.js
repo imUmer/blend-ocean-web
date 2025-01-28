@@ -24,11 +24,13 @@ import AssetAdd from "./components/Admin/AssetAdd";
 import AssetEdit from "./components/Admin/AssetEdit";
 import AssetPlot from "./pages/AssetPage/AssetPlot";
 import LearnPlot from "./pages/Learn/LearnPlot";
+import { LearnMenuProvider } from "./context/LearnMenuContext";
 
 const App = () => {
   return (
     <AuthProvider>
       <MenuProvider>
+      <LearnMenuProvider>
         <SearchProvider>
           <Router>
             <Navbar />
@@ -103,6 +105,7 @@ const App = () => {
           <Footer />
           </Router>
         </SearchProvider>
+      </LearnMenuProvider>
       </MenuProvider>
     </AuthProvider>
   );

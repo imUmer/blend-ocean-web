@@ -25,21 +25,21 @@ const learnMenuData = [
   {
     name: "Blender Tutorials",
     submenus: [
-      { name: "New Tutorials" },
-      { name: "Old Tutorials" }
+      { name: "New Tutorials", category:"blender_tutorials", isNew:true },
+      { name: "Old Tutorials", category:"blender_tutorials", isNew:false }
     ]
   },
   {
     name: "VFX Tutorials",
     submenus: [
-      { name: "New Tutorials" },
-      { name: "Old Tutorials" }
+      { name: "New Tutorials", category:"vfx_tutorials", isNew:true },
+      { name: "Old Tutorials", category:"vfx_tutorials", isNew:false }
     ]
   },
   {
     name: "Projects Files",
     submenus: [
-      { name: "Download Files" }
+      { name: "Download Files", category:"project_files" }
     ]
   }
 ];

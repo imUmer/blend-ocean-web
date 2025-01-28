@@ -1,18 +1,24 @@
-
 import React, { useState } from "react";
-import circleIcon from "../../assets/icons/circle.svg"; 
-import arrowIcon from "../../assets/icons/arrow.svg"; 
-import { learnMenuData } from '../../Helper/data';
+import circleIcon from "../../assets/icons/circle.svg";
+import arrowIcon from "../../assets/icons/arrow.svg";
+import { useLearnMenuContext } from "../../context/LearnMenuContext"; // Import LearnMenuContext for category management
+import { learnMenuData } from "../../Helper/data"; // Assuming you have this data
 
 const LearnSidebar = ({ toggleSidebar }) => {
   const [subMenuOpen, setSubMenuOpen] = useState({});
+  const { setCategory } = useLearnMenuContext(); // Use LearnMenuContext to set selected category
 
-  // Toggle submenu visibility
   const toggleSubMenu = (menuName) => {
     setSubMenuOpen((prevState) => ({
       ...prevState,
-      [menuName]: !prevState[menuName]
+      [menuName]: !prevState[menuName],
     }));
+  };
+
+  const handleCategoryClick = (submenu) => {
+    console.log(submenu?.category);
+    
+    setCategory(submenu?.category); // Set selected category (e.g., "Blender" or "VFX")
   };
 
   return (
@@ -62,6 +68,9 @@ const LearnSidebar = ({ toggleSidebar }) => {
                   <li
                     key={subIndex}
                     className="text-sm text-gray-400 hover:text-lime-500 cursor-pointer py-1"
+                    onClick={() => {
+                      if (submenu?.category) handleCategoryClick(submenu);
+                    }}
                   >
                     {submenu.name}
                   </li>
