@@ -4,62 +4,97 @@ import LearnCard from "./LearnCard";
 import burgermenuf from "../../assets/icons/burger-menu-gray-f.svg";
 import nodata from "../../assets/svgs/nodata.svg";
 import { useLearnMenu } from "../../context/LearnMenuContext"; 
+import { getAllLearnTutorials, getLearnTutorialsByCategory } from "../../services/learnService";
 
 export default function ShowLearn({ toggleSidebar }) {
   const [tutorials, setTutorials] = useState([]);
-  const [totalTutorials, setTotalTutorials] = useState(null);
+  const [groupedTutorials, setGroupedTutorials] = useState({
+    blender_tutorials: [],
+    vfx_tutorials: [],
+    projects: [],
+  });
   const [loading, setLoading] = useState(true);
   const { selectedCategory, setCategory, selectedCategoryName, setCategoryName } = useLearnMenu(); // Use context
 
-  useEffect(() => {
-    setCategoryName("All")
-    setCategory("All")
-    axios
-      .get("http://localhost:5001/api/learn")
-      .then((response) => {
-        setTutorials(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching tutorials:", error);
-        setLoading(false);
-      });
-  }, []);
+  // Fetch tutorials based on selected category or all tutorials
+  const fetchTutorials = async (category) => {
+    setLoading(true);
+    try {
+      const fetchedTutorials = category === "All" 
+        ? await getAllLearnTutorials() 
+        : await getLearnTutorialsByCategory(category);
 
-  const filterTutorialsByCategory = (category) => {
-    let filterTutorials = tutorials.filter((tutorial) => tutorial.category === category);
-    return filterTutorials;
+      if (category === "All") {
+        // Group tutorials by their category
+        const grouped = {
+          blender_tutorials: fetchedTutorials.filter((tutorial) => tutorial.category === "blender_tutorials"),
+          vfx_tutorials: fetchedTutorials.filter((tutorial) => tutorial.category === "vfx_tutorials"),
+          projects: fetchedTutorials.filter((tutorial) => tutorial.category === "projects"),
+        };
+        setGroupedTutorials(grouped);
+      } else {
+        setTutorials(fetchedTutorials);
+      }
+    } catch (err) {
+      console.error("Error fetching tutorials:", err);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // Fetch tutorials when the component mounts or category changes
+  useEffect(() => {
+    fetchTutorials(selectedCategory);
+    setCategoryName(selectedCategory === "All" ? "All" : selectedCategoryName); // Set category name for header
+  }, [selectedCategory]);
 
   const renderTutorials = () => {
     if (selectedCategory === "All") {
       return (
         <>
           {/* Blender Tutorials */}
-          <h3 className="text-xl font-semibold mb-4">Blender Tutorials</h3>
-          <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
-            {filterTutorialsByCategory("blender_tutorials").map((tutorial, idx) => (
-              <LearnCard key={idx} tutorial={tutorial} />
-            ))}
-          </div>
+          {groupedTutorials.blender_tutorials.length > 0 && (
+            <>
+              <h3 className="text-xl font-semibold mb-4">Blender Tutorials</h3>
+              <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
+                {groupedTutorials.blender_tutorials.map((tutorial, idx) => (
+                  <LearnCard key={idx} tutorial={tutorial} />
+                ))}
+              </div>
+            </>
+          )}
 
           {/* VFX Tutorials */}
-          <h3 className="text-xl font-semibold mb-4">VFX Tutorials</h3>
-          <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
-            {filterTutorialsByCategory("vfx_tutorials").map((tutorial, idx) => (
-              <LearnCard key={idx} tutorial={tutorial} />
-            ))}
-          </div>
+          {groupedTutorials.vfx_tutorials.length > 0 && (
+            <>
+              <h3 className="text-xl font-semibold mb-4">VFX Tutorials</h3>
+              <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
+                {groupedTutorials.vfx_tutorials.map((tutorial, idx) => (
+                  <LearnCard key={idx} tutorial={tutorial} />
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* Projects */}
+          {groupedTutorials.projects.length > 0 && (
+            <>
+              <h3 className="text-xl font-semibold mb-4">Projects</h3>
+              <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
+                {groupedTutorials.projects.map((tutorial, idx) => (
+                  <LearnCard key={idx} tutorial={tutorial} />
+                ))}
+              </div>
+            </>
+          )}
         </>
       );
     } else {
       return (
-        <div>
-          <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
-            {filterTutorialsByCategory(selectedCategory).map((tutorial, idx) => (
-              <LearnCard key={idx} tutorial={tutorial} />
-            ))}
-          </div>
+        <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
+          {tutorials.map((tutorial, idx) => (
+            <LearnCard key={idx} tutorial={tutorial} />
+          ))}
         </div>
       );
     }
@@ -77,10 +112,14 @@ export default function ShowLearn({ toggleSidebar }) {
               alt="Toggle Sidebar"
               onClick={toggleSidebar}
             />
-
             <div className="flex flex-col">
               <h2 className="text-2xl w-full font-bold">{selectedCategoryName}</h2>
-              <p className="text-gray-400">{filterTutorialsByCategory(selectedCategory).length !== 0 ? filterTutorialsByCategory(selectedCategory).length : tutorials?.length} Tutorials Available</p>
+              <p className="text-gray-400">
+                {selectedCategory === "All" 
+                  ? (groupedTutorials.blender_tutorials.length + groupedTutorials.vfx_tutorials.length + groupedTutorials.projects.length) 
+                  : tutorials?.length
+                } Tutorials Available
+              </p>
             </div>
           </div>
         </div>
@@ -88,18 +127,7 @@ export default function ShowLearn({ toggleSidebar }) {
         {/* Tutorials */}
         {loading ? (
           <p className="text-center text-gray-400">Loading tutorials...</p>
-        ) : tutorials?.length > 0 ? (
-          renderTutorials()
-        ) : (
-          <div className="flex flex-col justify-center items-center h-full">
-            <img
-              src={nodata}
-              alt="No data available"
-              className="w-full max-w-xs sm:max-w-sm md:max-w-md"
-            />
-            <p className="text-gray-400 text-lg sm:text-xl">No Tutorials Found</p>
-          </div>
-        )}
+        ) : renderTutorials()}
       </div>
     </div>
   );

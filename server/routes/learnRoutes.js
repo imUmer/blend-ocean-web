@@ -6,7 +6,7 @@ const {
 
 // Define routes /users/:id
 router.get("/", getAllTutorials); // Directly using the function
-router.get("/category/:name", getByCategory); // Directly using the function
+router.get("/category/:category", getByCategory); // Directly using the function
 router.get("/:id", getTutorialById); // Directly using the function
 router.post("/", createTutorial); // Directly using the function
 router.put("/:id", updateTutorial); // Directly using the function

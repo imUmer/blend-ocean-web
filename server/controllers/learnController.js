@@ -12,21 +12,19 @@ const getAllTutorials = async (req, res) => {
 
 // Fetch tutorials by category
 const getByCategory = (req, res) => {
-    const category = req.params.name; // Get category from URL
-    console.log(category);
-    res.json([category]);
+    const { category } = req.params;
     // Assuming you have a `Learn` model for the tutorials
-    // Learn.find({ category: categoryName }) // Filter by category, not _id
-    //   .then((tutorials) => {
-    //     if (!tutorials.length) {
-    //       return res.status(404).json({ message: "No tutorials found for this category" });
-    //     }
-    //     res.json(tutorials);
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //     res.status(500).json({ message: "Error fetching tutorials", error: err });
-    //   });
+    Learn.find({ category: category }) // Filter by category, not _id
+      .then((tutorials) => {
+        if (!tutorials.length) {
+          return res.status(404).json({ message: "No tutorials found for this category" });
+        }
+        res.json(tutorials);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).json({ message: "Error fetching tutorials", error: err });
+      });
   };
   
 
