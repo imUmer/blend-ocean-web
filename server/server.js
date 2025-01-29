@@ -43,7 +43,7 @@ app.use('/api/menu', menuRoutes);
 // Model Api 
 app.use('/api/models', modelRoutes);
 // Learn Api 
-app.use("/api/learn", learnRoutes);
+app.use("/api/learn/", learnRoutes);
 
 /// Error handling middleware
 app.use(errorHandler);  

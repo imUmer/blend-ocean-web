@@ -4,9 +4,9 @@ const {
   getAllTutorials, getByCategory, getTutorialById, createTutorial, updateTutorial, deleteTutorial 
 } = require("../controllers/learnController"); // Destructuring functions directly
 
-// Define routes
+// Define routes /users/:id
 router.get("/", getAllTutorials); // Directly using the function
-router.get("/category/:categoryname", getByCategory); // Directly using the function
+router.get("/category/:name", getByCategory); // Directly using the function
 router.get("/:id", getTutorialById); // Directly using the function
 router.post("/", createTutorial); // Directly using the function
 router.put("/:id", updateTutorial); // Directly using the function

@@ -7,6 +7,7 @@ import { useLearnMenu } from "../../context/LearnMenuContext";
 
 export default function ShowLearn({ toggleSidebar }) {
   const [tutorials, setTutorials] = useState([]);
+  const [totalTutorials, setTotalTutorials] = useState(null);
   const [loading, setLoading] = useState(true);
   const { selectedCategory, setCategory, selectedCategoryName, setCategoryName } = useLearnMenu(); // Use context
 
@@ -26,7 +27,8 @@ export default function ShowLearn({ toggleSidebar }) {
   }, []);
 
   const filterTutorialsByCategory = (category) => {
-    return tutorials.filter((tutorial) => tutorial.category === category);
+    let filterTutorials = tutorials.filter((tutorial) => tutorial.category === category);
+    return filterTutorials;
   };
 
   const renderTutorials = () => {
@@ -78,7 +80,7 @@ export default function ShowLearn({ toggleSidebar }) {
 
             <div className="flex flex-col">
               <h2 className="text-2xl w-full font-bold">{selectedCategoryName}</h2>
-              <p className="text-gray-400">{tutorials?.length} Tutorials Available</p>
+              <p className="text-gray-400">{filterTutorialsByCategory(selectedCategory).length !== 0 ? filterTutorialsByCategory(selectedCategory).length : tutorials?.length} Tutorials Available</p>
             </div>
           </div>
         </div>
