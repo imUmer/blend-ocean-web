@@ -90,6 +90,7 @@ const Navbar = () => {
 
   // Use effect to add and clean up the event listener for clicks outside
   useEffect(() => {
+    
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -144,79 +145,65 @@ const Navbar = () => {
 
       {/* Buttons */}
       <div className="flex space-x-4 items-center">
-        {/* Menu Button (Mobile) */}
-        <div className="relative lg:hidden w-7" ref={menuButtonRef}>
+        {/* Mobile Menu Button */}
+        <div className="relative lg:hidden" ref={menuButtonRef}>
           <img
             src={menu}
-            className="cursor-pointer"
+            className="cursor-pointer w-7 hover:opacity-80 transition"
             onClick={handleMenuClick}
             alt="menu"
           />
-          {/* Menu Links */}
+          
+          {/* Mobile Dropdown Menu */}
           {isMenuOpen && (
             <div
               ref={menuRef}
-              className="absolute max-md:top-8 top-10 max-md:-right-6 -right-16 z-40 shadow-lg justify-center"
+              className="absolute top-10 right-0 z-40 shadow-lg shadow-slate-700 bg-neutral-900 border-neutral-800 px-3 rounded-md w-44 py-2"
             >
-              <ul className="flex flex-col items-center bg-slate-800 w-40 p-1 text-xs text-gray-400 font-medium">
+              <ul className="flex flex-col items-center text-sm text-gray-300 font-medium">
                 {data.links.map((link, i) => (
-                <Link className="w-full " to={link.path} onClick={()=>{setSelectedType(link.name); setSelectedCollection("");}}>
-
-                  <li
-                    key={i}
-                    className="text-center py-2 px-3 m-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-500"
+                  <Link 
+                    key={i} 
+                    to={link.path} 
+                    className="w-full text-center py-2 hover:bg-gray-700 hover:text-lime-400 transition rounded-md"
+                    onClick={() => {
+                      setSelectedType(link.name);
+                      setSelectedCollection("");
+                      setCategory("All");
+                      setCategoryName("All");
+                    }}
                   >
                     {link.name}
-                  </li>
                   </Link>
                 ))}
-
-                {token ? (
-                  ""
+                
+                {/* Authentication Buttons */}
+                {!token ? (
+                  <>
+                    <li className="w-full text-center">
+                      <Link to="/login">
+                        <button className="w-full text-sm text-gray-300 hover:bg-lime-500 hover:text-black px-4 py-1 border border-lime-500 rounded-full transition">
+                          Sign In
+                        </button>
+                      </Link>
+                    </li>
+                    <li className="w-full text-center">
+                      <Link to="/register">
+                        <button className="w-full bg-lime-500 text-sm text-white hover:bg-lime-600 rounded-lg px-5 py-1 transition">
+                          Register
+                        </button>
+                      </Link>
+                    </li>
+                  </>
                 ) : (
-                  <li className="w-full text-center py-2 px-3 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
-                    <Link to="/login">
-                      <button
-                        className={`${
-                          token ? "hidden" : ""
-                        } w-full text-xs text-gray-300 hover:bg-lime-500 hover:text-black px-4 py-1 border border-lime-500 rounded-full`}
-                      >
-                        Sign In
-                      </button>
-                    </Link>
+                  <li className="w-full text-center">
+                    <button
+                      onClick={handleLogout}
+                      className="w-full px-5 py-1 text-sm font-medium text-white bg-lime-500 rounded-lg hover:bg-lime-600 transition"
+                    >
+                      Logout
+                    </button>
                   </li>
-                )}
-                {token ? (
-                  ""
-                ) : (
-                  <li className="w-full text-center py-2 px-3 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
-                    <Link to="/register">
-                      <button
-                        className={`${
-                          token ? "hidden" : ""
-                        } w-full bg-lime-500 text-xs text-white hover:bg-lime-600 rounded-xl px-5 py-1`}
-                      >
-                        {" "}
-                        Register
-                      </button>
-                    </Link>
-                  </li>
-                )}
-                {token ? (
-                  <li className="w-full text-center py-2 px-3 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-400">
-                    <Link to="/login">
-                      <button
-                        onClick={handleLogout}
-                        className={`${
-                          token ? "" : "hidden"
-                        }  items-center px-5 py-1 text-xs font-medium text-center text-white bg-lime-500 rounded-xl hover:bg-lime-600 focus:ring-4 focus:outline-none  dark:bg-lime-500 dark:hover:bg-lime-600 dark:focus:ring-lime-800`}
-                      >
-                        Logout
-                      </button>
-                    </Link>
-                  </li>
-                ) : (
-                  ""
                 )}
               </ul>
             </div>
@@ -244,7 +231,7 @@ const Navbar = () => {
           <button
             onClick={handleLogout}
             className={`${
-              token ? "" : "hidden"
+              token ? "sm:hidden" : "hidden"
             }  items-center px-5 py-1 text-xs font-medium text-center text-white bg-lime-500 rounded-xl hover:bg-lime-600 focus:ring-4 focus:outline-none  dark:bg-lime-500 dark:hover:bg-lime-600 dark:focus:ring-lime-800`}
           >
             Logout
