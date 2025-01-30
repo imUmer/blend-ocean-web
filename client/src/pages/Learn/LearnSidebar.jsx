@@ -18,7 +18,13 @@ const LearnSidebar = ({ toggleSidebar }) => {
   const handleCategoryClick = (submenu) => {
     setCategory(submenu?.category); // Set category
     setCategoryName(submenu?.categoryname); // Set category name
-    setType(submenu?.isNew ? "new" : "old"); // Set type to "New" or "Old"
+
+    // Ensure "Projects" always show all files
+  if (submenu?.category === "project_files") {
+    setType(""); // Clear filtering for projects
+  } else {
+    setType(submenu?.isNew ? "new" : "old"); // Set type normally for other categories
+  }
   };
   
 

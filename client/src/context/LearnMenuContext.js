@@ -9,7 +9,7 @@ const LearnMenuContext = createContext();
 export const LearnMenuProvider = ({ children }) => {
   const [selectedCategoryName, setSelectedCategoryName] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [isNew, setIsNew] = useState("new"); // Default to 'New'
+  const [isNew, setIsNew] = useState("all"); // Default to 'New'
 
   // Function to set selected category
   const setCategory = (category) => {
