@@ -49,11 +49,23 @@ export default function ShowLearn({ toggleSidebar }) {
   }, [selectedCategory]);
 
   const renderTutorials = () => {
+    const hasBlender = groupedTutorials.blender_tutorials.length > 0;
+    const hasVFX = groupedTutorials.vfx_tutorials.length > 0;
+    const hasProjects = groupedTutorials.projects.length > 0;
+    
     if (selectedCategory === "All") {
+      if (!hasBlender && !hasVFX && !hasProjects) {
+        return (
+          <div className="flex flex-col items-center justify-center">
+            <img src={nodata} alt="No data available" className="w-60 opacity-75" />
+            <p className="text-gray-400 mt-2">No tutorials available</p>
+          </div>
+        );
+      }
+  
       return (
         <>
-          {/* Blender Tutorials */}
-          {groupedTutorials.blender_tutorials.length > 0 && (
+          {hasBlender && (
             <>
               <h3 className="text-xl font-semibold mb-4">Blender Tutorials</h3>
               <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
@@ -63,9 +75,8 @@ export default function ShowLearn({ toggleSidebar }) {
               </div>
             </>
           )}
-
-          {/* VFX Tutorials */}
-          {groupedTutorials.vfx_tutorials.length > 0 && (
+  
+          {hasVFX && (
             <>
               <h3 className="text-xl font-semibold mb-4">VFX Tutorials</h3>
               <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
@@ -75,9 +86,8 @@ export default function ShowLearn({ toggleSidebar }) {
               </div>
             </>
           )}
-
-          {/* Projects */}
-          {groupedTutorials.projects.length > 0 && (
+  
+          {hasProjects && (
             <>
               <h3 className="text-xl font-semibold mb-4">Projects</h3>
               <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
@@ -90,6 +100,18 @@ export default function ShowLearn({ toggleSidebar }) {
         </>
       );
     } else {
+      if (tutorials.length === 0) {
+        return (
+          // No data image
+          <div className="flex flex-col justify-center items-center h-full">
+            <img src={nodata} alt="No data available" className="w-full max-w-xs sm:max-w-sm md:max-w-md" />
+            <p className="text-gray-400 text-lg sm:text-xl">
+              No Results Found
+            </p>
+          </div>
+        );
+      }
+  
       return (
         <div className="w-fit grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-8">
           {tutorials.map((tutorial, idx) => (
