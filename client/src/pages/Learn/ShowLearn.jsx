@@ -14,39 +14,47 @@ export default function ShowLearn({ toggleSidebar }) {
     projects: [],
   });
   const [loading, setLoading] = useState(true);
-  const { selectedCategory, setCategory, selectedCategoryName, setCategoryName } = useLearnMenu(); // Use context
+  const { selectedCategory, setCategory, selectedCategoryName, setCategoryName, isNew, setType } = useLearnMenu(); // Use context
 
-  // Fetch tutorials based on selected category or all tutorials
-  const fetchTutorials = async (category) => {
-    setLoading(true);
-    try {
-      const fetchedTutorials = category === "All" 
-        ? await getAllLearnTutorials() 
-        : await getLearnTutorialsByCategory(category);
+  // const [type, setType] = useState("New"); // Default to "New"
 
-      if (category === "All") {
-        // Group tutorials by their category
-        const grouped = {
-          blender_tutorials: fetchedTutorials.filter((tutorial) => tutorial.category === "blender_tutorials"),
-          vfx_tutorials: fetchedTutorials.filter((tutorial) => tutorial.category === "vfx_tutorials"),
-          projects: fetchedTutorials.filter((tutorial) => tutorial.category === "projects"),
-        };
-        setGroupedTutorials(grouped);
-      } else {
-        setTutorials(fetchedTutorials);
-      }
-    } catch (err) {
-      console.error("Error fetching tutorials:", err);
-    } finally {
-      setLoading(false);
+console.log(isNew);
+
+const fetchTutorials = async (category) => {
+  setLoading(true);
+  try {
+    let fetchedTutorials = category === "All" 
+      ? await getAllLearnTutorials() 
+      : await getLearnTutorialsByCategory(category);
+
+    // Apply filtering based on type (new/old)
+    if (isNew === "new") {
+      fetchedTutorials = fetchedTutorials.filter(tutorial => tutorial.isNew);
+    } else if (isNew === "old") {
+      fetchedTutorials = fetchedTutorials.filter(tutorial => !tutorial.isNew);
     }
-  };
+
+    if (category === "All") {
+      setGroupedTutorials({
+        blender_tutorials: fetchedTutorials.filter(t => t.category === "blender_tutorials"),
+        vfx_tutorials: fetchedTutorials.filter(t => t.category === "vfx_tutorials"),
+        projects: fetchedTutorials.filter(t => t.category === "projects"),
+      });
+    } else {
+      setTutorials(fetchedTutorials);
+    }
+  } catch (err) {
+    console.error("Error fetching tutorials:", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // Fetch tutorials when the component mounts or category changes
   useEffect(() => {
     fetchTutorials(selectedCategory);
-    setCategoryName(selectedCategory === "All" ? "All" : selectedCategoryName); // Set category name for header
-  }, [selectedCategory]);
+  }, [selectedCategory, isNew]); // Re-fetch when type changes
 
   const renderTutorials = () => {
     const hasBlender = groupedTutorials.blender_tutorials.length > 0;

@@ -19,7 +19,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { setSearchTerm } = useSearch();
   const { setSelectedType, setSelectedCollection } = useMenu();
-  const { setCategory, setCategoryName } = useLearnMenu(); 
+  const { setCategory, setCategoryName,  setType } = useLearnMenu(); 
   
   // token
   const { user, setUser, token, setToken } = useAuth();
@@ -129,7 +129,7 @@ const Navbar = () => {
           <div>
             <ul className="w-full truncate flex justify-center items-start max-lg:hidden text-xs gap-4 text-gray-400 font-medium">
               {data.links.map((link,i) => (
-                <Link key={link.id} to={link.path} onClick={()=>{setSelectedType(link.name); setSelectedCollection(""); setCategory("All"); setCategoryName("All");}}>
+                <Link key={link.id} to={link.path} onClick={()=>{setSelectedType(link.name); setSelectedCollection(""); setCategory("All"); setCategoryName("All"); setType("all"); }}>
                 <li
                   
                   className=" text-center py-1 px-1 cursor-pointer rounded hover:bg-gray-700 hover:text-lime-500"
@@ -171,6 +171,7 @@ const Navbar = () => {
                       setSelectedCollection("");
                       setCategory("All");
                       setCategoryName("All");
+                      setType("all");
                     }}
                   >
                     {link.name}

@@ -16,10 +16,11 @@ const LearnSidebar = ({ toggleSidebar }) => {
   };
 
   const handleCategoryClick = (submenu) => {
-    setCategory(submenu?.category); // Set selected category (e.g., "Blender" or "VFX")
-    setCategoryName(submenu?.categoryname); // Set selected category Name
-    setType(submenu?.isNew); // Set selected type
+    setCategory(submenu?.category); // Set category
+    setCategoryName(submenu?.categoryname); // Set category name
+    setType(submenu?.isNew ? "new" : "old"); // Set type to "New" or "Old"
   };
+  
 
   return (
     <div className="w-64 max-lg:w-full shadow-2xl bg-neutral-900 border-neutral-800 text-white">
