@@ -2,9 +2,9 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import ModelCard from "./ModelCard";
 import ModelPopup from "./ModelPopup";
 import burgermenuf from "../assets/icons/burger-menu-gray-f.svg";
-import axios from "axios";
 import { useSearch } from "../context/SearchContext";
 import { useMenu } from "../context/MenuContext";
+import { getMTHBySearch } from "../services/mthService";
 
 const Gallery = ({ toggleSidebar }) => {
   const [models, setModels] = useState([]);
@@ -25,7 +25,7 @@ const Gallery = ({ toggleSidebar }) => {
     setLoading(true);
     setEarlyAccessToggle(false);
     try {
-      const { data } = await axios.get('/api/models/search', {
+      const { data } = await getMTHBySearch({
         params: { page, limit: 8, searchTerm, selectedType, selectedCollection, ...filters },
       });
 
