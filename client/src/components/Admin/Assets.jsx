@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useAuth } from "../../context/AuthContext"; 
 import { useNavigate } from "react-router-dom";
+import { fetchAllAssets, deleteAssetById } from "../../services/adminService";
 
 const AssetsSection = () => {
+  const { token } = useAuth();
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -10,7 +12,7 @@ const AssetsSection = () => {
   // Fetch assets from the database
   const fetchAssets = async () => {
     try {
-      const { data } = await axios.get("/api/models"); // Replace with your actual API endpoint
+      const { data } = await fetchAllAssets(); // Replace with your actual API endpoint
       setAssets(data);
       setLoading(false);
     } catch (error) {
@@ -24,7 +26,7 @@ const AssetsSection = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete this asset?");
     if (confirmDelete) {
       try {
-        await axios.delete(`/api/models/${id}`); // Replace with your actual API endpoint
+        await deleteAssetById(token, id); 
         setAssets((prevAssets) => prevAssets.filter((asset) => asset._id !== id)); // Update state
         alert("Asset deleted successfully!");
       } catch (error) {
