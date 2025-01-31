@@ -75,7 +75,7 @@ export default function ShowLearn({ toggleSidebar }) {
             <TutorialCategory title="VFX Tutorials" tutorials={vfx_tutorials} />
           )}
           {projects.length > 0 && (
-            <TutorialCategory title="Projects" tutorials={projects} />
+            <TutorialCategory title="Projects Files" tutorials={projects} />
           )}
         </>
       );
