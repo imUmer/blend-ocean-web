@@ -28,7 +28,7 @@ const Gallery = ({ toggleSidebar }) => {
       const { data } = await getMTHBySearch({
         params: { page, limit: 8, searchTerm, selectedType, selectedCollection, ...filters },
       });
-
+      console.log("Data : ", data);
       setModels(data.models);
       setAllModels(data.models);
     } catch (error) {

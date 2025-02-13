@@ -1,6 +1,6 @@
 // MenuContext.js
 import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios"; // For making API requests
+import { getAllMenu } from "../services/menuService";
 
 // Create Context
 const MenuContext = createContext();
@@ -20,15 +20,15 @@ export const MenuProvider = ({ children }) => {
   // Function to fetch menu data
   const fetchMenus = async () => {
     try {
-      const response = await axios.get("/api/menu"); // Adjust API endpoint as needed
-      const menuData = response.data;
+      const response = await getAllMenu(); 
+      const menuData = response;
 
       setMenus(menuData); // Store the full menu data
 
       // Separate types and categories
-      const menuTypes = menuData.filter((menu) => menu.category === "menu"); //  
-      const menuCategories = menuData.filter((menu) => menu.category === "submenu"); //  
-      const menuCollections = menuData.filter((menu) => menu.category === "item"); // 
+      const menuTypes = menuData?.filter((menu) => menu.category === "menu"); //  
+      const menuCategories = menuData?.filter((menu) => menu.category === "submenu"); //  
+      const menuCollections = menuData?.filter((menu) => menu.category === "item"); // 
 
       setTypes(menuTypes);
       setCategories(menuCategories);

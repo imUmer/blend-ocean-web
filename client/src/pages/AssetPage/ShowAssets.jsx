@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import ModelCard from "../../components/ModelCard.jsx";
 import ModelPopup from "../../components/ModelPopup.jsx";
 import burgermenuf from "../../assets/icons/burger-menu-gray-f.svg";
-import axios from "axios";
 import { useSearch } from "../../context/SearchContext";
 import { useMenu } from "../../context/MenuContext";
 import nodata from "../../assets/svgs/nodata.svg";
+import { getAllAssets } from "../../services/assetService.js";
+import { getMTHBySearch } from "../../services/mthService.js";
 
 export default function ShowAssets({ toggleSidebar, type }) {
   const [models, setModels] = useState([]);
@@ -25,20 +26,13 @@ export default function ShowAssets({ toggleSidebar, type }) {
 
   // Fetch models dynamically
   const fetchModels = async (page) => {
-    setLoading(true);
-    setEarlyAccessToggle(false);
-    try {
-      const { data } = await axios.get("/api/models/search", {
-        params: {
-          page,
-          limit: 8,
-          searchTerm,
-          selectedType,
-          selectedCollection,
-          ...filters,
-        },
+      setLoading(true);
+      setEarlyAccessToggle(false);
+      try {
+        const  data  = await getMTHBySearch({
+          params: { page, limit: 8, searchTerm, selectedType, selectedCollection, ...filters },
       });
-
+            
       setModels(data.models);
       setAllModels(data.models);
       setPages(data.pages);

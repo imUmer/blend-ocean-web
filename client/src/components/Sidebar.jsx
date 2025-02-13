@@ -30,7 +30,7 @@ const Sidebar = ({ toggleSidebar }) => {
 
   // Build menu hierarchy
   const buildMenuHierarchy = () => {
-    const rootMenus = menuData.filter((menu) => !menu.parentId); // No parent means top-level menu
+    const rootMenus = menuData?.filter((menu) => !menu.parentId); // No parent means top-level menu
     const buildSubMenu = (parentId) => {
       return menuData
         .filter((menu) => menu.parentId?._id === parentId) // Match parentId

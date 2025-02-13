@@ -9,5 +9,7 @@ export const getMTH = async () => {
 // Fetch data by search
 export const getMTHBySearch = async ({params}) => {
     const response = await axiosInstance.get("/models/search/", {params});
+    console.log("Data : ", response.data);
+    
     return response.data;
   };
