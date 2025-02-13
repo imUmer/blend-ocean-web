@@ -16,7 +16,7 @@ const Register = () => {
     e.preventDefault();
     seLoading(true);
     try {
-      const response = await registerUser(formData);
+      await registerUser(formData);
       setMessage("User registered successfully!");
       navigate('/login');
   } catch (error) {

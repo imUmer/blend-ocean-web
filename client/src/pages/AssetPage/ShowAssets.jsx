@@ -5,7 +5,6 @@ import burgermenuf from "../../assets/icons/burger-menu-gray-f.svg";
 import { useSearch } from "../../context/SearchContext";
 import { useMenu } from "../../context/MenuContext";
 import nodata from "../../assets/svgs/nodata.svg";
-import { getAllAssets } from "../../services/assetService.js";
 import { getMTHBySearch } from "../../services/mthService.js";
 
 export default function ShowAssets({ toggleSidebar, type }) {

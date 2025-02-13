@@ -15,7 +15,7 @@ export default function LearnPlot() {
 
     useEffect(()=>{
         setSelectedType(type);
-        setSelectedCollection();
+        setSelectedCollection("");
     },[])
   
     return (

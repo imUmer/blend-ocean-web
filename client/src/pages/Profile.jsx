@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { getUserProfile, updateProfile } from "../services/userService";
 import { collection, addDoc } from "firebase/firestore";
-import { db, app } from "../firebase";
+import { db } from "../firebase";
 import FirestoreUserProfile from "../components/FirestoreUserProfile";
 
 const Profile = () => {
@@ -23,11 +22,8 @@ const Profile = () => {
   const [loadingPic, setLoadingPic] = useState(false);
   const navigate = useNavigate();
   const {user, setUser, token, setToken } = useAuth();
-  // const user1 = token ? jwtDecode(token) : null;
-  // const [user, setUser] = useState(user1);
   const fileInputRef = useRef(null);
   const [documentId, setDocumentId] = useState(null);
-  const [loadingProfilePic, setLoadingProfilePic] = useState(true);
 
  
   const handleImageClick = () => {
