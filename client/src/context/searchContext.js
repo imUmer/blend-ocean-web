@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState } from "react";
 
 export const SearchContext = createContext();
 
+export const useSearch = () => useContext(SearchContext);
+
 export const SearchProvider = ({ children }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
@@ -19,5 +21,3 @@ export const SearchProvider = ({ children }) => {
     </SearchContext.Provider>
   );
 };
-
-export const useSearch = () => useContext(SearchContext);
