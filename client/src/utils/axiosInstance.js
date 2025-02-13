@@ -1,8 +1,11 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL; // Default if env not set
+console.log(API_BASE_URL);
+
 const axiosInstance = axios.create({
-  baseURL: "/api",
+  baseURL: `${API_BASE_URL}/api`, // Use environment variable
   headers: {
     "Content-Type": "application/json",
   },
@@ -18,8 +21,8 @@ axiosInstance.interceptors.request.use(
       // Check if token is about to expire (e.g., within 1 minute)
       if (decoded.exp * 1000 < Date.now() + 60000) {
         try {
-          // Call refresh token endpoint
-          const response = await axios.post("http://localhost:5000/api/auth/refresh-token", {}, { withCredentials: true });
+          // Call refresh token endpoint dynamically
+          const response = await axios.post(`${API_BASE_URL}/api/auth/refresh-token`, {}, { withCredentials: true });
   
           // Save the new access token
           localStorage.setItem("token", response.data.accessToken);
