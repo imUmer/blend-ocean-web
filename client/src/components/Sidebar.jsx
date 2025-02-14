@@ -5,6 +5,7 @@ import texture from "../assets/icons/texture.svg";
 import hdris from "../assets/icons/hdris.svg";
 import arrow from "../assets/icons/arrow.svg";
 import { useMenu } from "../context/MenuContext";
+import { getAllMenu } from "../services/menuService";
 
 const Sidebar = ({ toggleSidebar }) => {
   const [subMenuOpen, setSubMenuOpen] = useState({});
@@ -16,7 +17,7 @@ const Sidebar = ({ toggleSidebar }) => {
   const fetchMenuData = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/menu/"); // Replace with your actual API endpoint
+      const response = await getAllMenu(); // Replace with your actual API endpoint
       const data = await response.json();
       console.log(data);
 
