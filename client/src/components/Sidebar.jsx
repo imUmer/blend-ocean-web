@@ -18,10 +18,8 @@ const Sidebar = ({ toggleSidebar }) => {
     try {
       setLoading(true);
       const response = await getAllMenu(); // Replace with your actual API endpoint
-      const data = await response.json();
-      console.log(data);
-
-      setMenuData(data); // Set fetched data to state
+      
+      setMenuData(response); // Set fetched data to state
       setLoading(false);
     } catch (error) {
       console.error("Error fetching menu data:", error);
