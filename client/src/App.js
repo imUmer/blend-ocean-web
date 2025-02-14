@@ -10,7 +10,7 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import "./App.css";
 import Navbar from "./components/Navbar";
-import Test from './components/Test'; // This is for testing purpose
+
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import About from "./pages/Static/About";
