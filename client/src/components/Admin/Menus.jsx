@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ConfirmationAlert from "../anim/ConfirmationAlert";
 import {createMenus, updateMenuById, deleteMenuById } from "../../services/adminService";
 import { useAuth } from "../../context/AuthContext";
+import { getAllMenu } from "../../services/menuService";
 
 const MenuSection = () => {
   const [menus, setMenus] = useState([]);
@@ -48,8 +49,7 @@ const MenuSection = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/menu/"); // Replace with actual API URL
-        const data = await response.json();
+        const data = await getAllMenu(); 
 
         const { menuList, submenuList, itemList } = transformData(data);
 

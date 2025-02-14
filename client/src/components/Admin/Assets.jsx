@@ -12,7 +12,7 @@ const AssetsSection = () => {
   // Fetch assets from the database
   const fetchAssets = async () => {
     try {
-      const { data } = await fetchAllAssets(); // Replace with your actual API endpoint
+      const data = await fetchAllAssets(); // Replace with your actual API endpoint
       setAssets(data);
       setLoading(false);
     } catch (error) {
