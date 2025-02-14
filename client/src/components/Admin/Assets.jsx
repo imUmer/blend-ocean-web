@@ -58,7 +58,7 @@ const AssetsSection = () => {
       {/* Assets Table */}
       {loading ? (
         <p>Loading assets...</p>
-      ) : assets.length > 0 ? (
+      ) : assets?.length > 0 ? (
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-700">
