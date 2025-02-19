@@ -21,6 +21,7 @@ const SignIn = () => {
         name: user.displayName,
         email: user.email,
         photoUrl: user.photoURL,
+        role: "user",
       };
       
       const response = await googleLogin(googleData);
@@ -47,12 +48,12 @@ const SignIn = () => {
     setLoading(true);
     try {
       const response = await loginUser(formData);
-      const { name, email, photoUrl, token } = response;
+      const { name, email, photoUrl, isAdmin, token } = response;
       console.log(response);
       
 
       setToken(token); // Update token in AuthContext
-      setUser({name,email,photoUrl}); 
+      setUser({name,email,photoUrl,isAdmin}); 
       setMessage("Logged in successfully!");
       navigate("/profile");
     } catch (error) {

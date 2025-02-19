@@ -25,6 +25,7 @@ import AssetEdit from "./components/Admin/AssetEdit";
 import AssetPlot from "./pages/AssetPage/AssetPlot";
 import LearnPlot from "./pages/Learn/LearnPlot";
 import { LearnMenuProvider } from "./context/LearnMenuContext";
+import { ProtectedAdminRoute } from "./services/adminService";
 
 const App = () => {
   return (
@@ -64,41 +65,51 @@ const App = () => {
               <Route
                 path="/admin"
                 element={
+                  <ProtectedAdminRoute>
                   <ProtectedRoute>
                     <AdminPanel />
                   </ProtectedRoute>
+                </ProtectedAdminRoute>
                 }
               />
               <Route
                 path="/admin/user/:id"
                 element={
+                  <ProtectedAdminRoute>
                   <ProtectedRoute>
                     <UserEdit />
                   </ProtectedRoute>
+                  </ProtectedAdminRoute>
                 }
               />
               <Route
                 path="/admin/assets"
                 element={
+                  <ProtectedAdminRoute>
                   <ProtectedRoute>
                   <AssetAdd />
                   </ProtectedRoute>
+                  </ProtectedAdminRoute>
                 }
               />
               <Route
                 path="/admin/assets/:id"
                 element={
+                  <ProtectedAdminRoute>
                   <ProtectedRoute>
                   <AssetEdit />
                   </ProtectedRoute>
+                  </ProtectedAdminRoute>
                 }
               />
               <Route
                 path="/admin/menu"
                 element={
+                  <ProtectedAdminRoute>
                   <ProtectedRoute>
                   <MenuEdit />
                   </ProtectedRoute>
+                  </ProtectedAdminRoute>
                 }
               />
             </Routes>

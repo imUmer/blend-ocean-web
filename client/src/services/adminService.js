@@ -1,5 +1,18 @@
 import axiosInstance from "../utils/axiosInstance"; // Adjust the path as needed
 
+
+import { Navigate } from "react-router-dom";
+
+export const ProtectedAdminRoute = ({ children }) => {
+    const user = JSON.parse(localStorage.getItem("user")); // Fetch user from localStorage or state
+    console.log(user)
+    if (!user.isAdmin) {
+        return <Navigate to="/login" />; // Redirect non-admin users
+    }
+
+    return children;
+};
+
 //////////   USER /////////////
 
 // Fetch all users (admin only)
@@ -106,7 +119,11 @@ export const fetchAssetById = async (token, id) => {
   return response.data;
 };
 export const fetchAllAssets = async () => {
-  const response = await axiosInstance.get(`/models/`);
+  const response = await axiosInstance.get(`/models/`,{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 };
 export const updateAssetById = async (token, id, formData) => {
