@@ -232,7 +232,7 @@ const Navbar = () => {
           <button
             onClick={handleLogout}
             className={`${
-              token ? "sm:hidden" : "hidden"
+              token ? "" : "hidden"
             }  items-center px-5 py-1 text-xs font-medium text-center text-white bg-lime-500 rounded-xl hover:bg-lime-600 focus:ring-4 focus:outline-none  dark:bg-lime-500 dark:hover:bg-lime-600 dark:focus:ring-lime-800`}
           >
             Logout
